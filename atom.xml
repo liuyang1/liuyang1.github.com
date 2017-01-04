@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://liuyang1.github.io/"/>
-  <updated>2017-01-04T12:12:25.196Z</updated>
+  <updated>2017-01-04T12:15:25.490Z</updated>
   <id>http://liuyang1.github.io/</id>
   
   <author>
@@ -20,7 +20,7 @@
     <link href="http://liuyang1.github.io/2017/01/04/hexo-again/"/>
     <id>http://liuyang1.github.io/2017/01/04/hexo-again/</id>
     <published>2017-01-04T11:36:24.000Z</published>
-    <updated>2017-01-04T12:12:25.196Z</updated>
+    <updated>2017-01-04T12:15:25.490Z</updated>
     
     <content type="html"><![CDATA[<p>因为之前安装hexo环境的机器已经重新安装系统了，因此还需要重新安装一边hexo。</p>
 <p>不知不觉踩了些坑。</p>
@@ -44,7 +44,7 @@
 <p>然后以前的配置</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">deploy:</div><div class="line">    type: github</div></pre></td></tr></table></figure>
 <p>要改成</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">deploy:</div><div class="line">    type: git</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">deploy:</div><div class="line">    type: git</div><div class="line">    branch: master</div></pre></td></tr></table></figure>
 <p>因为最新的方式支持所有git的托管网站了。</p>
 ]]></content>
     
