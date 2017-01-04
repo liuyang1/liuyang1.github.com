@@ -1,0 +1,297 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>[vim] clighter8 | River &amp; Could</title>
+  <meta name="author" content="liuyang1">
+  
+  <meta name="description" content="随着VIM进入8.0时代，终于有了一系列的异步调用的支持。这些支持使得vim可以更好的处理复杂的异步操作，例如编译，建立tag等等。
+而vim的语法渲染方案过去只能够给予纯文本的分析，因此只能够对例如关键词，基本的语法结构啊，比如括号之前的部分进行格式上的区分，但是因为没有语义的概念，所有就有一些限制，比如，就不能对函数和宏进行区分进行渲染。
+clighter8就是这样的一个CS架构的vim插件。">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <meta property="og:title" content="[vim] clighter8"/>
+  <meta property="og:site_name" content="River &amp; Could"/>
+
+  
+    <meta property="og:image" content="undefined"/>
+  
+
+  <link href="/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="River &amp; Could" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+  
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-59389559-1']);
+  
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+
+</head>
+
+
+<body>
+  <header id="header" class="inner"><div class="alignleft">
+  <h1><a href="/">River &amp; Could</a></h1>
+  <h2><a href="/">从前有一个大傻逼，没有人知道他是谁。</a></h2>
+</div>
+<nav id="main-nav" class="alignright">
+  <ul>
+    
+      <li><a href="/">Home</a></li>
+    
+      <li><a href="/archives">Archives</a></li>
+    
+      <li><a href="/fun">Fun</a></li>
+    
+      <li><a href="/about">About</a></li>
+    
+      <li><a href="/atom.xml">RSS</a></li>
+    
+  </ul>
+  <div class="clearfix"></div>
+</nav>
+<div class="clearfix"></div>
+</header>
+  <div id="content" class="inner">
+    <div id="main-col" class="alignleft"><div id="wrapper"><article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time datetime="2017-01-04T11:14:23.000Z"><a href="/2017/01/04/clighter8/">2017-01-04</a></time>
+      
+      
+  
+    <h1 class="title">[vim] clighter8</h1>
+  
+
+    </header>
+    <div class="entry">
+      
+
+<div id="toc" class="toc-article alignright">
+    <strong class="toc-title">Table of Content:</strong>
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#issues"><span class="toc-text">issues</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#clighter8-failed-start-engine"><span class="toc-text">[clighter8] failed start engine</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#编译选项的自定义"><span class="toc-text">编译选项的自定义</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#clighter8Expr的问题"><span class="toc-text">clighter8Expr的问题</span></a></li></ol></li></ol>
+</div>
+
+        <p>随着VIM进入8.0时代，终于有了一系列的异步调用的支持。这些支持使得vim可以更好的处理复杂的异步操作，例如编译，建立tag等等。</p>
+<p>而vim的语法渲染方案过去只能够给予纯文本的分析，因此只能够对例如关键词，基本的语法结构啊，比如括号之前的部分进行格式上的区分，但是因为没有语义的概念，所有就有一些限制，比如，就不能对函数和宏进行区分进行渲染。</p>
+<p><a href="https://github.com/bbchung/clighter8" target="_blank" rel="external">clighter8</a>就是这样的一个CS架构的vim插件。</p>
+<a id="more"></a>
+<p>它利用了vim的<code>channel</code>的API，主要集成了<a href="http://clang.llvm.org/" target="_blank" rel="external">clang</a>用于语义分析。提供以下的特性：</p>
+<ul>
+<li>运行时可变的，高度定制的语法高亮。</li>
+</ul>
+<p>其他的特性，我没有觉得特别有用：</p>
+<ul>
+<li>重命名重构</li>
+</ul>
+<p>这个不是很常用，而且相比于全文替换相比，没有觉得有非常大的用处。而且我的工作代码库特别庞大，因此使用这个工具也不能保证不会引入问题。</p>
+<ul>
+<li>自动后台运行gtags</li>
+</ul>
+<p>这个也有缺陷，因为它只会在当前目录运行，不会在git root目录运行，因此反而会shadow掉我原本放在git root目录下面的gtags文件。</p>
+<ul>
+<li>clang-format集成</li>
+</ul>
+<p>我在实际中采用unicurstiry而不是clang-format，因此这个特性对于我而言也没有用途。</p>
+<hr>
+<p>先展示下使用clighter8前后的效果对比图。我使用的是molokai主题，本来就比较花哨。<br>使用clighter8之后，可以清晰的区分宏和函数，区分变量的定义和使用时的高亮。对于函数的定义，也有额外的高亮支持。</p>
+<p><img src="img/clighter8.png" alt="cligher8"></p>
+<p>这个插件需要：</p>
+<ul>
+<li>vim8.0，并且打开job和channel的支持。</li>
+<li>libclang和兼容的python bindings。</li>
+<li>clang-format</li>
+<li>GNU global</li>
+</ul>
+<p>这些东西都需要预先安装好。后面的clighter8的安装过程才可以保证顺利没有问题。</p>
+<p>安装过程则非常简单,使用任意一款包管理器，我使用的是Plug</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">Plug &apos;bbchung/clighter8&apos;</div></pre></td></tr></table></figure>
+<h2 id="issues"><a href="#issues" class="headerlink" title="issues"></a>issues</h2><h3 id="clighter8-failed-start-engine"><a href="#clighter8-failed-start-engine" class="headerlink" title="[clighter8] failed start engine"></a>[clighter8] failed start engine</h3><p>这个错误是因为engine.py的脚本没有启动成功。我检查下，发现它碰到一个异常，没有找到libclang.so。这是因为我没有配置</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">let g:clighter8_libclang_path=&quot;/usr/lib/llvm-3.9/lib/libclang.so&quot;</div></pre></td></tr></table></figure>
+<p>这里按照你对应的clang版本进行配置。</p>
+<p>其他问题可以尝试检查<code>/tmp/cligher8.log</code>.</p>
+<h3 id="编译选项的自定义"><a href="#编译选项的自定义" class="headerlink" title="编译选项的自定义"></a>编译选项的自定义</h3><p>除了最简单的项目，我们都需要自己定义的一堆编译选项。需要配置</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">let g:clighter8_global_compile_args=[&apos;-Ipthread&apos;, ...]</div></pre></td></tr></table></figure>
+<h3 id="clighter8Expr的问题"><a href="#clighter8Expr的问题" class="headerlink" title="clighter8Expr的问题"></a>clighter8Expr的问题</h3><p>配置完成之后，发现经常会提醒没有关于clighter8Expr的高亮配置。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">highlight default link clighter8Expr cString</div></pre></td></tr></table></figure>
+<hr>
+<p>有问题的话，可以查看其文档，如果相应的功能有问题，可能是依赖没有安装，或者对应的配置选项没有进行配置。</p>
+<p>目前已经基本功能可用，后续再看需要吧。</p>
+<p>更多我的配置，可以参考<a href="https://github.com/liuyang1/dotfiles" target="_blank" rel="external">dotfiles</a></p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+  
+  <div class="tags">
+    <a href="/tags/vim/">vim</a>
+  </div>
+
+        
+      
+      <div class="clearfix"></div>
+<!-- 
+<div class="pagepart clearfix">
+  
+    <a href="/2016/06/13/haskell-longeststatus/" class="alignleft prev" title="实战 最长状态">实战 最长状态</a>
+  
+  
+    <a href="/2017/01/04/python_list_monad/" class="alignright next" title="翻译 通过Python的列表推导理解Monad">翻译 通过Python的列表推导理解Monad</a>
+  
+</div>
+
+ -->
+    </footer>
+  </div>
+</article>
+
+
+<section id="comment">
+  <h1 class="title">留言</h1>
+
+  
+  <div id="disqus_thread">
+    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  </div>
+  
+</section>
+
+
+</div></div>
+    <aside id="sidebar" class="alignright">
+  <div class="search">
+  <form action="//google.com/search" method="get" accept-charset="utf-8">
+    <input type="search" name="q" results="0" placeholder="搜索">
+    <input type="hidden" name="q" value="site:liuyang1.github.io">
+  </form>
+</div>
+
+  
+
+  
+<div class="widget tag">
+  <h3 class="title">标签</h3>
+  <ul class="entry">
+  
+    <li><a href="/tags/C/">C</a><small>4</small></li>
+  
+    <li><a href="/tags/Haskell/">Haskell</a><small>2</small></li>
+  
+    <li><a href="/tags/Software-Engineer/">Software Engineer</a><small>1</small></li>
+  
+    <li><a href="/tags/Standard/">Standard</a><small>1</small></li>
+  
+    <li><a href="/tags/algo/">algo</a><small>2</small></li>
+  
+    <li><a href="/tags/aos/">aos</a><small>1</small></li>
+  
+    <li><a href="/tags/bash/">bash</a><small>2</small></li>
+  
+    <li><a href="/tags/basic/">basic</a><small>1</small></li>
+  
+    <li><a href="/tags/coderead/">coderead</a><small>1</small></li>
+  
+    <li><a href="/tags/hexo/">hexo</a><small>1</small></li>
+  
+    <li><a href="/tags/intro/">intro</a><small>2</small></li>
+  
+    <li><a href="/tags/mobile/">mobile</a><small>1</small></li>
+  
+    <li><a href="/tags/python/">python</a><small>3</small></li>
+  
+    <li><a href="/tags/src/">src</a><small>2</small></li>
+  
+    <li><a href="/tags/tool/">tool</a><small>4</small></li>
+  
+    <li><a href="/tags/video/">video</a><small>3</small></li>
+  
+    <li><a href="/tags/vim/">vim</a><small>1</small></li>
+  
+    <li><a href="/tags/week/">week</a><small>12</small></li>
+  
+    <li><a href="/tags/实战/">实战</a><small>1</small></li>
+  
+    <li><a href="/tags/翻译/">翻译</a><small>1</small></li>
+  
+  </ul>
+</div>
+
+</aside>
+    <div class="clearfix"></div>
+  </div>
+  <footer id="footer" class="inner"><div class="alignleft">
+  
+  &copy; 2017 liuyang1
+  
+</div>
+<div class="clearfix"></div></footer>
+  <script src="//lib.sinaapp.com/js/jquery/2.0.3/jquery-2.0.3.min.js"></script>
+<script src="/js/instantclick.min.js" data-no-instant></script>
+<script data-no-instant>
+    InstantClick.on('change', function(isInitialLoad) {
+      if (isInitialLoad === false) {
+        if (typeof _hmt !== 'undefined')
+          _hmt.push(['_trackPageview', location.pathname + location.search]);
+        if (typeof ga !== 'undefined')
+          ga('send', 'pageview', location.pathname + location.search);
+      }
+    });
+    InstantClick.init();
+</script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+
+
+<script type="text/javascript">
+var disqus_shortname = 'liuyang1';
+
+(function(){
+  var dsq = document.createElement('script');
+  dsq.type = 'text/javascript';
+  dsq.async = true;
+  dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+}());
+</script>
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "//hm.baidu.com/hm.js?0c65442b2922ed650d2d34c603409234";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+</body>
+</html>

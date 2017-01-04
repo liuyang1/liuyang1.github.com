@@ -1,0 +1,322 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>投票多数问题 | River &amp; Could</title>
+  <meta name="author" content="liuyang1">
+  
+  <meta name="description" content="一个算法问题，虽然简单，但是别有趣味。
+问题非常简单，已知数组中有一个元素出现次数大于N/2次，其中N为数组长度。求这个元素。">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <meta property="og:title" content="投票多数问题"/>
+  <meta property="og:site_name" content="River &amp; Could"/>
+
+  
+    <meta property="og:image" content="undefined"/>
+  
+
+  <link href="/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="River &amp; Could" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+  
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-59389559-1']);
+  
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+
+</head>
+
+
+<body>
+  <header id="header" class="inner"><div class="alignleft">
+  <h1><a href="/">River &amp; Could</a></h1>
+  <h2><a href="/">从前有一个大傻逼，没有人知道他是谁。</a></h2>
+</div>
+<nav id="main-nav" class="alignright">
+  <ul>
+    
+      <li><a href="/">Home</a></li>
+    
+      <li><a href="/archives">Archives</a></li>
+    
+      <li><a href="/fun">Fun</a></li>
+    
+      <li><a href="/about">About</a></li>
+    
+      <li><a href="/atom.xml">RSS</a></li>
+    
+  </ul>
+  <div class="clearfix"></div>
+</nav>
+<div class="clearfix"></div>
+</header>
+  <div id="content" class="inner">
+    <div id="main-col" class="alignleft"><div id="wrapper"><article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time datetime="2015-12-30T14:04:46.000Z"><a href="/2015/12/30/vote/">2015-12-30</a></time>
+      
+      
+  
+    <h1 class="title">投票多数问题</h1>
+  
+
+    </header>
+    <div class="entry">
+      
+
+<div id="toc" class="toc-article alignright">
+    <strong class="toc-title">Table of Content:</strong>
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#常见解法"><span class="toc-text">常见解法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Moore’s-Vote-Algorithm"><span class="toc-text">Moore’s Vote Algorithm</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Misra’s-Algorithm"><span class="toc-text">Misra’s Algorithm</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#后记"><span class="toc-text">后记</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#链接地址"><span class="toc-text">链接地址</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#参考链接"><span class="toc-text">参考链接</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#代码"><span class="toc-text">代码</span></a></li></ol>
+</div>
+
+        <p>一个算法问题，虽然简单，但是别有趣味。</p>
+<p>问题非常简单，已知数组中有一个元素出现次数大于N/2次，其中N为数组长度。求这个元素。</p>
+<a id="more"></a>
+<h2 id="常见解法"><a href="#常见解法" class="headerlink" title="常见解法"></a>常见解法</h2><p>首先直观上可以对数组进行排序，然后排序后数组的中位数，就是结果。这种方法复杂度在于排序，为O(n * log(n))。</p>
+<p>在数组中元素范围有限，或者元素范围很大，但是可以哈希的话，则可以在数组上进行一次统计计数，那么扫描数组一遍，即可以得到统计结果，然后在统计结果上遍历求解结果。这种方法的复杂度是O(n)的，缺点是需要额外的存储空间，特别是元素范围较大需要哈希，并且出现元素多数不相等的时候，需要O(n)的额外空间。</p>
+<p>元素范围有限的情况下，还可以用基数排序，复杂度也是O(n).</p>
+<p>上面的两种算法都有些overkill，方法一做了额外的排序，方法二做了额外的统计，这两部分实际上都做了许多的额外操作。</p>
+<p><img src="/img/ScarletOverkill.jpg" alt="Scarlet Overkill"></p>
+<p>其实对于这个问题，可以随机选择一个元素，然后统计该元素出现次数，如果大于N/2,则返回。检查一个数是否满足N/2，只需要遍历一遍数组即可。这种概率性的算法复杂度是多少呢？</p>
+<p>从N个对象中抽取p频次的对象的问题，直到抽中为止。这是一个<a href="https://zh.wikipedia.org/wiki/%E5%B9%BE%E4%BD%95%E5%88%86%E4%BD%88" target="_blank" rel="external">几何分布</a>问题，呈几何分布的随机变量X的期望值E(X)=1/p。</p>
+<p>对于本题，那么期望抽取两次即可以得到结果，看起来非常划算。算法实现在这里<a href="https://github.com/liuyang1/test/blob/master/lang/c/leetcode/majorityElem.169.c" target="_blank" rel="external">majorityElem.169.c</a></p>
+<p>而且以上是考虑从N个对象中抽取，有放回的情况（也就是抽取目标对象，频率保持p不变）。如果设计算法避免重复抽取已知不是目标的对象，那么显然可以进一步提高抽中的概率。期望抽取更少次，就可以得到正确结果。这里避免抽取已经抽过的对象，可以直接在原数组上交换元素就可以完成，不需要额外空间，这里不是重点，就不展开了。这种不放回的抽样方法属于<a href="https://zh.wikipedia.org/wiki/%E8%B6%85%E5%87%A0%E4%BD%95%E5%88%86%E5%B8%83" target="_blank" rel="external">超几何分布</a>。</p>
+<p>那么还有更好的算法了吗？有没有只需要常量存储空间，复杂度只有O(n)的确定性算法吗？</p>
+<p>这就是本文要介绍的内容。</p>
+<h2 id="Moore’s-Vote-Algorithm"><a href="#Moore’s-Vote-Algorithm" class="headerlink" title="Moore’s Vote Algorithm"></a>Moore’s Vote Algorithm</h2><p>Moore的这个算法，本是非常简单，教授本人对这个直观算法也非常自豪，专门列在自己的<a href="https://www.cs.utexas.edu/~moore/best-ideas/index.html" target="_blank" rel="external">`My` Best Ideas</a>页面中。</p>
+<p>对于已知必然存在频次大于N/2的对象的情况下，该算法只需要扫描数组一遍，即可得到结果。<br>算法过程如下：</p>
+<pre><code>初始化计数值cnt为0，
+扫描数组
+    如果cnt为0，那么当前值设为cand，并且cnt设为1.
+    如果cnt不为0
+        并且当前值和cand相等，则cnt++。
+        或者当前值和cand不相等，则cnt--。
+</code></pre><p>这个算法简单到已经可以直接转换为代码了。Moore教授还给出了一个单步运行算法的<a href="https://www.cs.utexas.edu/~moore/best-ideas/mjrty/example.html#step01" target="_blank" rel="external">示例</a>，很直观。<br>我的实现可以看<a href="https://github.com/liuyang1/test/blob/master/lang/c/leetcode/majorityElem.169.moore.c" target="_blank" rel="external">majorityElem.169.moore.c</a></p>
+<p>假设频次大于N/2的对象值为A，如果cnt等于零，则可以确定在数组已经扫描过的部分，A的出现频率少于等于1/2。(如果A或者任意其他值在已经扫描部分大于1/2，则cnt不能为0)。那么未扫描部分，则A的频率依然是大于等于1/2，问题的规模得以减小，但性质保持不变。具体可以参考论文<a href="http://www.cs.utexas.edu/users/boyer/mjrty.ps.Z" target="_blank" rel="external">MJRTY - A Fast Majority Vote Algorithm</a>。</p>
+<p>对于确定存在频次大于N/2的对象的情况下，算法到此结束了。<br>对于不能确定是否存在频次大于N/2的对象的情况下，还需要额外一次数组扫描。对其出现次数进行计数，如果大于N/2,则为结果值，否则没有频次大于N/2的对象。</p>
+<p>这个算法只需要2个额外存储空间，并且还可以处理不确定是否存在结果的情况。（概率算法不能够处理这种情况）。而且算法过程异常直观。Moore教授的这篇论文<a href="http://www.cs.utexas.edu/users/boyer/mjrty.ps.Z" target="_blank" rel="external">MJRTY - A Fast Majority Vote Algorithm</a>可惜没有出版。</p>
+<p>这个问题还可以进一步推广，如何寻找出现频率大于1/3的对象。或者如何寻找出现频率大于1/K(其中K&lt;N)的对象呢？</p>
+<p>Moore教授的同事Misra在上述算法的激励下，也在思考这个问题。</p>
+<h2 id="Misra’s-Algorithm"><a href="#Misra’s-Algorithm" class="headerlink" title="Misra’s Algorithm"></a>Misra’s Algorithm</h2><p>Misra的这篇论文<a href="http://www.mathcs.emory.edu/~cheung/papers/StreamDB/Frequency-count/1982-Misra-FindRepeatedElements.pdf" target="_blank" rel="external">FindRepeatedElements</a>略微复杂一点，瞄了一眼，没有看懂。。然后找到一份<a href="http://dimacs.rutgers.edu/~graham/pubs/papers/encalgs-mg.pdf" target="_blank" rel="external">summary</a>，这个summary里面清晰的介绍了算法。</p>
+<p><img src="/img/misra.png" alt="Misra Algorithm"></p>
+<p>显然出现频率大于1/K的元素最多有K-1个。</p>
+<p>这个算法相比Moore的算法扩充在，cand不再是一个值，而是一个规模大小以K-1为上限的候选集合，记为T，对应着集合中的每个元素都有一个计数。当T的元素个数不足K的时候，则加入到T中。当集合T满的时候，且扫描遇到的元素不在集合T中的时候，则对集合中所有对象的计数全部都减一。</p>
+<p>好像也不复杂吧？我实现了一个版本<a href="https://github.com/liuyang1/test/blob/master/lang/c/leetcode/majorityElem2.229.c" target="_blank" rel="external">majorityElem2.229.c</a></p>
+<pre><code>int *majorityElement(int *nums, int numsSize, int *returnSize) {
+    Ctx ctx, *pctx = &amp;ctx;;
+    // at most K - 1 elements ocurr greater than [n / K] times.
+    initCtx(pctx, K - 1);
+    int i, j;
+    for (i = 0; i != numsSize; i++) {
+        if (pros(pctx, nums[i])) {
+        } else if (atnd(pctx, nums[i])) {
+        } else {
+            cons(pctx);
+        }
+    }
+    int *r = retr(pctx, returnSize);
+    deinitCtx(pctx);
+
+    // have to one more pass to verify it really greater than [n / K] times.
+    vrfy(nums, numsSize, numsSize / K, r, returnSize);
+    return r;
+}
+</code></pre><p>我把算法形象地实现为3个动作，pros投票，atnd参加，cons反对票。</p>
+<pre><code>- pros，投票，如果扫描对象在候选人中，则对其投票。如果不在候选人中，则投票失败。
+- 如果投票失败，那么尝试将当前扫描值加入到候选人。如果候选人已经满了，那么参加(atnd)选举失败
+- 如果参加(atnd)失败，则对当前所有候选人投反对票。
+</code></pre><p>完整的算法实现见<a href="https://github.com/liuyang1/test/blob/master/lang/c/leetcode/majorityElem2.229.c" target="_blank" rel="external">majorityElem2.229.c</a>。</p>
+<p>需要注意的是，这个算法同样需要验证得到候选集合T中的元素的频率是否真的大于1/K。K ！= 2，那么最终符合条件的元素个数最多有 K - 1个。即使有保证存在一个元素频率大于1/K，但是最终扫描得到的候选集合T的元素个数仍然是K - 1，要排除其他的元素，这就需要验证过程啦。</p>
+<h2 id="后记"><a href="#后记" class="headerlink" title="后记"></a>后记</h2><p>这个算法可以很方便的用于统计计数，下次投票的时候可以用啦。:)</p>
+<p>这里的Moore教授还发明了字符串匹配的BM算法。这里的M指的就是他！</p>
+<h1 id="链接地址"><a href="#链接地址" class="headerlink" title="链接地址"></a>链接地址</h1><h2 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h2><ul>
+<li><a href="https://zh.wikipedia.org/wiki/%E5%B9%BE%E4%BD%95%E5%88%86%E4%BD%88" target="_blank" rel="external">几何分布</a></li>
+<li><a href="https://zh.wikipedia.org/wiki/%E8%B6%85%E5%87%A0%E4%BD%95%E5%88%86%E5%B8%83" target="_blank" rel="external">超几何分布</a></li>
+<li><a href="https://www.cs.utexas.edu/~moore/best-ideas/mjrty/example.html#step01" target="_blank" rel="external">Moore的示例</a></li>
+<li><a href="http://www.cs.utexas.edu/users/boyer/mjrty.ps.Z" target="_blank" rel="external">MJRTY - A Fast Majority Vote Algorithm</a></li>
+<li><a href="http://www.mathcs.emory.edu/~cheung/papers/StreamDB/Frequency-count/1982-Misra-FindRepeatedElements.pdf" target="_blank" rel="external">FindRepeatedElements</a></li>
+</ul>
+<h2 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h2><ul>
+<li><a href="https://github.com/liuyang1/test/blob/master/lang/c/leetcode/majorityElem.169.c" target="_blank" rel="external">majorityElem.169.c</a></li>
+<li><a href="https://github.com/liuyang1/test/blob/master/lang/c/leetcode/majorityElem.169.moore.c" target="_blank" rel="external">majorityElem.169.moore.c</a></li>
+<li><a href="https://github.com/liuyang1/test/blob/master/lang/c/leetcode/majorityElem2.229.c" target="_blank" rel="external">majorityElem2.229.c</a></li>
+</ul>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+  
+  <div class="tags">
+    <a href="/tags/C/">C</a>, <a href="/tags/algo/">algo</a>
+  </div>
+
+        
+      
+      <div class="clearfix"></div>
+<!-- 
+<div class="pagepart clearfix">
+  
+    <a href="/2015/12/29/yuv/" class="alignleft prev" title="YUV格式">YUV格式</a>
+  
+  
+    <a href="/2016/04/02/fast-slow-pointer/" class="alignright next" title="快慢指针问题的讨论">快慢指针问题的讨论</a>
+  
+</div>
+
+ -->
+    </footer>
+  </div>
+</article>
+
+
+<section id="comment">
+  <h1 class="title">留言</h1>
+
+  
+  <div id="disqus_thread">
+    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  </div>
+  
+</section>
+
+
+</div></div>
+    <aside id="sidebar" class="alignright">
+  <div class="search">
+  <form action="//google.com/search" method="get" accept-charset="utf-8">
+    <input type="search" name="q" results="0" placeholder="搜索">
+    <input type="hidden" name="q" value="site:liuyang1.github.io">
+  </form>
+</div>
+
+  
+
+  
+<div class="widget tag">
+  <h3 class="title">标签</h3>
+  <ul class="entry">
+  
+    <li><a href="/tags/C/">C</a><small>4</small></li>
+  
+    <li><a href="/tags/Haskell/">Haskell</a><small>2</small></li>
+  
+    <li><a href="/tags/Software-Engineer/">Software Engineer</a><small>1</small></li>
+  
+    <li><a href="/tags/Standard/">Standard</a><small>1</small></li>
+  
+    <li><a href="/tags/algo/">algo</a><small>2</small></li>
+  
+    <li><a href="/tags/aos/">aos</a><small>1</small></li>
+  
+    <li><a href="/tags/bash/">bash</a><small>2</small></li>
+  
+    <li><a href="/tags/basic/">basic</a><small>1</small></li>
+  
+    <li><a href="/tags/coderead/">coderead</a><small>1</small></li>
+  
+    <li><a href="/tags/hexo/">hexo</a><small>1</small></li>
+  
+    <li><a href="/tags/intro/">intro</a><small>2</small></li>
+  
+    <li><a href="/tags/mobile/">mobile</a><small>1</small></li>
+  
+    <li><a href="/tags/python/">python</a><small>3</small></li>
+  
+    <li><a href="/tags/src/">src</a><small>2</small></li>
+  
+    <li><a href="/tags/tool/">tool</a><small>4</small></li>
+  
+    <li><a href="/tags/video/">video</a><small>3</small></li>
+  
+    <li><a href="/tags/vim/">vim</a><small>1</small></li>
+  
+    <li><a href="/tags/week/">week</a><small>12</small></li>
+  
+    <li><a href="/tags/实战/">实战</a><small>1</small></li>
+  
+    <li><a href="/tags/翻译/">翻译</a><small>1</small></li>
+  
+  </ul>
+</div>
+
+</aside>
+    <div class="clearfix"></div>
+  </div>
+  <footer id="footer" class="inner"><div class="alignleft">
+  
+  &copy; 2017 liuyang1
+  
+</div>
+<div class="clearfix"></div></footer>
+  <script src="//lib.sinaapp.com/js/jquery/2.0.3/jquery-2.0.3.min.js"></script>
+<script src="/js/instantclick.min.js" data-no-instant></script>
+<script data-no-instant>
+    InstantClick.on('change', function(isInitialLoad) {
+      if (isInitialLoad === false) {
+        if (typeof _hmt !== 'undefined')
+          _hmt.push(['_trackPageview', location.pathname + location.search]);
+        if (typeof ga !== 'undefined')
+          ga('send', 'pageview', location.pathname + location.search);
+      }
+    });
+    InstantClick.init();
+</script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+
+
+<script type="text/javascript">
+var disqus_shortname = 'liuyang1';
+
+(function(){
+  var dsq = document.createElement('script');
+  dsq.type = 'text/javascript';
+  dsq.async = true;
+  dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+}());
+</script>
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "//hm.baidu.com/hm.js?0c65442b2922ed650d2d34c603409234";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+</body>
+</html>

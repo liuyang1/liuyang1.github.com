@@ -1,0 +1,394 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>printf? | River &amp; Could</title>
+  <meta name="author" content="liuyang1">
+  
+  <meta name="description" content="printf这个函数，在C语言中是最基本的之一。可是有多少不了解的细节隐藏其中呢。">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <meta property="og:title" content="printf?"/>
+  <meta property="og:site_name" content="River &amp; Could"/>
+
+  
+    <meta property="og:image" content="undefined"/>
+  
+
+  <link href="/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="River &amp; Could" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+  
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-59389559-1']);
+  
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+
+</head>
+
+
+<body>
+  <header id="header" class="inner"><div class="alignleft">
+  <h1><a href="/">River &amp; Could</a></h1>
+  <h2><a href="/">从前有一个大傻逼，没有人知道他是谁。</a></h2>
+</div>
+<nav id="main-nav" class="alignright">
+  <ul>
+    
+      <li><a href="/">Home</a></li>
+    
+      <li><a href="/archives">Archives</a></li>
+    
+      <li><a href="/fun">Fun</a></li>
+    
+      <li><a href="/about">About</a></li>
+    
+      <li><a href="/atom.xml">RSS</a></li>
+    
+  </ul>
+  <div class="clearfix"></div>
+</nav>
+<div class="clearfix"></div>
+</header>
+  <div id="content" class="inner">
+    <div id="main-col" class="alignleft"><div id="wrapper"><article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time datetime="2015-02-08T13:05:53.000Z"><a href="/2015/02/08/printf/">2015-02-08</a></time>
+      
+      
+  
+    <h1 class="title">printf?</h1>
+  
+
+    </header>
+    <div class="entry">
+      
+
+<div id="toc" class="toc-article alignright">
+    <strong class="toc-title">Table of Content:</strong>
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#可变参数列表"><span class="toc-text">可变参数列表</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#printf"><span class="toc-text">printf</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Deriv"><span class="toc-text">Deriv</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#int-gt-string"><span class="toc-text">int -> string</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#double-gt-string"><span class="toc-text">double -> string</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#double"><span class="toc-text">double</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#背景"><span class="toc-text">背景</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#浮点数表示"><span class="toc-text">浮点数表示</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#规格化的值"><span class="toc-text">规格化的值</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#非规格化"><span class="toc-text">非规格化</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#其他"><span class="toc-text">其他</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#总结"><span class="toc-text">总结</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Grisu"><span class="toc-text">Grisu</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ref"><span class="toc-text">ref</span></a></li></ol>
+</div>
+
+        <p>printf这个函数，在C语言中是最基本的之一。可是有多少不了解的细节隐藏其中呢。<br><a id="more"></a></p>
+<h2 id="可变参数列表"><a href="#可变参数列表" class="headerlink" title="可变参数列表"></a>可变参数列表</h2><p>嗯，这个名词可能没有听说过。<code>man 3 printf</code></p>
+<pre><code>int printf(const char *format, ...);
+</code></pre><p>这里后面的。。。在编程时候怎么用呢？这就是可变参数列表，即可以加任意格式，任意个数的参数。</p>
+<p>在函数的声明和实现的时候，都直接用三个点表示可变参数就可以了。这个三个点的参数只能放在最后一个。<br>但是这个任意参数列表要如何使用呢？<br>这就涉及到关于关于可变参数列表的几个宏了。</p>
+<pre><code>// va_list 类型
+va_list ap;
+// 三个宏
+// 初始化ap，第二个参数为函数参数中从左到右的最后一个
+va_start(ap, [LAST PARAM]);
+// 取ap中的元素，并且按照强制转换为TYPE类型，然后返回
+// 下一次调用此宏，将会返回下一个参数。
+va_arg(ap, [TYPE]);
+// 结束,作为良好的工程习惯，这个宏必须调用。
+va_end(ap);
+</code></pre><p>这个可变参数（Variable Argument，VA）是怎么实现的呢？C语言的函数调用时候，是从右向左压栈的。因此可变参数列表的区间，其实就是从栈的底部到正常参数之间的部分，这就是va_start为什么需要[LAST PARAM]作为参数，因此以此向栈底移动，就到了可变参数列表的部分。</p>
+<p>然后按照从各种神奇渠道知道可变参数中某个参数的类型，然后强制转换就可以使用了。</p>
+<p>这里的神奇渠道一般有2种方法。</p>
+<ul>
+<li>假设所有参数都是一种类型，比如int。</li>
+</ul>
+<p>不过这种方法不知道参数的个数，因此还需要一个正常参数来告知参数个数。</p>
+<p>这种方法可以很容易写出一个接受任意参数个数的<code>int sum(int n, ...);</code></p>
+<ul>
+<li>加一个字符串作为参数，以字符串来中信息解释后面可变参数列表</li>
+</ul>
+<p>字符串可以同时提供参数个数和参数类型的语义。</p>
+<p>这种方式的最典型的例子，就是今天的主角：printf函数了。</p>
+<pre><code>NOTE:
+va_arg(ap, [TYPE]);
+// 每次调用这个宏，会移动内部的指针，因此不是可重入的。
+// 因此需要保存每个参数的值。或者使用va_copy这个宏
+
+// 如果调用到参数列表结束，也就是到栈底。
+// 这个时候在栈中没有对应的参数，就溢出到栈底了。
+
+// va_list ap, 也可以作为参数传递给其他函数，参考vprintf
+</code></pre><h2 id="printf"><a href="#printf" class="headerlink" title="printf"></a>printf</h2><p>在va_list的基础上，似乎printf就唾手可得了。</p>
+<ul>
+<li>创建一个类似的使用可变参数列表的函数</li>
+<li>一般的字面字符则直接输出</li>
+<li>以%开始的格式字符串，根据格式解释相应的可变参数的类型，然后转化为字符串。</li>
+</ul>
+<p>看上去并不复杂，对吧？<br>只是上面的第三步实在隐藏了太多太多的细节了。printf支持的参数类型很广泛，<br>所有的C语言基本类型都支持（而且必须都支持，不然怎么调bug啊）。</p>
+<pre><code>NOTE:
+突然想插入一下，在C语言发明的“上古”时期，C语言自带标准库的特性，还是非常高端的。
+那个时候很多代码还在汇编或者其他上古语言的阶段，自带标准库，使得程序员的程序的基础组件更高阶。
+就像现在python的“自带电池”，以及具有完整的framework的编程语言，都是类似的尽一步发挥。
+</code></pre><p>而且要支持自定义的格式。</p>
+<pre><code>- %%    %字符
+- %c    字符
+- %s    字符串，长度(宽度)支持，左右对齐
+- %d %u %i %o %x %X     整数，short/long类型，左右对齐，长度,精度，符号，进制，补全，进制前缀,前缀的大小写。
+- %f %F %e %E %g %G %a %A       浮点数，同上
+</code></pre><p>这个时候估计看起来就有意思许多啦。:)</p>
+<p>关于这个更详细的资料参考：<a href="http://www.cplusplus.com/reference/cstdio/printf/" target="_blank" rel="external">printf</a>。<br>或者直接看man的手册。</p>
+<p>细节不说，但还是概要性讲一下。</p>
+<pre><code>%[flags*][width][.precison][length][type]
+flags
+- 0     以0进行补全
+- -     右对齐（没有，则默认左对齐）
+- +     符号输出（大于等于0，输出+，小于0，输出-）
+- &lt;space&gt;   当不需要输出符号（大于等于0）时，输出一个空格
+- #     进制前缀，8进制输出0，16进制输出0x（当type为x的时候，或者0x，当type为X的时候）
+flags 可以进行组合，但不是所有的组合都有效
+width   宽度
+.precision      精度，对于浮点数有效
+length      short 或者long的修饰，例如%lld
+type        类型，如上列
+</code></pre><p>这个上面列的有些我之前也从来没有注意过，比如#和空格的flags。<br><code>%#x</code>比<code>0x%x</code>,语义更清晰，而且要少输一个字符呢。 程序员果然懒惰啊。</p>
+<p>以上所有的情况，都要测试通过，还是比较费力的。建议大家可以尝试一下，是一个比较合适的练习题。<br>以后可以作为面试题啊。</p>
+<h3 id="Deriv"><a href="#Deriv" class="headerlink" title="Deriv"></a>Deriv</h3><p>strftime，输出格式化的时间字符串信息。也是采用类似的东西实现的。</p>
+<p>例如:%H，就是从相应的时间结构体中找到对应的小时属性，然后打印出来。</p>
+<p>实现一个完整的strftime函数。</p>
+<h2 id="int-gt-string"><a href="#int-gt-string" class="headerlink" title="int -&gt; string"></a>int -&gt; string</h2><p>如果仅仅满足与以上，那么这只是一个较为麻烦的状态机而已，用更多的<code>if</code>，<code>else</code>，之类，总是可以解决的。<br>在上面都解决的基础上，还有一个问题要考虑，就是数值转换为字符串的问题。</p>
+<p>人类可读的字符串，一般要求为10进制，而计算机存储的数据是按照2进制的。<br>整数情形下，比较简单，直接不断对base求余，然后以整数循环就可以了。</p>
+<p>不过这里有个细节要注意，上面的得到对应字符的计算方法，是从低位到高位的。<br>而我们输出到字符串或者stdout，要从高位到低位的。<br>这要么通过一个递归算法来完成，要么一个逆序，或者一个缓存空间完成。<br>我实践中采用的是，先计算出宽度，指针前跳，再回跳计算输出。</p>
+<h2 id="double-gt-string"><a href="#double-gt-string" class="headerlink" title="double -&gt; string"></a>double -&gt; string</h2><p>那么float和double呢？<br>简单的看，我们可以利用上面整数的方式一样来。强制转换为整数，然后整数部分按照上面的算法进行。<br>小数点部分，则通过逐渐乘10,然后得到每一位数。</p>
+<p>这种方式看上去似乎勉强可行，但是如果这个浮点数过大或者过小显然就无法处理了。</p>
+<p>这里有一篇<a href="http://www.serpentine.com/blog/2011/06/29/here-be-dragons-advances-in-problems-you-didnt-even-know-you-had/" target="_blank" rel="external">dragon</a></p>
+<p>Steele和White,1990年有一篇论文，提出了<a href="http://dl.acm.org/citation.cfm?id=93559" target="_blank" rel="external">How to print floating-point numbers accurately</a><br>就是论述如何精确的输出一个浮点数。这个dragon4的算法，在各个标准库中迅速普及.但是dragon4的算法，比较复杂，而且有一定的性能消耗。因为会有些中间结果要计算。</p>
+<p>2010年的时候，Florian Loitsch发表了一篇新论文<a href="http://www.cs.indiana.edu/~dyb/pubs/FP-Printing-PLDI96.pdf" target="_blank" rel="external">PLDI</a>.<br>这篇论文的Grisu3算法，速度很快，但是对于0.5%的数值性能不好，需要使用Dargon4算法。这个论文的作者在google,这个算法现在已经应用于V8引擎。并且有一个开源库<a href="https://code.google.com/p/double-conversion/" target="_blank" rel="external">double-conversation</a>.</p>
+<p>Grisu,这个算法名词其实是小龙的意思。哈哈。</p>
+<pre><code>NOTE:
+其实这里才是本文的初衷啊。
+</code></pre><p>不过在介绍这个算法以前，我们要先分析下double这个类型。</p>
+<h2 id="double"><a href="#double" class="headerlink" title="double"></a>double</h2><h3 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h3><p>关于整型的表示，所有的计算机基础的书籍几乎全部都有提到。但是关于double类型就开始语焉不详了。这里其实可以参考＜深入理解计算机原理＞这本非常经典的书，里面说的非常透彻，不过可能略微有些枯燥，坚持啦。下面简单总结下：</p>
+<p>与浮点数相对的是定点数.定点的概念,就是小数点的位置不变,也就是固定的bit表示固定的权重.而相邻比特的权重以2进制变化.<br>即</p>
+<pre><code>b = sum[2^(i - k) * b_i] = 1 / 2 ^ k * sum[2^i * b_i]
+</code></pre><p>以上的k,就是定点的位置.如果k=0,那么就是一般的整数.(以上表示无符号数,也就是没有考虑符号bit).</p>
+<p>由上可见,定点数好处是截取一段,以等步长采样,里面的数是均匀分布在截取段的.<br>可是这里的定点数的表示范围实在是太小了,使用起来非常不方便.而且太小的数它也没有办法以更好的近似值来表达出来.</p>
+<p>定点数不好用,那么需要怎样的表示方法呢?粗略来讲可能会有如下的约束/需求:</p>
+<pre><code>* 使用有限且固定长度的二进制位
+    - 这样有限度,且方便处理
+* 减少任何不必要的位/表示
+    - 因为有限
+* 表示的范围要大一些
+    - 不能比整数范围还小吧
+* 按照相对精度,而不是绝对精度
+    - 在数值很大的情况下,依然维持绝对精度显然没有什么意义了.
+* 便于进行计算
+    - 例如比较,舍入,等等.
+</code></pre><p>以上的一些可以让我们联想到科学计数法.科学计数法，因为使用了额外的10进制的指数部分,这样可以按照相对精度表达数字,而且范围很大,并且可以减少不必要的0.因此我们结合科学计数法和二进制的表达形式,就可以得到更好的实数表达方法了.</p>
+<pre><code>n = (-1) ^ s * a * 10 ^ E
+</code></pre><p>这时候就需要浮点数的发明了.与定点数相对的,浮点数的小数点的位置是变动的.可是咋变动呢?<br>这里的变动,其实就是需要一部分比特来表示定点表示的k,也就是小数点的位置.对于表示表示”数据”的部分而言,每个比特的权重就因此而改变.<br>这也就是”浮点”的float的方法.</p>
+<p>这也就是科学计数法中是如何利用指数部分的.因此结合科学计数法,二进制,和上面的原则,就很容易理解浮点数表示了.</p>
+<h3 id="浮点数表示"><a href="#浮点数表示" class="headerlink" title="浮点数表示"></a>浮点数表示</h3><p>现有的计算机中的浮点数的表示方法，来自于IEEE754的规定.</p>
+<pre><code>- b = (-1) ^ s * M \* 2 ^ E
+- s,符号,使用最高位表示
+- M,尾数,使用最低若干位表示,表示方法见后，对应字段记为frac(“分数”)
+- E,阶码,使用中间若干位表示,表示方法见后，对应字段记为exp(&quot;指数&quot;)
+- 单精度float,即32bit. 1位符号位,8位阶码,23位尾数
+- 双精度double,即64bit.1位符号位,11位阶码,52位尾数
+</code></pre><p><center><img src="/img/floating_point.png" alt="浮点数表示(ref:wikipedia)"><center></center></center></p>
+<p>可以看到浮点数的表达式和10进制的科学计数法几乎是一样一样一样的啊..</p>
+<p>double类型需要表达的实数区域是有限的,但是我们还想支持更大范围的实数区域,也就是要支持+-Inf,+-0,NaN(Not a Number)的表达形式.<br>结合上面的表达式,显然</p>
+<pre><code>- 最大的E,就对应着+-Inf的情况.
+- 最小的E,对应着+-0
+- 在以上两种情况下,尾数位是没有意义的.那么就结合尾数位的状态,作为NaN的表示.
+</code></pre><p>不过最多最常见的还是一般情况啊.</p>
+<h3 id="规格化的值"><a href="#规格化的值" class="headerlink" title="规格化的值"></a>规格化的值</h3><p>在这种情况下,阶码不全位0,不全位1.</p>
+<p>表示符号的位,意义是非常清晰的,不解释.</p>
+<p>表示阶码字段,解释位偏置的无符号整数.无符号整数很容易理解,偏置就是有符号整数的基础上,加上(或者减去)一个偏置量.</p>
+<pre><code>E = e - Bias (e 来自 exp)
+Bias = 2 ^ (k - 1) - 1
+k,阶码字段长度
+</code></pre><p>回忆下科学计数法中,对于中间的”尾数”,是有限制的.即<code>1 &lt;= a &lt; 10</code>,也就是ａ的最高位必须是有效的（不可以是０）,同时还不能大于10（大于10，就是使用<code>a / 10 * 10 ^ (E + 1)</code>来表示了）。这种约束，其实规范了科学计数法的表达方式，同时可以比较一致的衡量相对精度（直接固定要求ａ的小数点后多少位就可以了）。</p>
+<p>这一点对于二进制也是有效的。但是结合二进制的最高有效位，其实只可以是1。因此，frac解释位小数字段，也就是</p>
+<pre><code>f = [0 .f\_(n-1)... f\_1 f_0]2
+M = 1 + f
+这里的1,就是隐含的开始位的1.节约了1个比特.
+</code></pre><h3 id="非规格化"><a href="#非规格化" class="headerlink" title="非规格化"></a>非规格化</h3><p>当阶码全部都是0的情况,所表示的就是非规格化的.这个时候,不同于上面规格化的情况了.</p>
+<pre><code>E = 1 - Bias (e全位0)
+M = f (不再包含开始位的1)
+</code></pre><p>注意:<br>这里的定义和规格化的情况形式是不同的.<br>但是二者有联系,注意到规格化,并且E最小的时候,对应的就是<code>E = e - Bias = 1 - Bias (e = 00..1)</code>.<br>因此规格化的最小值的步长,和非规格化的时候的步长是一样的.<br>而<code>M = f</code>,也就是保证了规格化的最小值表示的数,与非规格化的时候是连续(且均匀分布的)<br>这种特性称之为<code>逐渐溢出</code>,因为向0溢出的过程是均匀的.</p>
+<p>同时<code>M = f</code>,这样实数的表示,才有可能在有限步内接近0,不然就无法表示靠近0附近的数值了.</p>
+<p>在这种模式下,0的表示刚好为全0,-0的表示符号位位1,其余位都是0.</p>
+<p>这样非常直观,而且利于和整型之间相互转换.</p>
+<h3 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h3><p>当阶码全位1的时候.<br>如果尾数全为0,则表示无穷.(正负无穷则根据符号位决定)<br>如果尾数不全位0,表示NaN.</p>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>如果枚举一下浮点数的表示法,可以看到.在符号位为0的情况下,以比特串进行的升序排列,与对应的实数的排序,是完全一致的.在符号位为1的情况下,则相反,与按照降序排列是完全一致的.<br>根据这个特性,就可以简单的对浮点数进行比较运算.</p>
+<h2 id="Grisu"><a href="#Grisu" class="headerlink" title="Grisu"></a>Grisu</h2><p>下面我们就开始正式的考虑从浮点数到十进制字符串的表示.这其实也是一个”渲染”的过程.</p>
+<p>这个还是专门再开一篇来讲吧,不然实在太长了.</p>
+<h2 id="ref"><a href="#ref" class="headerlink" title="ref"></a>ref</h2><ol>
+<li><a href="http://zh.wikipedia.org/zh-cn/IEEE_754" target="_blank" rel="external">IEEE 754</a></li>
+</ol>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+  
+  <div class="tags">
+    <a href="/tags/C/">C</a>, <a href="/tags/src/">src</a>
+  </div>
+
+        
+      
+      <div class="clearfix"></div>
+<!-- 
+<div class="pagepart clearfix">
+  
+    <a href="/2015/02/06/Werror/" class="alignleft prev" title="-Werror in C">-Werror in C</a>
+  
+  
+    <a href="/2015/03/07/gtd/" class="alignright next" title="效率工具比较与选择">效率工具比较与选择</a>
+  
+</div>
+
+ -->
+    </footer>
+  </div>
+</article>
+
+
+<section id="comment">
+  <h1 class="title">留言</h1>
+
+  
+  <div id="disqus_thread">
+    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  </div>
+  
+</section>
+
+
+</div></div>
+    <aside id="sidebar" class="alignright">
+  <div class="search">
+  <form action="//google.com/search" method="get" accept-charset="utf-8">
+    <input type="search" name="q" results="0" placeholder="搜索">
+    <input type="hidden" name="q" value="site:liuyang1.github.io">
+  </form>
+</div>
+
+  
+
+  
+<div class="widget tag">
+  <h3 class="title">标签</h3>
+  <ul class="entry">
+  
+    <li><a href="/tags/C/">C</a><small>4</small></li>
+  
+    <li><a href="/tags/Haskell/">Haskell</a><small>2</small></li>
+  
+    <li><a href="/tags/Software-Engineer/">Software Engineer</a><small>1</small></li>
+  
+    <li><a href="/tags/Standard/">Standard</a><small>1</small></li>
+  
+    <li><a href="/tags/algo/">algo</a><small>2</small></li>
+  
+    <li><a href="/tags/aos/">aos</a><small>1</small></li>
+  
+    <li><a href="/tags/bash/">bash</a><small>2</small></li>
+  
+    <li><a href="/tags/basic/">basic</a><small>1</small></li>
+  
+    <li><a href="/tags/coderead/">coderead</a><small>1</small></li>
+  
+    <li><a href="/tags/hexo/">hexo</a><small>1</small></li>
+  
+    <li><a href="/tags/intro/">intro</a><small>2</small></li>
+  
+    <li><a href="/tags/mobile/">mobile</a><small>1</small></li>
+  
+    <li><a href="/tags/python/">python</a><small>3</small></li>
+  
+    <li><a href="/tags/src/">src</a><small>2</small></li>
+  
+    <li><a href="/tags/tool/">tool</a><small>4</small></li>
+  
+    <li><a href="/tags/video/">video</a><small>3</small></li>
+  
+    <li><a href="/tags/vim/">vim</a><small>1</small></li>
+  
+    <li><a href="/tags/week/">week</a><small>12</small></li>
+  
+    <li><a href="/tags/实战/">实战</a><small>1</small></li>
+  
+    <li><a href="/tags/翻译/">翻译</a><small>1</small></li>
+  
+  </ul>
+</div>
+
+</aside>
+    <div class="clearfix"></div>
+  </div>
+  <footer id="footer" class="inner"><div class="alignleft">
+  
+  &copy; 2017 liuyang1
+  
+</div>
+<div class="clearfix"></div></footer>
+  <script src="//lib.sinaapp.com/js/jquery/2.0.3/jquery-2.0.3.min.js"></script>
+<script src="/js/instantclick.min.js" data-no-instant></script>
+<script data-no-instant>
+    InstantClick.on('change', function(isInitialLoad) {
+      if (isInitialLoad === false) {
+        if (typeof _hmt !== 'undefined')
+          _hmt.push(['_trackPageview', location.pathname + location.search]);
+        if (typeof ga !== 'undefined')
+          ga('send', 'pageview', location.pathname + location.search);
+      }
+    });
+    InstantClick.init();
+</script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+
+
+<script type="text/javascript">
+var disqus_shortname = 'liuyang1';
+
+(function(){
+  var dsq = document.createElement('script');
+  dsq.type = 'text/javascript';
+  dsq.async = true;
+  dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+}());
+</script>
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "//hm.baidu.com/hm.js?0c65442b2922ed650d2d34c603409234";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+</body>
+</html>

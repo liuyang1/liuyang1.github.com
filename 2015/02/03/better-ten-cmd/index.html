@@ -1,0 +1,296 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Linux的10个命令？ | River &amp; Could</title>
+  <meta name="author" content="liuyang1">
+  
+  <meta name="description" content="随便谈谈Linux的10个命令">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <meta property="og:title" content="Linux的10个命令？"/>
+  <meta property="og:site_name" content="River &amp; Could"/>
+
+  
+    <meta property="og:image" content="undefined"/>
+  
+
+  <link href="/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="River &amp; Could" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+  
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-59389559-1']);
+  
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+
+</head>
+
+
+<body>
+  <header id="header" class="inner"><div class="alignleft">
+  <h1><a href="/">River &amp; Could</a></h1>
+  <h2><a href="/">从前有一个大傻逼，没有人知道他是谁。</a></h2>
+</div>
+<nav id="main-nav" class="alignright">
+  <ul>
+    
+      <li><a href="/">Home</a></li>
+    
+      <li><a href="/archives">Archives</a></li>
+    
+      <li><a href="/fun">Fun</a></li>
+    
+      <li><a href="/about">About</a></li>
+    
+      <li><a href="/atom.xml">RSS</a></li>
+    
+  </ul>
+  <div class="clearfix"></div>
+</nav>
+<div class="clearfix"></div>
+</header>
+  <div id="content" class="inner">
+    <div id="main-col" class="alignleft"><div id="wrapper"><article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time datetime="2015-02-03T13:48:16.000Z"><a href="/2015/02/03/better-ten-cmd/">2015-02-03</a></time>
+      
+      
+  
+    <h1 class="title">Linux的10个命令？</h1>
+  
+
+    </header>
+    <div class="entry">
+      
+
+<div id="toc" class="toc-article alignright">
+    <strong class="toc-title">Table of Content:</strong>
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#man"><span class="toc-text">man</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#touch-cat-less"><span class="toc-text">touch, cat, less</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#touch"><span class="toc-text">touch</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#cat"><span class="toc-text">cat</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#less"><span class="toc-text">less</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#其他的命令"><span class="toc-text">其他的命令</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#tail"><span class="toc-text">tail</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#sort-amp-grep"><span class="toc-text">sort & grep</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#cut"><span class="toc-text">cut</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#sed"><span class="toc-text">sed</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#tar"><span class="toc-text">tar</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#find"><span class="toc-text">find</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#diff"><span class="toc-text">diff</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#uniq"><span class="toc-text">uniq</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#chmod"><span class="toc-text">chmod</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#最后"><span class="toc-text">最后</span></a></li></ol>
+</div>
+
+        <p>随便谈谈Linux的10个命令<br><a id="more"></a></p>
+<p>今天在网上看到有人分享关于Linux的10个命令之类的东西。<br>我也在此由此展开说下自己的实践。</p>
+<h2 id="man"><a href="#man" class="headerlink" title="man"></a>man</h2><p>这个命令用于查看帮助文档。</p>
+<p>在vim中，利用K，就可以直接查看当前所在的词的帮助。</p>
+<pre><code>set keywordprg=man\ -a
+</code></pre><p>相当于man -a命令，可以查看所有的文档。</p>
+<h2 id="touch-cat-less"><a href="#touch-cat-less" class="headerlink" title="touch, cat, less"></a>touch, cat, less</h2><h3 id="touch"><a href="#touch" class="headerlink" title="touch"></a>touch</h3><p>创建一个文件，或者touch它，也就是更新文件的mtime</p>
+<h3 id="cat"><a href="#cat" class="headerlink" title="cat"></a>cat</h3><p>显示文件</p>
+<h3 id="less"><a href="#less" class="headerlink" title="less"></a>less</h3><pre><code>less is more
+</code></pre><p>这个命令和more一样，属于一种pager。<br>而且可以直接利用/，进入搜索模式。和vim中的操作很像。</p>
+<h3 id="其他的命令"><a href="#其他的命令" class="headerlink" title="其他的命令"></a>其他的命令</h3><p>这样的基本文件操作命令很多，比较常用的还有下面的。</p>
+<h3 id="tail"><a href="#tail" class="headerlink" title="tail"></a>tail</h3><p>显示文件的末尾10行，<br>加-n参数，显示末尾的几行。</p>
+<pre><code>tail -n
+</code></pre><p>-f 跟踪显示。这个非常有用，可以跟踪查看log。</p>
+<pre><code>tail -f
+</code></pre><h2 id="sort-amp-grep"><a href="#sort-amp-grep" class="headerlink" title="sort &amp; grep"></a>sort &amp; grep</h2><p>sort,其实我的使用不是很多，因为我处理复杂的文本，一般用python，而不是shell。</p>
+<p>grep进行正则匹配，建议可以尝试ack或者ag。<br>这两个都比grep要好用一些。</p>
+<ul>
+<li>默认不匹配二进制文件，和某些路径下的文件（.git或者其他隐藏文件</li>
+<li>默认当前目录下向下递归搜索</li>
+<li>默认smartcase方式</li>
+</ul>
+<p>而且速度也快不少。当你的需求是搜索代码的时候，非常值得尝试下。</p>
+<h2 id="cut"><a href="#cut" class="headerlink" title="cut"></a>cut</h2><p>和sort一样，我用python。</p>
+<h2 id="sed"><a href="#sed" class="headerlink" title="sed"></a>sed</h2><p>这个偶尔还是会用的。但是一样不常用。</p>
+<h2 id="tar"><a href="#tar" class="headerlink" title="tar"></a>tar</h2><p>在zsh中，有一个比较好的实践方式。<br>就是通过下面的方式，这样这些带压缩文件后缀的文件都是“可执行的”，会自动调用相应的文件进行解压缩操作。</p>
+<pre><code>alias -s rar=&quot;unrar e&quot;
+alias -s tgz=&quot;tar zxvf&quot;
+alias -s bz2=&quot;tar jxvf&quot;
+alias -s gz=&quot;tar zxvf&quot;
+alias -s tar=&quot;tar xvf&quot;
+alias -s zip=&quot;7z x&quot;
+alias -s xz=&quot;unxz&quot;
+</code></pre><h2 id="find"><a href="#find" class="headerlink" title="find"></a>find</h2><p>如果不清楚文件具体在那个位置，不用在root路径下递归搜索，可以尝试locate，这个命令对应在系统中有一个数据库的，因此速度比较快。</p>
+<p>坏处就是数据库有时更新不及时，因此有的时候需要手动更新。</p>
+<pre><code>updatedb
+</code></pre><p>手动更新需要root权限。</p>
+<h2 id="diff"><a href="#diff" class="headerlink" title="diff"></a>diff</h2><p>vimdiff 更为实用啊。</p>
+<p>diff命令也可以比较二进制文件，但是只输出第一次不同的位置。</p>
+<h2 id="uniq"><a href="#uniq" class="headerlink" title="uniq"></a>uniq</h2><p>python，again。</p>
+<h2 id="chmod"><a href="#chmod" class="headerlink" title="chmod"></a>chmod</h2><p>777之类的说明就不说了。</p>
+<p>另外777，毫无疑问，在实际中应该避免使用。</p>
+<pre><code>chmod u+x
+</code></pre><p>这种方式，比777之类的数值意义更明显，更好用。</p>
+<p>另外部分敏感文件，对权限管理有限制，实际中需要注意。一个典型就是.ssh下面的文件。</p>
+<h2 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h2><p>其实Linux的10个命令之类的，意义很小。<br>要在Linux下面多工作，思考和实践，才会更为熟悉，工作/开发更有效率。</p>
+<p>一行流之类是不好的工程实践，不建议。</p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+  
+  <div class="tags">
+    <a href="/tags/intro/">intro</a>
+  </div>
+
+        
+      
+      <div class="clearfix"></div>
+<!-- 
+<div class="pagepart clearfix">
+  
+    <a href="/2015/02/01/linenoise/" class="alignleft prev" title="readline和linenoise">readline和linenoise</a>
+  
+  
+    <a href="/2015/02/06/Werror/" class="alignright next" title="-Werror in C">-Werror in C</a>
+  
+</div>
+
+ -->
+    </footer>
+  </div>
+</article>
+
+
+<section id="comment">
+  <h1 class="title">留言</h1>
+
+  
+  <div id="disqus_thread">
+    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  </div>
+  
+</section>
+
+
+</div></div>
+    <aside id="sidebar" class="alignright">
+  <div class="search">
+  <form action="//google.com/search" method="get" accept-charset="utf-8">
+    <input type="search" name="q" results="0" placeholder="搜索">
+    <input type="hidden" name="q" value="site:liuyang1.github.io">
+  </form>
+</div>
+
+  
+
+  
+<div class="widget tag">
+  <h3 class="title">标签</h3>
+  <ul class="entry">
+  
+    <li><a href="/tags/C/">C</a><small>4</small></li>
+  
+    <li><a href="/tags/Haskell/">Haskell</a><small>2</small></li>
+  
+    <li><a href="/tags/Software-Engineer/">Software Engineer</a><small>1</small></li>
+  
+    <li><a href="/tags/Standard/">Standard</a><small>1</small></li>
+  
+    <li><a href="/tags/algo/">algo</a><small>2</small></li>
+  
+    <li><a href="/tags/aos/">aos</a><small>1</small></li>
+  
+    <li><a href="/tags/bash/">bash</a><small>2</small></li>
+  
+    <li><a href="/tags/basic/">basic</a><small>1</small></li>
+  
+    <li><a href="/tags/coderead/">coderead</a><small>1</small></li>
+  
+    <li><a href="/tags/hexo/">hexo</a><small>1</small></li>
+  
+    <li><a href="/tags/intro/">intro</a><small>2</small></li>
+  
+    <li><a href="/tags/mobile/">mobile</a><small>1</small></li>
+  
+    <li><a href="/tags/python/">python</a><small>3</small></li>
+  
+    <li><a href="/tags/src/">src</a><small>2</small></li>
+  
+    <li><a href="/tags/tool/">tool</a><small>4</small></li>
+  
+    <li><a href="/tags/video/">video</a><small>3</small></li>
+  
+    <li><a href="/tags/vim/">vim</a><small>1</small></li>
+  
+    <li><a href="/tags/week/">week</a><small>12</small></li>
+  
+    <li><a href="/tags/实战/">实战</a><small>1</small></li>
+  
+    <li><a href="/tags/翻译/">翻译</a><small>1</small></li>
+  
+  </ul>
+</div>
+
+</aside>
+    <div class="clearfix"></div>
+  </div>
+  <footer id="footer" class="inner"><div class="alignleft">
+  
+  &copy; 2017 liuyang1
+  
+</div>
+<div class="clearfix"></div></footer>
+  <script src="//lib.sinaapp.com/js/jquery/2.0.3/jquery-2.0.3.min.js"></script>
+<script src="/js/instantclick.min.js" data-no-instant></script>
+<script data-no-instant>
+    InstantClick.on('change', function(isInitialLoad) {
+      if (isInitialLoad === false) {
+        if (typeof _hmt !== 'undefined')
+          _hmt.push(['_trackPageview', location.pathname + location.search]);
+        if (typeof ga !== 'undefined')
+          ga('send', 'pageview', location.pathname + location.search);
+      }
+    });
+    InstantClick.init();
+</script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+
+
+<script type="text/javascript">
+var disqus_shortname = 'liuyang1';
+
+(function(){
+  var dsq = document.createElement('script');
+  dsq.type = 'text/javascript';
+  dsq.async = true;
+  dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+}());
+</script>
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "//hm.baidu.com/hm.js?0c65442b2922ed650d2d34c603409234";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+</body>
+</html>

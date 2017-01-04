@@ -1,0 +1,386 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>with statement @Python | River &amp; Could</title>
+  <meta name="author" content="liuyang1">
+  
+  <meta name="description" content="with语句以最常见的文件操作为例,打开文件,必须有对应的关闭文件.这样保证资源(文件句柄)不会泄漏.但是如何手动保证这一点,在复杂的程序中,就会是一个问题.
+程序的逻辑可能比较复杂,而在有异常机制的语言中,控制流就更为复杂.
+在C++中,类似的问题,我们有析构函数来保证这一步.在Python中,我们有with语句.
+with open(filename) as fp:
+    for line in fp.readlines():
+        pass
+这样在with程序执行完毕,或者异常跳出的时候,都可以保证打开的文件必然会关闭.
+下面就介绍下Python中的with.">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <meta property="og:title" content="with statement @Python"/>
+  <meta property="og:site_name" content="River &amp; Could"/>
+
+  
+    <meta property="og:image" content="undefined"/>
+  
+
+  <link href="/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="River &amp; Could" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+  
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-59389559-1']);
+  
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+
+</head>
+
+
+<body>
+  <header id="header" class="inner"><div class="alignleft">
+  <h1><a href="/">River &amp; Could</a></h1>
+  <h2><a href="/">从前有一个大傻逼，没有人知道他是谁。</a></h2>
+</div>
+<nav id="main-nav" class="alignright">
+  <ul>
+    
+      <li><a href="/">Home</a></li>
+    
+      <li><a href="/archives">Archives</a></li>
+    
+      <li><a href="/fun">Fun</a></li>
+    
+      <li><a href="/about">About</a></li>
+    
+      <li><a href="/atom.xml">RSS</a></li>
+    
+  </ul>
+  <div class="clearfix"></div>
+</nav>
+<div class="clearfix"></div>
+</header>
+  <div id="content" class="inner">
+    <div id="main-col" class="alignleft"><div id="wrapper"><article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time datetime="2015-08-26T11:34:57.000Z"><a href="/2015/08/26/withCtxMgr/">2015-08-26</a></time>
+      
+      
+  
+    <h1 class="title">with statement @Python</h1>
+  
+
+    </header>
+    <div class="entry">
+      
+
+<div id="toc" class="toc-article alignright">
+    <strong class="toc-title">Table of Content:</strong>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#with语句"><span class="toc-text">with语句</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#深入一点点"><span class="toc-text">深入一点点</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#实例"><span class="toc-text">实例</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#扩展"><span class="toc-text">扩展</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#contextmanager"><span class="toc-text">contextmanager</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#closing"><span class="toc-text">closing</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#ChangeLog"><span class="toc-text">ChangeLog</span></a></li></ol></li></ol></li></ol>
+</div>
+
+        <h1 id="with语句"><a href="#with语句" class="headerlink" title="with语句"></a>with语句</h1><p>以最常见的文件操作为例,打开文件,必须有对应的关闭文件.<br>这样保证资源(文件句柄)不会泄漏.但是如何手动保证这一点,在复杂的程序中,就会是一个问题.</p>
+<p>程序的逻辑可能比较复杂,而在有异常机制的语言中,控制流就更为复杂.</p>
+<p>在C++中,类似的问题,我们有析构函数来保证这一步.在Python中,我们有<code>with</code>语句.</p>
+<pre><code>with open(filename) as fp:
+    for line in fp.readlines():
+        pass
+</code></pre><p>这样在with程序执行完毕,或者异常跳出的时候,都可以保证打开的文件必然会关闭.</p>
+<p>下面就介绍下Python中的<code>with</code>.<br><a id="more"></a></p>
+<p>上面的代码直观的不需要解释.(这就是Python的显著优点啊)</p>
+<p><code>with</code>的语句格式如下:</p>
+<pre><code>with EXPR [as TARGET]:
+    BLOCK
+</code></pre><h1 id="深入一点点"><a href="#深入一点点" class="headerlink" title="深入一点点"></a>深入一点点</h1><p><code>with</code>语句其实是一种<code>contextmanager</code>.它的语句格式就如上所示.</p>
+<p>在执行<code>with</code>语句是的执行顺序</p>
+<pre><code>- 执行表达式EXPR
+- 注册contextmanager的__exit__方法
+- 执行contextmanager的__enter__方法
+- 如果有as,那么将EXPR的结果赋值给TARGET
+- 执行后面BLOCK中的代码
+- 执行__exit__方法
+</code></pre><p>一个典型的示例程序<a href="https://github.com/liuyang1/test/blob/master/lang/python/contextlib/contextMgr.py" target="_blank" rel="external">contextMgr.py</a>:</p>
+<pre><code>class myCtxMgr():
+    def __init__(self, val):
+        print &quot;init&quot;
+        self.val = val
+    def __enter__(self):
+        print &quot;enter&quot;
+        return self.val
+    # Don&apos;t use keyword type as var name
+    # as Guan XiQing&apos;s suggestion
+    def __exit__(self, typ, value, traceback):
+        print &quot;leave&quot;
+        return
+
+with myCtxMgr(5) as val:
+    print val
+</code></pre><p><code>__exit__</code>方法带的众多参数,就是为了保证在异常的情况下面,依然可以处理.</p>
+<p>执行结果如下:</p>
+<pre><code>init
+enter
+5
+leave
+</code></pre><h1 id="实例"><a href="#实例" class="headerlink" title="实例"></a>实例</h1><p><code>with</code>语句看上去不错,但是有什么用处呢?</p>
+<p>利用with语句可以简化我们的代码.特别是我们想进入一个上下文时候,做特定的操作.离开上下文的时候,做相应的逆操作.</p>
+<p>上下文的英文就是<code>context</code></p>
+<p>最常见的锁操作,进来加锁,退出关锁.可惜Python中没有锁的概念,不能使用这个例子了.</p>
+<p>在数据库的操作简单封装的时候,其实也有类似的需求.连接数据库,操作数据库,断开连接.这里的连接其实也是一种上下文.</p>
+<p>下面放一个sqlite3的数据库操作的小例子 <a href="https://github.com/liuyang1/test/blob/master/lang/python/db.py" target="_blank" rel="external">db.py</a></p>
+<pre><code>import sqlite3
+import json
+
+
+rootdir = &quot;./&quot;
+db = rootdir + &quot;db/gering.db&quot;
+table = &quot;clst&quot;
+sqlRecent10 = &quot;SELECT * FROM %s ORDER BY id DESC LIMIT 10;&quot; % (table)
+sqlInsertSQL = &quot;INSERT INTO %s (clnum, json) VALUES (?,?);&quot; % (table)
+sqlMaxid = &quot;SELECT * FROM %s ORDER BY id DESC LIMIT 1;&quot; % (table)
+sqlDelAll = &quot;DELETE FROM %s;&quot; % (table)
+
+
+class openDB():
+
+    def __init__(self, db):
+        self.db = db
+
+    def __enter__(self):
+        self.conn = sqlite3.connect(self.db)
+        self.c = self.conn.cursor()
+        return self.conn, self.c
+
+    def __exit__(self, typ, value, trackback):
+        self.c.close()
+
+
+def insertHist(clnum, jsonobj):
+    with openDB(db) as (conn, csr):
+        csr.execute(sqlInsertSQL, (clnum, json.dumps(jsonobj)))
+        newid = csr.lastrowid
+        conn.commit()
+        return newid
+
+
+def getRecent10():
+    with openDB(db) as (_, csr):
+        csr.execute(sqlRecent10)
+        return csr.fetchall()
+
+
+def getMaxID():
+    with openDB(db) as (_, csr):
+        csr.execute(sqlMaxid)
+        try:
+            ret = csr.fetchone()[0]
+        except TypeError:
+            ret = 0
+        return ret
+
+
+def delAll():
+    with openDB(db) as (conn, csr):
+        csr.execute(sqlDelAll)
+        conn.commit()
+        return True
+</code></pre><h1 id="扩展"><a href="#扩展" class="headerlink" title="扩展"></a>扩展</h1><p>Python的标准库中有一些关于<code>with</code>的扩展库<code>contextlib</code>,用起来也比较有意思.</p>
+<h2 id="contextmanager"><a href="#contextmanager" class="headerlink" title="contextmanager"></a>contextmanager</h2><p>contextmanager是一种修饰器,配合<code>yield</code>语句使用. <a href="https://github.com/liuyang1/test/blob/master/lang/python/contextlib/tag.py" target="_blank" rel="external">tag.py</a></p>
+<pre><code>import contextlib
+
+@contextlib.contextmanager
+def htmlTag(tag):
+    print &quot;&lt;%s&gt;&quot; % (tag)
+    yield
+    print &quot;&lt;/%s&gt;&quot; % (tag)
+
+
+with htmlTag(&quot;h1&quot;):
+    print &quot;Header&quot;
+</code></pre><p>输出是什么,随手可以试一下.</p>
+<p>利用<code>contextmanager</code>,我们也可以快速的实现第一个小例子.这个就留给大家实践吧.</p>
+<h2 id="closing"><a href="#closing" class="headerlink" title="closing"></a>closing</h2><p><code>closing</code>完全符合上面的关闭资源这一点的设计目的.首先closing假设其对象参数,含有<code>close</code>方法.</p>
+<p>当代码块BLOCK执行完毕的时候,自动调用对象参数的<code>close</code>方法.</p>
+<pre><code>from contextlib import closing
+import urllib
+
+with closing(urllib.urlopen(&apos;http://www.google.com&apos;)) as page:
+    for line in page:
+        print line
+</code></pre><h3 id="ChangeLog"><a href="#ChangeLog" class="headerlink" title="ChangeLog"></a>ChangeLog</h3><ul>
+<li>rename <code>type</code> var name to <code>typ</code></li>
+</ul>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+  
+  <div class="tags">
+    <a href="/tags/python/">python</a>
+  </div>
+
+        
+      
+      <div class="clearfix"></div>
+<!-- 
+<div class="pagepart clearfix">
+  
+    <a href="/2015/08/25/bitfield-py/" class="alignleft prev" title="bitfield in ctypes @Python">bitfield in ctypes @Python</a>
+  
+  
+    <a href="/2015/12/21/h264-mp4/" class="alignright next" title="提取MP4文件中的h264/h265视频流">提取MP4文件中的h264/h265视频流</a>
+  
+</div>
+
+ -->
+    </footer>
+  </div>
+</article>
+
+
+<section id="comment">
+  <h1 class="title">留言</h1>
+
+  
+  <div id="disqus_thread">
+    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  </div>
+  
+</section>
+
+
+</div></div>
+    <aside id="sidebar" class="alignright">
+  <div class="search">
+  <form action="//google.com/search" method="get" accept-charset="utf-8">
+    <input type="search" name="q" results="0" placeholder="搜索">
+    <input type="hidden" name="q" value="site:liuyang1.github.io">
+  </form>
+</div>
+
+  
+
+  
+<div class="widget tag">
+  <h3 class="title">标签</h3>
+  <ul class="entry">
+  
+    <li><a href="/tags/C/">C</a><small>4</small></li>
+  
+    <li><a href="/tags/Haskell/">Haskell</a><small>2</small></li>
+  
+    <li><a href="/tags/Software-Engineer/">Software Engineer</a><small>1</small></li>
+  
+    <li><a href="/tags/Standard/">Standard</a><small>1</small></li>
+  
+    <li><a href="/tags/algo/">algo</a><small>2</small></li>
+  
+    <li><a href="/tags/aos/">aos</a><small>1</small></li>
+  
+    <li><a href="/tags/bash/">bash</a><small>2</small></li>
+  
+    <li><a href="/tags/basic/">basic</a><small>1</small></li>
+  
+    <li><a href="/tags/coderead/">coderead</a><small>1</small></li>
+  
+    <li><a href="/tags/hexo/">hexo</a><small>1</small></li>
+  
+    <li><a href="/tags/intro/">intro</a><small>2</small></li>
+  
+    <li><a href="/tags/mobile/">mobile</a><small>1</small></li>
+  
+    <li><a href="/tags/python/">python</a><small>3</small></li>
+  
+    <li><a href="/tags/src/">src</a><small>2</small></li>
+  
+    <li><a href="/tags/tool/">tool</a><small>4</small></li>
+  
+    <li><a href="/tags/video/">video</a><small>3</small></li>
+  
+    <li><a href="/tags/vim/">vim</a><small>1</small></li>
+  
+    <li><a href="/tags/week/">week</a><small>12</small></li>
+  
+    <li><a href="/tags/实战/">实战</a><small>1</small></li>
+  
+    <li><a href="/tags/翻译/">翻译</a><small>1</small></li>
+  
+  </ul>
+</div>
+
+</aside>
+    <div class="clearfix"></div>
+  </div>
+  <footer id="footer" class="inner"><div class="alignleft">
+  
+  &copy; 2017 liuyang1
+  
+</div>
+<div class="clearfix"></div></footer>
+  <script src="//lib.sinaapp.com/js/jquery/2.0.3/jquery-2.0.3.min.js"></script>
+<script src="/js/instantclick.min.js" data-no-instant></script>
+<script data-no-instant>
+    InstantClick.on('change', function(isInitialLoad) {
+      if (isInitialLoad === false) {
+        if (typeof _hmt !== 'undefined')
+          _hmt.push(['_trackPageview', location.pathname + location.search]);
+        if (typeof ga !== 'undefined')
+          ga('send', 'pageview', location.pathname + location.search);
+      }
+    });
+    InstantClick.init();
+</script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+
+
+<script type="text/javascript">
+var disqus_shortname = 'liuyang1';
+
+(function(){
+  var dsq = document.createElement('script');
+  dsq.type = 'text/javascript';
+  dsq.async = true;
+  dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+}());
+</script>
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "//hm.baidu.com/hm.js?0c65442b2922ed650d2d34c603409234";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+</body>
+</html>

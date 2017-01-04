@@ -1,0 +1,323 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>gerrit讨论 | River &amp; Could</title>
+  <meta name="author" content="liuyang1">
+  
+  <meta name="description" content="gerrit是google出品的一个开源的review工具.
+感觉这个工具使用挺普遍的,但是好像没有”深入”的介绍.这里自己也浅尝辙止一下.">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <meta property="og:title" content="gerrit讨论"/>
+  <meta property="og:site_name" content="River &amp; Could"/>
+
+  
+    <meta property="og:image" content="undefined"/>
+  
+
+  <link href="/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="River &amp; Could" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+  
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-59389559-1']);
+  
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+
+</head>
+
+
+<body>
+  <header id="header" class="inner"><div class="alignleft">
+  <h1><a href="/">River &amp; Could</a></h1>
+  <h2><a href="/">从前有一个大傻逼，没有人知道他是谁。</a></h2>
+</div>
+<nav id="main-nav" class="alignright">
+  <ul>
+    
+      <li><a href="/">Home</a></li>
+    
+      <li><a href="/archives">Archives</a></li>
+    
+      <li><a href="/fun">Fun</a></li>
+    
+      <li><a href="/about">About</a></li>
+    
+      <li><a href="/atom.xml">RSS</a></li>
+    
+  </ul>
+  <div class="clearfix"></div>
+</nav>
+<div class="clearfix"></div>
+</header>
+  <div id="content" class="inner">
+    <div id="main-col" class="alignleft"><div id="wrapper"><article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time datetime="2015-03-26T13:17:36.000Z"><a href="/2015/03/26/gerrit/">2015-03-26</a></time>
+      
+      
+  
+    <h1 class="title">gerrit讨论</h1>
+  
+
+    </header>
+    <div class="entry">
+      
+
+<div id="toc" class="toc-article alignright">
+    <strong class="toc-title">Table of Content:</strong>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#gerrit"><span class="toc-text">gerrit</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#web"><span class="toc-text">web</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#CL-vs-branch"><span class="toc-text">CL vs. branch</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#rebase-vs-merge"><span class="toc-text">rebase vs. merge</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#gerrit的其他"><span class="toc-text">gerrit的其他</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#gerrit接口"><span class="toc-text">gerrit接口</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#plugout"><span class="toc-text">plugout</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#CLDog"><span class="toc-text">CLDog</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#gering"><span class="toc-text">gering</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#进阶"><span class="toc-text">进阶</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#总结"><span class="toc-text">总结</span></a></li></ol></li></ol>
+</div>
+
+        <p>gerrit是google出品的一个开源的review工具.</p>
+<p>感觉这个工具使用挺普遍的,但是好像没有”深入”的介绍.这里自己也浅尝辙止一下.<br><a id="more"></a></p>
+<h1 id="gerrit"><a href="#gerrit" class="headerlink" title="gerrit"></a>gerrit</h1><h2 id="web"><a href="#web" class="headerlink" title="web"></a>web</h2><p>gerrit本身就是一个web端的工具.而且从名字本身就可以看出,这个是从git衍生出来的.</p>
+<p>集成gerrit的典型流程</p>
+<ul>
+<li>clone</li>
+<li>checkout -b [branch]</li>
+<li>modify / stage / commit</li>
+<li>push / CI test / review</li>
+<li>rebase / merge</li>
+</ul>
+<h3 id="CL-vs-branch"><a href="#CL-vs-branch" class="headerlink" title="CL vs. branch"></a>CL vs. branch</h3><p>gerrit的一个明显特点就是,只能够以CL的形式来提交代码.</p>
+<p>CL: Change List</p>
+<p>是根据commit中的Change-Id来进行判断的.这个Change-Id的生成依赖于本地git的一个hook.</p>
+<p>当完成commit的过程之后,会自动检查在commit的最后是否是Change-Id,如果有的话,则不做任何操作.没有的话,则会生成一个,然后添加到commit的最后.</p>
+<p>这也的话,后续的push / review循环,就是可以继续的,因为只要保持Chnage-Id不变,gerrit系统就会据此检测到一个CL,(而再一次的提交就是一个新的patch-set).</p>
+<p>这也意味着,提交多个依赖关系的commit的显得很不方便.</p>
+<p>因为代码的提交都是一个孤立的CL嘛.(当然也可以在CL中设置依赖关系,当时review是按照CL会单位的,因此还是不方便啊.)</p>
+<p>这点可以对比github/gitlab之类的工具,这些多按照branch为单位进行review,也就是可以review多个commit一起,并且可以在review的过程中提交新的commit,从而可以方便看到一个branch上的修改.</p>
+<h3 id="rebase-vs-merge"><a href="#rebase-vs-merge" class="headerlink" title="rebase vs. merge"></a>rebase vs. merge</h3><p>上面的特点,其实也决定的代码合并的方式.</p>
+<p>以CL为单位,合并的单元其实是一个孤立的commit,从而没有merge的必要.或者说只允许fast-forward方式的mrege.</p>
+<p>这种方式下面,如果CL完成之后,而trunk的代码有了其他的变动的时候,这个时候就需要rebase了.</p>
+<p>而以branch为单位进行提交那么就必须进行merge.</p>
+<p>以CL为单位的有一个潜在的好处,就是在出现regression的时候,可以方便的进行revert,而branch merge的话,相对会略微麻烦一点.</p>
+<h3 id="gerrit的其他"><a href="#gerrit的其他" class="headerlink" title="gerrit的其他"></a>gerrit的其他</h3><p>gerrit还有其他缺点啊.</p>
+<ul>
+<li>syntax highlight效果不好</li>
+<li>不能插入图片作为review内容</li>
+</ul>
+<p>归根结底,gerrit比较适合相对重型的开发过程.</p>
+<p>这里的重型,是指dev / build / test / review / integrate / verify / release 的过程.(唉,每一步都很重,好烦躁啊!)</p>
+<p>而gerrit本身CL的特点,也比较容易造成commit比较容易累积在一起,从而形成一个重的CL.(好重,好烦!)</p>
+<h2 id="gerrit接口"><a href="#gerrit接口" class="headerlink" title="gerrit接口"></a>gerrit接口</h2><p>我所注意的,gerrit有两大类接口</p>
+<h2 id="plugout"><a href="#plugout" class="headerlink" title="plugout"></a>plugout</h2><p>gerrit本身的系统主体有java构成,部分扩展可以采用prolog.</p>
+<p>因为我不能在工具选型上有发言权,而且这种工具的时候,已经是相对稳固的,替换成本也很高.同时我还不是系统管理员(如果真的就让我当admin,说不定我还不愿意呢)</p>
+<p>而我还是有一些扩展gerrit的需要.</p>
+<p>这个时候就不能采用一般的plugin了,因为我不是管理员嘛,根据没有办法给它配置插件.</p>
+<p>而且,我们的需求有着太多的细节点,用gerrit的插件的话,也不容易满足灵活性的要求.</p>
+<h3 id="CLDog"><a href="#CLDog" class="headerlink" title="CLDog"></a>CLDog</h3><p>这是一个集成发布的提醒系统.</p>
+<p>主要功能,就是在新的发布版本出来的时候,给新加入的每个CL的作者发送邮件提醒,他的CL已经进入trunk了.对于bug fix的CL,同时提醒其在bug track系统中标记.(呃,还没有和JIRA集成)</p>
+<p>在将所有的commit汇总,做一个总结的excel文档出来,发送给manager.</p>
+<p>关键工具</p>
+<ul>
+<li>crontab</li>
+<li>python</li>
+<li>xlsxwriter</li>
+<li>sh</li>
+<li>git</li>
+</ul>
+<p>细节就不展开了,也没有太大的意思,如果有需求,我可以再展开讲.</p>
+<p>CLDog和gerrit其实基本没有关系的.</p>
+<h3 id="gering"><a href="#gering" class="headerlink" title="gering"></a>gering</h3><p>对于不同的模块,肯定有比较熟悉的人或者负责人,那么就需要他进行review.</p>
+<p>gerrit有插件reviewer和git-blame reviewer插件.其中blame插件的比较有意思,就是根据修改模块,它在历史上被修改的行数最多的那个人,让他来review.</p>
+<p>不过在相对集中的组织里面,这种方式不是很好用.</p>
+<p>而且,我们开发的周期比较长,大家又比较忙,我们的模块也不是简单按照文件或者文件夹来划分的.</p>
+<p>这个时候就需要一个插件来完成这部分功能.</p>
+<p>原理非常简单,现在简单总结完毕:</p>
+<ul>
+<li>ssh gerrit stream-events, 从gerrit得到内部的事件,以JSON格式作为一行内容返回到标准输出</li>
+<li>python脚本,读取,解析JSON,根据相应的类型,内容,来具体进行一些信息.</li>
+<li>调用ssh gerrit set-reviews, 设置reviewer.</li>
+</ul>
+<p>其他额外需要考虑的有:</p>
+<ul>
+<li>xlrd读取excel文件,得到相应的模块或者branch对应的review的人的列表</li>
+</ul>
+<h4 id="进阶"><a href="#进阶" class="headerlink" title="进阶"></a>进阶</h4><p>对于set-reviewers可能比较简单,对于检查是否达到submit标准,可能需要记录下类似的信息<br>{(CL-Number, PatchSet) : {VRIF: vrif_val, REVW: [author0, author1, …]}, …}</p>
+<p>这样的话,其实也没有别的问题,但是为了方便调试,可能会重新启动程序,这个适合上面的字典信息,就可能会丢失.<br>而无法重现gerrit的event,就存在问题了.</p>
+<p>这个时候,就可以利用一些持久化的库,利于pickle,或者json.</p>
+<p>在收到对应的例如KeyboardInterrupt的时候,调用持久化的功能,将其存储到硬盘上.<br>当下一次启动的时候重新载入.</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>好像也没有什么特别的,早知道就不专门写一篇东西出来啦.</p>
+<p>主要是感觉gerrit的这方面的中文资料好像不是很多,这里就作为一个补充吧.</p>
+<p>如果有需要拓展gerrit的,可以随便看下,找个思路.</p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+  
+  <div class="tags">
+    <a href="/tags/tool/">tool</a>
+  </div>
+
+        
+      
+      <div class="clearfix"></div>
+<!-- 
+<div class="pagepart clearfix">
+  
+    <a href="/2015/03/21/201512/" class="alignleft prev" title="2015年第12周 周记">2015年第12周 周记</a>
+  
+  
+    <a href="/2015/04/01/201513/" class="alignright next" title="2015年第13周周记">2015年第13周周记</a>
+  
+</div>
+
+ -->
+    </footer>
+  </div>
+</article>
+
+
+<section id="comment">
+  <h1 class="title">留言</h1>
+
+  
+  <div id="disqus_thread">
+    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  </div>
+  
+</section>
+
+
+</div></div>
+    <aside id="sidebar" class="alignright">
+  <div class="search">
+  <form action="//google.com/search" method="get" accept-charset="utf-8">
+    <input type="search" name="q" results="0" placeholder="搜索">
+    <input type="hidden" name="q" value="site:liuyang1.github.io">
+  </form>
+</div>
+
+  
+
+  
+<div class="widget tag">
+  <h3 class="title">标签</h3>
+  <ul class="entry">
+  
+    <li><a href="/tags/C/">C</a><small>4</small></li>
+  
+    <li><a href="/tags/Haskell/">Haskell</a><small>2</small></li>
+  
+    <li><a href="/tags/Software-Engineer/">Software Engineer</a><small>1</small></li>
+  
+    <li><a href="/tags/Standard/">Standard</a><small>1</small></li>
+  
+    <li><a href="/tags/algo/">algo</a><small>2</small></li>
+  
+    <li><a href="/tags/aos/">aos</a><small>1</small></li>
+  
+    <li><a href="/tags/bash/">bash</a><small>2</small></li>
+  
+    <li><a href="/tags/basic/">basic</a><small>1</small></li>
+  
+    <li><a href="/tags/coderead/">coderead</a><small>1</small></li>
+  
+    <li><a href="/tags/hexo/">hexo</a><small>1</small></li>
+  
+    <li><a href="/tags/intro/">intro</a><small>2</small></li>
+  
+    <li><a href="/tags/mobile/">mobile</a><small>1</small></li>
+  
+    <li><a href="/tags/python/">python</a><small>3</small></li>
+  
+    <li><a href="/tags/src/">src</a><small>2</small></li>
+  
+    <li><a href="/tags/tool/">tool</a><small>4</small></li>
+  
+    <li><a href="/tags/video/">video</a><small>3</small></li>
+  
+    <li><a href="/tags/vim/">vim</a><small>1</small></li>
+  
+    <li><a href="/tags/week/">week</a><small>12</small></li>
+  
+    <li><a href="/tags/实战/">实战</a><small>1</small></li>
+  
+    <li><a href="/tags/翻译/">翻译</a><small>1</small></li>
+  
+  </ul>
+</div>
+
+</aside>
+    <div class="clearfix"></div>
+  </div>
+  <footer id="footer" class="inner"><div class="alignleft">
+  
+  &copy; 2017 liuyang1
+  
+</div>
+<div class="clearfix"></div></footer>
+  <script src="//lib.sinaapp.com/js/jquery/2.0.3/jquery-2.0.3.min.js"></script>
+<script src="/js/instantclick.min.js" data-no-instant></script>
+<script data-no-instant>
+    InstantClick.on('change', function(isInitialLoad) {
+      if (isInitialLoad === false) {
+        if (typeof _hmt !== 'undefined')
+          _hmt.push(['_trackPageview', location.pathname + location.search]);
+        if (typeof ga !== 'undefined')
+          ga('send', 'pageview', location.pathname + location.search);
+      }
+    });
+    InstantClick.init();
+</script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+
+
+<script type="text/javascript">
+var disqus_shortname = 'liuyang1';
+
+(function(){
+  var dsq = document.createElement('script');
+  dsq.type = 'text/javascript';
+  dsq.async = true;
+  dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+}());
+</script>
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "//hm.baidu.com/hm.js?0c65442b2922ed650d2d34c603409234";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+</body>
+</html>

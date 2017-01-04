@@ -1,0 +1,282 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>2015年11周 周记 | River &amp; Could</title>
+  <meta name="author" content="liuyang1">
+  
+  <meta name="description" content="haskell和sumpocket,还有其他的小工具.">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <meta property="og:title" content="2015年11周 周记"/>
+  <meta property="og:site_name" content="River &amp; Could"/>
+
+  
+    <meta property="og:image" content="undefined"/>
+  
+
+  <link href="/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="River &amp; Could" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+  
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-59389559-1']);
+  
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+
+</head>
+
+
+<body>
+  <header id="header" class="inner"><div class="alignleft">
+  <h1><a href="/">River &amp; Could</a></h1>
+  <h2><a href="/">从前有一个大傻逼，没有人知道他是谁。</a></h2>
+</div>
+<nav id="main-nav" class="alignright">
+  <ul>
+    
+      <li><a href="/">Home</a></li>
+    
+      <li><a href="/archives">Archives</a></li>
+    
+      <li><a href="/fun">Fun</a></li>
+    
+      <li><a href="/about">About</a></li>
+    
+      <li><a href="/atom.xml">RSS</a></li>
+    
+  </ul>
+  <div class="clearfix"></div>
+</nav>
+<div class="clearfix"></div>
+</header>
+  <div id="content" class="inner">
+    <div id="main-col" class="alignleft"><div id="wrapper"><article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time datetime="2015-03-15T04:56:49.000Z"><a href="/2015/03/15/201511/">2015-03-15</a></time>
+      
+      
+  
+    <h1 class="title">2015年11周 周记</h1>
+  
+
+    </header>
+    <div class="entry">
+      
+
+<div id="toc" class="toc-article alignright">
+    <strong class="toc-title">Table of Content:</strong>
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#haskell"><span class="toc-text">haskell</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#sumpocket"><span class="toc-text">sumpocket</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#tool"><span class="toc-text">tool</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#input字体"><span class="toc-text">input字体</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#github-pulse"><span class="toc-text">github pulse</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#trello"><span class="toc-text">trello</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Dell-LT-100"><span class="toc-text">Dell LT-100</span></a></li></ol></li></ol>
+</div>
+
+        <p>haskell和sumpocket,还有其他的小工具.</p>
+<a id="more"></a>
+<h2 id="haskell"><a href="#haskell" class="headerlink" title="haskell"></a>haskell</h2><p>本周看了关于haksell的不少东西.主要是阅读了下面的书:</p>
+<ul>
+<li>real world haskell 前几章</li>
+<li><a href="https://learnyouahaskell-zh-tw.csie.org" target="_blank" rel="external">learn you haskell for great good 中文版</a><br>从前到后基本看完了.主干还有3章.</li>
+<li>seven languages in seven weeks 的 haskell 的章节</li>
+</ul>
+<p>习题做了<a href="https://wiki.haskell.org/H-99:_Ninety-Nine_Haskell_Problems" target="_blank" rel="external">Haskell 99</a>的大概有30题的样子.<br>在这里<a href="https://github.com/liuyang1/H99" target="_blank" rel="external">H99</a></p>
+<p>7周7语言这本书自己还是2012年样子看的吧,现在翻一翻还是挺有意思的.<br>建议没有看过的同学可以看下.</p>
+<p>real world 这本书看起来略微吃力一些.我也不知道自己怎么半路就转换到learn you haskell<br>这本书的.相比来说,这个就易懂一些.至少学习曲线没有那么陡峭.</p>
+<p>看了haskell,印象最深刻就是它的类型系统.</p>
+<p>一般来说,像C语言之类是静态,弱类型的系统,从而不方便写出抽象性更高的代码.如果都用<br>void*,也是可以的,但是又需要在类型之间强制转换,从而失去了编译器静态检查的好处.</p>
+<p>python之类的动态语言,就非常方便,但是随着代码的膨胀,不能进行有效的检查便是问题.</p>
+<p>lisp之类的,也可以做到动态.也是类似的.</p>
+<p>haskell则是静态类型的,但是有类型推断系统,从而可以更智能的检查出类型不匹配之类的问题.而且类型之上也可以进行抽象的.</p>
+<p>可以想象C++的auto,到处都支持.</p>
+<h2 id="sumpocket"><a href="#sumpocket" class="headerlink" title="sumpocket"></a>sumpocket</h2><p>因为自己的日常的强烈应用之一就是pocket.</p>
+<p>就非常想做一个统计的功能,从而促进自己进一步来消灭自己在pocket中沉淀的文章.</p>
+<p>现在终于可以着手进行了.</p>
+<p>目前还在实验中. 代码在<a href="http://github.com/liuyang1/sumpocket" target="_blank" rel="external">sumpocket</a>.</p>
+<p>后续自己会尝试作出一个动态统计图表出来.</p>
+<p>这个过程中比较<em>麻烦</em>的就是授权过程,因为自己之前没有接触过,还是有点意思的.<br>(其实之前block就是因为这个问题,当时虽然已经有解决方案了,但是一时又不想做了)</p>
+<h2 id="tool"><a href="#tool" class="headerlink" title="tool"></a>tool</h2><h3 id="input字体"><a href="#input字体" class="headerlink" title="input字体"></a><a href="http://input.fontbureau.com/download/#customize" target="_blank" rel="external">input字体</a></h3><p>这个编程字体,可以自己定义.还有意思,对自己现有编程字体不是很满意的可以尝试下.</p>
+<h3 id="github-pulse"><a href="#github-pulse" class="headerlink" title="github pulse"></a><a href="https://github.com/tadeuzagallo/GithubPulse" target="_blank" rel="external">github pulse</a></h3><p>一个chrome小插件,可以统计自己public的repo上commit的历史信息,从而督促自己每天写代码.</p>
+<ul>
+<li><a href="https://chrome.google.com/webstore/detail/githubpulse/ppkickbgijieebbgfipephpafiiebapg" target="_blank" rel="external">chrome web store</a></li>
+<li><a href="https://github.com/tadeuzagallo/GithubPulse/raw/master/dist/GithubPulse.crx" target="_blank" rel="external">github</a></li>
+</ul>
+<p>也可以直接到github下载,然后自己切换到chrome的extension页面,拖过去安装.</p>
+<p>另外,统计自己2015年过去工作之外的代码和笔记累计已经达到了8k行,突然觉得100k行代码不算什么啊.<br>好好努力吧.</p>
+<h3 id="trello"><a href="#trello" class="headerlink" title="trello"></a><a href="https://trello.com/procras/recommend" target="_blank" rel="external">trello</a></h3><p>自己之前发了一个关于gtd工具的帖子,发现在web端/桌面端,trello还是非常舒服的.<br>关键是scrum这种方式,自己的TODO/Doing/DONE非常清晰,看到自己的DONE的列表也比较有成就感啊,从而激励自己继续工作啊.</p>
+<h3 id="Dell-LT-100"><a href="#Dell-LT-100" class="headerlink" title="Dell LT-100"></a>Dell LT-100</h3><p>换了一个键盘，手感还可以．</p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+  
+  <div class="tags">
+    <a href="/tags/week/">week</a>
+  </div>
+
+        
+      
+      <div class="clearfix"></div>
+<!-- 
+<div class="pagepart clearfix">
+  
+    <a href="/2015/03/12/aos-bash/" class="alignleft prev" title="AOS ch3 bash">AOS ch3 bash</a>
+  
+  
+    <a href="/2015/03/21/201512/" class="alignright next" title="2015年第12周 周记">2015年第12周 周记</a>
+  
+</div>
+
+ -->
+    </footer>
+  </div>
+</article>
+
+
+<section id="comment">
+  <h1 class="title">留言</h1>
+
+  
+  <div id="disqus_thread">
+    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  </div>
+  
+</section>
+
+
+</div></div>
+    <aside id="sidebar" class="alignright">
+  <div class="search">
+  <form action="//google.com/search" method="get" accept-charset="utf-8">
+    <input type="search" name="q" results="0" placeholder="搜索">
+    <input type="hidden" name="q" value="site:liuyang1.github.io">
+  </form>
+</div>
+
+  
+
+  
+<div class="widget tag">
+  <h3 class="title">标签</h3>
+  <ul class="entry">
+  
+    <li><a href="/tags/C/">C</a><small>4</small></li>
+  
+    <li><a href="/tags/Haskell/">Haskell</a><small>2</small></li>
+  
+    <li><a href="/tags/Software-Engineer/">Software Engineer</a><small>1</small></li>
+  
+    <li><a href="/tags/Standard/">Standard</a><small>1</small></li>
+  
+    <li><a href="/tags/algo/">algo</a><small>2</small></li>
+  
+    <li><a href="/tags/aos/">aos</a><small>1</small></li>
+  
+    <li><a href="/tags/bash/">bash</a><small>2</small></li>
+  
+    <li><a href="/tags/basic/">basic</a><small>1</small></li>
+  
+    <li><a href="/tags/coderead/">coderead</a><small>1</small></li>
+  
+    <li><a href="/tags/hexo/">hexo</a><small>1</small></li>
+  
+    <li><a href="/tags/intro/">intro</a><small>2</small></li>
+  
+    <li><a href="/tags/mobile/">mobile</a><small>1</small></li>
+  
+    <li><a href="/tags/python/">python</a><small>3</small></li>
+  
+    <li><a href="/tags/src/">src</a><small>2</small></li>
+  
+    <li><a href="/tags/tool/">tool</a><small>4</small></li>
+  
+    <li><a href="/tags/video/">video</a><small>3</small></li>
+  
+    <li><a href="/tags/vim/">vim</a><small>1</small></li>
+  
+    <li><a href="/tags/week/">week</a><small>12</small></li>
+  
+    <li><a href="/tags/实战/">实战</a><small>1</small></li>
+  
+    <li><a href="/tags/翻译/">翻译</a><small>1</small></li>
+  
+  </ul>
+</div>
+
+</aside>
+    <div class="clearfix"></div>
+  </div>
+  <footer id="footer" class="inner"><div class="alignleft">
+  
+  &copy; 2017 liuyang1
+  
+</div>
+<div class="clearfix"></div></footer>
+  <script src="//lib.sinaapp.com/js/jquery/2.0.3/jquery-2.0.3.min.js"></script>
+<script src="/js/instantclick.min.js" data-no-instant></script>
+<script data-no-instant>
+    InstantClick.on('change', function(isInitialLoad) {
+      if (isInitialLoad === false) {
+        if (typeof _hmt !== 'undefined')
+          _hmt.push(['_trackPageview', location.pathname + location.search]);
+        if (typeof ga !== 'undefined')
+          ga('send', 'pageview', location.pathname + location.search);
+      }
+    });
+    InstantClick.init();
+</script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+
+
+<script type="text/javascript">
+var disqus_shortname = 'liuyang1';
+
+(function(){
+  var dsq = document.createElement('script');
+  dsq.type = 'text/javascript';
+  dsq.async = true;
+  dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+}());
+</script>
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "//hm.baidu.com/hm.js?0c65442b2922ed650d2d34c603409234";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+</body>
+</html>

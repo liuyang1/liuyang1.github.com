@@ -1,0 +1,364 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>YUV格式 | River &amp; Could</title>
+  <meta name="author" content="liuyang1">
+  
+  <meta name="description" content="做视频图像之流，YUV格式是最基本的知识，原不必细说的。只是现在发现自己还是会遇到很多的细节问题，现在自己对于这个的经验也越多，不免就想总结下。
+这个问题居然熟悉到我以为自己已经写过这个话题了。。原来自己曾经总结过程一个wiki,不过这个是干货中的干货，就像吃压缩饼干，还没有水喝一样，囫囵吞枣，不小心还会噎着。">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <meta property="og:title" content="YUV格式"/>
+  <meta property="og:site_name" content="River &amp; Could"/>
+
+  
+    <meta property="og:image" content="undefined"/>
+  
+
+  <link href="/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="River &amp; Could" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+  
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-59389559-1']);
+  
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+
+</head>
+
+
+<body>
+  <header id="header" class="inner"><div class="alignleft">
+  <h1><a href="/">River &amp; Could</a></h1>
+  <h2><a href="/">从前有一个大傻逼，没有人知道他是谁。</a></h2>
+</div>
+<nav id="main-nav" class="alignright">
+  <ul>
+    
+      <li><a href="/">Home</a></li>
+    
+      <li><a href="/archives">Archives</a></li>
+    
+      <li><a href="/fun">Fun</a></li>
+    
+      <li><a href="/about">About</a></li>
+    
+      <li><a href="/atom.xml">RSS</a></li>
+    
+  </ul>
+  <div class="clearfix"></div>
+</nav>
+<div class="clearfix"></div>
+</header>
+  <div id="content" class="inner">
+    <div id="main-col" class="alignleft"><div id="wrapper"><article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time datetime="2015-12-29T14:29:12.000Z"><a href="/2015/12/29/yuv/">2015-12-29</a></time>
+      
+      
+  
+    <h1 class="title">YUV格式</h1>
+  
+
+    </header>
+    <div class="entry">
+      
+
+<div id="toc" class="toc-article alignright">
+    <strong class="toc-title">Table of Content:</strong>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#YUV颜色空间"><span class="toc-text">YUV颜色空间</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#比特深度-位深"><span class="toc-text">比特深度/位深</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#采样率"><span class="toc-text">采样率</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#示例"><span class="toc-text">示例</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#YUV分布"><span class="toc-text">YUV分布</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#alignment-stride"><span class="toc-text">alignment/stride</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#ChangeList"><span class="toc-text">ChangeList</span></a></li></ol>
+</div>
+
+        <p>做视频图像之流，YUV格式是最基本的知识，原不必细说的。只是现在发现自己还是会遇到很多的细节问题，现在自己对于这个的经验也越多，不免就想总结下。</p>
+<p>这个问题居然熟悉到我以为自己已经写过这个话题了。。原来自己曾经总结过程一个<a href="https://github.com/liuyang1/wiki/blob/master/yuv.wiki" target="_blank" rel="external">wiki</a>,不过这个是干货中的干货，就像吃压缩饼干，还没有水喝一样，囫囵吞枣，不小心还会噎着。</p>
+<a id="more"></a>
+<h1 id="YUV颜色空间"><a href="#YUV颜色空间" class="headerlink" title="YUV颜色空间"></a>YUV颜色空间</h1><p>YUV其实是一个颜色空间，RGB是大家非常熟悉的另外一个颜色空间。</p>
+<p>常用的颜色空间有这些：</p>
+<pre><code>- YUV，用于视频图像的压缩、显示等。
+- RGB/RGBA，用于graphic上的显示等，最为常见。
+- HSL/HSV，同样用于显示。
+- CMYK，用于印刷之类。
+</code></pre><p>其中YUV颜色空间，又有具体不同的标准。</p>
+<p>YUV空间有3个分量：</p>
+<pre><code>- Y 亮度
+- U/V， 两个色度分量
+</code></pre><p>之所以压缩显示摄像领域采用YUV格式，最主要的原因是人的眼睛的物理特性。人的眼睛对亮度信息最为敏感，颜色信息相对没有那么明显。因此降低对色度的采样，可以基本保持视觉效果不变。</p>
+<h2 id="比特深度-位深"><a href="#比特深度-位深" class="headerlink" title="比特深度/位深"></a>比特深度/位深</h2><p>每个数据至采用几个比特表示。</p>
+<p>一般最为常见的是8bit，也就是一个像素。现在已经有10bit视频流。医用显示器上显示位深可以达到12bit，不过据说很贵啦。位深越大，表示数据的阶数越多。早年彩屏手机出来的时候，喜欢号称自己有一千六百万色，其实就是(2 ^ 8) ^ 3 = 16777216啦。其实就是位深为8，RGB三色显示的意思。</p>
+<h2 id="采样率"><a href="#采样率" class="headerlink" title="采样率"></a>采样率</h2><p>YUV格式有4：4：4，4：2：2，4：2：0三种常见的采样方式。</p>
+<pre><code>- 4：4：4，每个像素采样YUV三个分量
+- 4：2：2，每个像素采样Y分量，UV分量水平方向每两个像素采样一次
+- 4：2：0，每个像素采样Y分量，UV分量水平数值方向每4个像素采样一次
+</code></pre><p><img src="/img/yuv422_sample.png" alt="YUV422 sampling"></p>
+<p><img src="/img/yuv420_sample.png" alt="YUV422 sampling"></p>
+<p>结合采样率和位深概念，有bit per pixel的概念，就是平均每个像素需要多少比特。<br>根据上面采样率的定义，结果如下：</p>
+<table>
+<thead>
+<tr>
+<th>sample rate</th>
+<th style="text-align:center">bit per pixel</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>444</td>
+<td style="text-align:center">24</td>
+</tr>
+<tr>
+<td>422</td>
+<td style="text-align:center">16</td>
+</tr>
+<tr>
+<td>420</td>
+<td style="text-align:center">12</td>
+</tr>
+</tbody>
+</table>
+<p>由此，也印证了最初关于YUV方式的讨论。</p>
+<h2 id="示例"><a href="#示例" class="headerlink" title="示例"></a>示例</h2><p>了解RGB的，可以很直观的理解其作用机制，就是RGB三原色，同时RGB相同，可以简单降为灰度图。 #000000 表示黑色， #ffffff 表示白色，也非常易于理解。</p>
+<p>YUV在这点上就相对没有那么直观（可能还是接触较少的缘故）。YUV的意义前面已经介绍过。其中UV两个分量是有符号的。或者对于8比特的情况下，可以认为是有bias = - 2 ^ 7 的。因此Y的取值范围为[0，255], UV的取值范围为[-127，128]。当UV为0的时候，表示没有颜色，颜色为灰色。而UV为0的时候，其二进制表示为0x80。因为 0x80 - bias = 0。所以 0x008080 为黑色， 0xff8080 为白色。</p>
+<p>那么0x000000呢，为绿色。</p>
+<p>注意，并不是强度为0x00，就是灰色或者白到黑色了。在YUV里，不是这样的。这里UV分量都是0x00，就决定了其颜色为绿色，强度分量为0x00表示是深绿，0xff0000，则是浅绿。这里的亮度，理解为强度更为合适啊。</p>
+<p>那么0xffffff呢，为浅粉红色。</p>
+<p>这两个颜色的特殊意义，在于一般程序中会将数据清空为全零数据，那么这些区域显示出来就是绿色。解码出现错误的时候，也很有可能是绿色的块。对于只有有效的Y数据，但是没有有效的UV数据的时候，所有的内容都会看上去蒙上一层绿色。</p>
+<p>同理显示的时候，也有可能遇到粉屏。</p>
+<p><img src="/img/yuv_sample.png" alt="YUV sample" align="center"></p>
+<p>从<a href="http://multimedia.cx/eggs/yuv-and-rgb/" target="_blank" rel="external">这里</a>截个图，因为实在是太直观了。</p>
+<h2 id="YUV分布"><a href="#YUV分布" class="headerlink" title="YUV分布"></a>YUV分布</h2><p>对比RGBA,一般每个像素各个分量一般都是在一起的。而YUV则有更丰富的分布方式。</p>
+<pre><code>- packed，YUV数据放在一起，类似于RGBA。（默认类型）
+- planar，YUV三个分量的数据在一起，对应于三个planar，也就是所有Y数据放在一起，所有的U数据在一起，所有的V数据在一起。
+- semi-planar，这种方式的特点之处就在于Y数据在一起，UV数据交错放置在一起。
+- tiled（vs. rastered)， rastered就是光栅也就是数据按照每个像素进行划分，tiled则将数据首先按照4*4或者6*6的块进行组织，然后每个块，则进一步分布。
+</code></pre><p>这部分信息量有点大。还需要更多图演示一下。</p>
+<p>以YUV422为例，packed的方式数据如下分布：</p>
+<pre><code>+--+--+--+--+--+--+--+--+--+--+--+--
+|U0|Y0|V0|Y1|U2|Y2|V2|Y3|  |  |  |
++--+--+--+--+--+--+--+--+--+--+--+--
+</code></pre><p>注意，这里因为YUV422水平方向UV采样率只有2：1，因此UV分量只有偶数的。而packed中，还有分布顺序的区别，上面示意图中分布顺序为UYVY，显然还可以分布为VYUY，以及其他方式。</p>
+<p>planar的方式呢，则比较简单,仍然考虑为YUV422 planar的情况</p>
+<pre><code>+-------------------------------+
++                               |
++                Y              |
++                               |
++----------------+--------------+
++                +
++       U        +
++                +
++----------------+
++                +
++       V        +
++                +
++----------------+
+</code></pre><p>这里要注意，UV的每行长度只有Y的一般，因为2：1采样的缘故。但是二者的行数是完全一样的。</p>
+<p>那么YUV422 semi-planar呢，</p>
+<pre><code>+-------------------------------+
++                               |
++                Y              |
++                               |
++-------------------------------+
++U0|V0|U2|V2|                   |
++                UV             |
++                               |
++-------------------------------+
+</code></pre><p>UV分量联合起来，UV数据的分布大小刚刚好和Y是一样的。其中UV也同样有顺序的问题。</p>
+<p>YUV420也有类似的区分，planar或者semi-planar，其中YUV420 semi-planar的情况下，UV的stride和Y相等，但是UV的高是Y部分高的一半。</p>
+<pre><code>+-------------------------------+
++                               |
++                Y              |
++                               |
++-------------------------------+
++U0|V0|U2|V2|    UV             |
++                               |
++-------------------------------+
+</code></pre><p>Tiled的情况，没有那么常见，暂时不谈，以后更新。如果采用了tiled方式，但是格式配置错误的话，可能有块状的马赛克出现。</p>
+<p>好像也没有那么复杂吧，还有最后一点，这点经常容易出现问题。</p>
+<h2 id="alignment-stride"><a href="#alignment-stride" class="headerlink" title="alignment/stride"></a>alignment/stride</h2><p>在计算机处理的时候，对数据的对齐alignment往往有着特殊的要求，例如对齐到8字节或者64字节，当图像的宽度不符合这个对齐值的时候，就需要每行额外多一些，来达到对齐值的整数倍。<br>因此在水平方向上就有stride和width的区别，stride表示对齐之后的宽度，width则仅仅表示有效数据的宽度。</p>
+<p>类似的，在垂直方向上，可能也有对齐的问题。这里记为hstride，height。</p>
+<p>同样的，对于变分辨率的视频（adaptive playback会遇到）,可能还会碰到over allocate和crop的问题。也就是可能申请一块1920x1080的内存，但是这时候视频流的内容分辨率仅仅有640x480，那么这个时候数据要按照stride为1920，hstride为1080，来进行填充，这样可以直接从11920x1080的内存区域中直接从左上角crop出640x480的数据来。</p>
+<p>width x height的数据是可用的，但是其他地方则有可能为全零数据，或者任意的值，或者上一次写入的数据。</p>
+<p>如果stride值不对，那么图像会有斜条纹状的马赛克，这里的斜条纹是因为stride’和stride的差，在每行上都会累积的结果。</p>
+<p>对于YUV420SP,如果UV数据的起始地址不对，那么UV分量上则会有有问题。这时可以仅仅查看Y分量来检查问题。如果错误的UV分量位置上刚好是零，则图像会有一层绿色。</p>
+<p>之后碰到其他问题，再补充。</p>
+<h1 id="ChangeList"><a href="#ChangeList" class="headerlink" title="ChangeList"></a>ChangeList</h1><ul>
+<li>2015-12-29 Initial</li>
+<li>2015-12-30 update YUV422, YUV420 sampling image</li>
+</ul>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+  
+  <div class="tags">
+    <a href="/tags/video/">video</a>
+  </div>
+
+        
+      
+      <div class="clearfix"></div>
+<!-- 
+<div class="pagepart clearfix">
+  
+    <a href="/2015/12/21/h264-mp4/" class="alignleft prev" title="提取MP4文件中的h264/h265视频流">提取MP4文件中的h264/h265视频流</a>
+  
+  
+    <a href="/2015/12/30/vote/" class="alignright next" title="投票多数问题">投票多数问题</a>
+  
+</div>
+
+ -->
+    </footer>
+  </div>
+</article>
+
+
+<section id="comment">
+  <h1 class="title">留言</h1>
+
+  
+  <div id="disqus_thread">
+    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  </div>
+  
+</section>
+
+
+</div></div>
+    <aside id="sidebar" class="alignright">
+  <div class="search">
+  <form action="//google.com/search" method="get" accept-charset="utf-8">
+    <input type="search" name="q" results="0" placeholder="搜索">
+    <input type="hidden" name="q" value="site:liuyang1.github.io">
+  </form>
+</div>
+
+  
+
+  
+<div class="widget tag">
+  <h3 class="title">标签</h3>
+  <ul class="entry">
+  
+    <li><a href="/tags/C/">C</a><small>4</small></li>
+  
+    <li><a href="/tags/Haskell/">Haskell</a><small>2</small></li>
+  
+    <li><a href="/tags/Software-Engineer/">Software Engineer</a><small>1</small></li>
+  
+    <li><a href="/tags/Standard/">Standard</a><small>1</small></li>
+  
+    <li><a href="/tags/algo/">algo</a><small>2</small></li>
+  
+    <li><a href="/tags/aos/">aos</a><small>1</small></li>
+  
+    <li><a href="/tags/bash/">bash</a><small>2</small></li>
+  
+    <li><a href="/tags/basic/">basic</a><small>1</small></li>
+  
+    <li><a href="/tags/coderead/">coderead</a><small>1</small></li>
+  
+    <li><a href="/tags/hexo/">hexo</a><small>1</small></li>
+  
+    <li><a href="/tags/intro/">intro</a><small>2</small></li>
+  
+    <li><a href="/tags/mobile/">mobile</a><small>1</small></li>
+  
+    <li><a href="/tags/python/">python</a><small>3</small></li>
+  
+    <li><a href="/tags/src/">src</a><small>2</small></li>
+  
+    <li><a href="/tags/tool/">tool</a><small>4</small></li>
+  
+    <li><a href="/tags/video/">video</a><small>3</small></li>
+  
+    <li><a href="/tags/vim/">vim</a><small>1</small></li>
+  
+    <li><a href="/tags/week/">week</a><small>12</small></li>
+  
+    <li><a href="/tags/实战/">实战</a><small>1</small></li>
+  
+    <li><a href="/tags/翻译/">翻译</a><small>1</small></li>
+  
+  </ul>
+</div>
+
+</aside>
+    <div class="clearfix"></div>
+  </div>
+  <footer id="footer" class="inner"><div class="alignleft">
+  
+  &copy; 2017 liuyang1
+  
+</div>
+<div class="clearfix"></div></footer>
+  <script src="//lib.sinaapp.com/js/jquery/2.0.3/jquery-2.0.3.min.js"></script>
+<script src="/js/instantclick.min.js" data-no-instant></script>
+<script data-no-instant>
+    InstantClick.on('change', function(isInitialLoad) {
+      if (isInitialLoad === false) {
+        if (typeof _hmt !== 'undefined')
+          _hmt.push(['_trackPageview', location.pathname + location.search]);
+        if (typeof ga !== 'undefined')
+          ga('send', 'pageview', location.pathname + location.search);
+      }
+    });
+    InstantClick.init();
+</script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+
+
+<script type="text/javascript">
+var disqus_shortname = 'liuyang1';
+
+(function(){
+  var dsq = document.createElement('script');
+  dsq.type = 'text/javascript';
+  dsq.async = true;
+  dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+}());
+</script>
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "//hm.baidu.com/hm.js?0c65442b2922ed650d2d34c603409234";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+</body>
+</html>

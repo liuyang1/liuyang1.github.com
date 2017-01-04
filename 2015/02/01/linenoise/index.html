@@ -1,0 +1,433 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>readline和linenoise | River &amp; Could</title>
+  <meta name="author" content="liuyang1">
+  
+  <meta name="description" content="readline的背景介绍
+ANSI Escape code介绍
+linenoise实现">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <meta property="og:title" content="readline和linenoise"/>
+  <meta property="og:site_name" content="River &amp; Could"/>
+
+  
+    <meta property="og:image" content="undefined"/>
+  
+
+  <link href="/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="River &amp; Could" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+  
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-59389559-1']);
+  
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+
+</head>
+
+
+<body>
+  <header id="header" class="inner"><div class="alignleft">
+  <h1><a href="/">River &amp; Could</a></h1>
+  <h2><a href="/">从前有一个大傻逼，没有人知道他是谁。</a></h2>
+</div>
+<nav id="main-nav" class="alignright">
+  <ul>
+    
+      <li><a href="/">Home</a></li>
+    
+      <li><a href="/archives">Archives</a></li>
+    
+      <li><a href="/fun">Fun</a></li>
+    
+      <li><a href="/about">About</a></li>
+    
+      <li><a href="/atom.xml">RSS</a></li>
+    
+  </ul>
+  <div class="clearfix"></div>
+</nav>
+<div class="clearfix"></div>
+</header>
+  <div id="content" class="inner">
+    <div id="main-col" class="alignleft"><div id="wrapper"><article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time datetime="2015-02-01T14:30:43.000Z"><a href="/2015/02/01/linenoise/">2015-02-01</a></time>
+      
+      
+  
+    <h1 class="title">readline和linenoise</h1>
+  
+
+    </header>
+    <div class="entry">
+      
+
+<div id="toc" class="toc-article alignright">
+    <strong class="toc-title">Table of Content:</strong>
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#readline和背景"><span class="toc-text">readline和背景</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ANSI-escape-code"><span class="toc-text">ANSI escape code</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#历史"><span class="toc-text">历史</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#标准"><span class="toc-text">标准</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#linenoise"><span class="toc-text">linenoise</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#completion"><span class="toc-text">completion</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#external-interface"><span class="toc-text">external interface</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#internal-process"><span class="toc-text">internal process</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#显示和编辑命令缓冲区"><span class="toc-text">显示和编辑命令缓冲区</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#历史-1"><span class="toc-text">历史</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#扩展"><span class="toc-text">扩展</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#层级命令"><span class="toc-text">层级命令</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#进度条"><span class="toc-text">进度条</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#更新"><span class="toc-text">更新</span></a></li></ol>
+</div>
+
+        <ul>
+<li>readline的背景介绍</li>
+<li>ANSI Escape code介绍</li>
+<li>linenoise实现<a id="more"></a>
+</li>
+</ul>
+<h2 id="readline和背景"><a href="#readline和背景" class="headerlink" title="readline和背景"></a>readline和背景</h2><p>相比于GUI，在CLI混战的人也有user-friendly interface的需求。<br>这方面有非常成熟的库<strong>GNU readline</strong>，shell很多都是使用它来支持丰富多彩的输入/交互特性。<br>很多编程语言的解释器都支持使用readline。支持着异常丰富的特性。</p>
+<ul>
+<li>line edit（移动光标，编辑已经输入的内容）</li>
+<li>tab completion（自动补全功能）</li>
+<li>history</li>
+<li>vi-mode/emacs-mode（按键绑定方式，两种风格）</li>
+</ul>
+<p>以上的很多功能，已经是大家对于shell的默认选项。<br>试想一个不支持编辑功能的shell，估计是有多难用啊。<br>本文不是介绍这部分，因此不再此处深入。</p>
+<p>但是学习过C语言编程的人都知道，C默认支持的输入方式并不支持上述的任何一个特性。<br>C的输入，必须以newline，eof之类结束，才可以输入一个整行。<br>这是C的默认的行缓冲模式。而且在输入过程中backspace是可用的，<br>但是其他按键，例如delete，方向键都是不行的。<br>按着方向键输出都是^[[A, ^[[B</p>
+<p>这样看上去像是混乱语句的东西。<br>这样就无法进行编辑功能。</p>
+<p>如何支持上述特性呢？</p>
+<ul>
+<li><p>line edit</p>
+<p>  需要行的缓存，以及虚拟终端的控制。</p>
+</li>
+<li>tab completion<br>  同样需要虚拟终端控制，这些才可以进行立即方式输入，而不是默认的行缓冲模式。</li>
+<li>history<br>  这个感觉相对没有那么复杂，需要保存历史文件（就像所有的shell里面一样），然后支持各种历史的接口。</li>
+<li>vi-mode，emacs-mode<br>  在tab completion的基础上，可以立即响应各种按键，因此也会是可以支持的。</li>
+</ul>
+<p>对于上面的分析，可以看到问题基本集中在一个背景知识，虚拟终端控制，和一个技术实现，行缓存。</p>
+<ul>
+<li><a href="http://cnswww.cns.cwru.edu/php/chet/readline/rltop.html" target="_blank" rel="external">GNU readline</a></li>
+</ul>
+<h2 id="ANSI-escape-code"><a href="#ANSI-escape-code" class="headerlink" title="ANSI escape code"></a>ANSI escape code</h2><h3 id="历史"><a href="#历史" class="headerlink" title="历史"></a>历史</h3><p>回到刚刚的C语言的例子，输出的^[[A之类的到底是什么。这应该就是问题的关键点（之一）。<br>因为shell中这个向上按键，会向上翻命令历史，但是在这里却是^[[A。</p>
+<p>这是一种特殊的格式<a href="http://en.wikipedia.org/wiki/ANSI_escape_code" target="_blank" rel="external">ANSI escape code</a>。</p>
+<p>这种格式是一种带内in-band传输格式的一种方式。<br>所谓的in-band，就是数据信息和控制信息一起传输。<br>对于终端而言，控制信息控制着格式（普通字体，粗体，斜体，颜色，反色，闪烁，下划线）以及光标的位置，<br>终端的刷新等。<br>而数据信息就是纯字符或者说可打印可显示的字符。<br>而终端则起到翻译或者解释的作用，对于这种混合的字节流进行解释，最终输出呈现效果。</p>
+<p>如果有喜欢配置炫酷的终端prompt的同学，肯定对此多少有一定了解。</p>
+<p>注意：<br>Windows的控制台不是采用这种方式。<br>终端的颜色输出，和各种特性，已经另一个方面的库libncursor也是基于这个特性衍生出来的。这个以后有机会再介绍。<br>关于console，terminal，tty，virtual terminal，terminal emulator之类的区别可以参考这个吧。<a href="http://blog.csdn.net/on_1y/article/details/20203963" target="_blank" rel="external">csdn</a></p>
+<p>作为一个带内控制的方法，最初是有很多各自自定义的一套。这是时候为了兼容就需要一个接口，一般可以配置在termcap或者terminfo中，就是终端的capability或者information。后来出现了本节的ANSI escape sequence.作为一个标准。支持标准的一个流行的terminal，VT100.这个在有些软件比如putty，SecureCRT中还是可以看到，设置终端格式为VT100方式。</p>
+<p>而终端模拟器（今天所使用的几乎所有跑在GUI下的所谓终端），也同时支持。Linux控制器(Ctrl+Alt+F1出来的）也同样支持。而Unix/Linux下的众多程序都靠这个来在命令行下得到丰富多彩的输出。</p>
+<p>这一段似乎扯的太远了。readline之类的库，也是通过ANSI escape code也是通过这个支持的。</p>
+<p>中间的escape是什么意思呢？如果你在C程序中，会发现按下Esc，对应的是^[，也就是这些控制串都是以Esc对应的控制串开始的，因此这么叫。</p>
+<h3 id="标准"><a href="#标准" class="headerlink" title="标准"></a>标准</h3><p>请直接参考维基百科吧，复制的东西不想讲了。</p>
+<h2 id="linenoise"><a href="#linenoise" class="headerlink" title="linenoise"></a>linenoise</h2><p>GNU readline 是 GPL 协议的，因此会存在“污染”的问题。<br>在英文wiki上就记载这样的故事，CLISP因为链接了readline，被要求按照GPL协议重新发布。<br>GNU readline还是一个非常庞大而复杂的库，这不利于实际的工程应用。</p>
+<p>最近看到一个开源的库linenoise，这个库比较短小，核心代码仅仅1k+-行，非常的短小精悍，而且支持上述的前三个特性。<br>keybinding的支持目前正在进行中。本身采用BSD协议，可以相对自由的使用它。</p>
+<p>目前在redis，MongoDB和Android中用到。</p>
+<p>前面感觉闲扯的有点多，现在飞速进入正题中。</p>
+<h3 id="completion"><a href="#completion" class="headerlink" title="completion"></a>completion</h3><h4 id="external-interface"><a href="#external-interface" class="headerlink" title="external interface"></a>external interface</h4><pre><code>typedef struct linenoiseCompletions {
+  size_t len;
+  char **cvec;
+} linenoiseCompletions;
+</code></pre><p>linenoiseCompletions 这个类型的作用就像它的名字一样。</p>
+<p>这里的cvec是一个二级指针，用于指向待匹配的字符串序列。而len就是长度了。<br>对于初学者而言，这里需要注意，cvec指向一个数组，这个数组的长度为len。这个数据中的每个元素为一个字符串数据指针。</p>
+<p>例如，我们已经有了字符串“ab”，然后想匹配“abc”，“abd”，等等。这里的cvec就是用于指向后面的“abc”，“abd”的。<br>这个时候对应的len就是2。</p>
+<p>那么这个序列是如何工作的呢？</p>
+<pre><code>typedef void(linenoiseCompletionCallback)(const char *, linenoiseCompletions *);
+void linenoiseSetCompletionCallback(linenoiseCompletionCallback *);
+void linenoiseAddCompletion(linenoiseCompletions *, const char *);
+</code></pre><p>就是通过这个函数类型和这两个函数作用的。</p>
+<p>linenoiseSetCompletionCallback这个函数就是设置了回调函数。</p>
+<p>回调函数有2个参数，第一个字符串，表示当前的字符串内容。第二个为linenoiseCompletions类型指针。<br>结合example.c可以看到，回调函数可以根据当前的字符串内容，通过linenoiseAddCompletion函数添加新的补全字符串到lc中。结合当才的linenoiseCompletions的数据类型分析，这个逻辑必然是简单的添加到数据指针的后面。需要特别考虑的就是cvec这个数据可能的长度不够的问题。</p>
+<p>检查linenoiseAddCompletion这个函数的逻辑，果然是这样的。</p>
+<p>做的不那么好的地方就是，每次需要每次都调用realloc函数，来扩张cvec的大小。我认为相对较好的方法是初始化一定的大小，然后可以容纳数据，然后阶梯上涨。不过这样需要额外的属性存储存储空间的大小。逻辑略微复杂一点。好处是减低了内存空间调整的频率。</p>
+<p>realloc函数，这个用的不多。<br>用于改变指针指向的存储空间的大小。从开始位置到min（new size， old size）之间的内容得以保持不变。</p>
+<p>存储区域扩张的画，新增内存空间是未初始化的。</p>
+<p>如果参数ptr是NULL，那么等同于malloc的效果。</p>
+<p>如果参数size是0，而ptr不是NULL，那么等同于free的效果。</p>
+<p>使用realloc，可以进行内存分配的动态增长，对于一些不限定大小的需求非常有用。</p>
+<p>字符串的复制这里其实可以直接调用C标准库中的strdup就可以了。</p>
+<h4 id="internal-process"><a href="#internal-process" class="headerlink" title="internal process"></a>internal process</h4><p>以上是关于自动补全的外部接口，内部还需要怎样处理呢。</p>
+<p>这完全集中在一个函数completeLine中。</p>
+<p>completeLine的参数是linenoiseState类型。</p>
+<p>这个类型存储了当前的命令行的状态。</p>
+<pre><code>struct linenoiseState {
+    int ifd;            /* Terminal stdin file descriptor. */
+    int ofd;            /* Terminal stdout file descriptor. */
+    char *buf;          /* Edited line buffer. */
+    size_t buflen;      /* Edited line buffer size. */
+    const char *prompt; /* Prompt to display. */
+    size_t plen;        /* Prompt length. */
+    size_t pos;         /* Current cursor position. */
+    size_t oldpos;      /* Previous refresh cursor position. */
+    size_t len;         /* Current edited line length. */
+    size_t cols;        /* Number of columns in terminal. */
+    size_t maxrows;     /* Maximum num of rows used so far (multiline mode) */
+    int history_index;  /* The history index we are currently editing. */
+};
+</code></pre><p>上面的注释都非常清楚。用处也很明确。</p>
+<p>这个函数初始化了一个linenoiseCompletions lc，然后调用上面所讲的回调函数来初始化它。从ls中的buf就可以得到当前的字符串的内容是什么。</p>
+<p>这个时候我们就知道,外部认为匹配的自动补全的内容。</p>
+<p>completeLine的过程。</p>
+<p>输入“ab” -&gt; 按键tab -&gt; 如果没有匹配内容，则没有什么变化或者warning。</p>
+<p>如果有按键内容，那么显示第一个内容 -&gt; 按键Tab，轮替显示 -&gt; Esc 则退出。其他键，认为输入其他键退出。</p>
+<pre><code>// 不进行退出，条件其实是没有输入escape，或者输入了其他字符。
+while(!stop) {
+    /* Show completion or original buffer */
+    if (i &lt; lc.len) {
+        // 保持原始的ls
+        struct linenoiseState saved = *ls;
+
+        ls-&gt;len = ls-&gt;pos = strlen(lc.cvec[i]);
+        ls-&gt;buf = lc.cvec[i];
+        // 刷新显示
+        refreshLine(ls);
+        // 这个时候就立刻为下一次显示内容做准备
+        // ls存储的内容又恢复为初始的内容
+        ls-&gt;len = saved.len;
+        ls-&gt;pos = saved.pos;
+        ls-&gt;buf = saved.buf;
+    } else {
+        // i == lc.len 也就是所有的completion的轮换一遍了
+        // 不做任何处理，这个时候显示的就是初始的内容
+        refreshLine(ls);
+        // TODO:
+        // 这里其实可以在最初的saved之后，
+        // 更改为在i==ls。len的时候进行复原的操作。
+        // 可以节约不必要的操作
+    }
+
+    nread = read(ls-&gt;ifd,&amp;c,1);
+    if (nread &lt;= 0) {
+        freeCompletions(&amp;lc);
+        return -1;
+    }
+
+    // 读入新的字符
+    switch(c) {
+        case 9: /* tab */
+            i = (i+1) % (lc.len+1);
+            // 这里的一圈长度为lc。len+1
+            // 也就是所有的待匹配内容+原始内容
+            // 轮换, 轮换一圈则beep
+            if (i == lc.len) linenoiseBeep();
+            break;
+        case 27: /* escape */
+            /* Re-show original buffer */
+            if (i &lt; lc.len) refreshLine(ls);
+            // XXX
+            // reshow 为什么呢？
+            stop = 1;
+            break;
+        default:
+            /* Update buffer and return */
+            if (i &lt; lc.len) {
+                // TODO:
+                // 这里似乎，没有必要啊，删除
+                nwritten = snprintf(ls-&gt;buf,ls-&gt;buflen,&quot;%s&quot;,lc.cvec[i]);
+                ls-&gt;len = ls-&gt;pos = nwritten;
+            }
+            stop = 1;
+            break;
+    }
+}
+</code></pre><p>返回最后一个的输入字符，这样可以进行插入处理。</p>
+<h3 id="显示和编辑命令缓冲区"><a href="#显示和编辑命令缓冲区" class="headerlink" title="显示和编辑命令缓冲区"></a>显示和编辑命令缓冲区</h3><p>上面的显示和刷新显示命令行的方式来自于refreshLine这个函数。<br>结合上面的linenoiseState的类型，也可以简单估计，就是通过prompt和buf组合了显示的字符串，pos决定了光标的位置，ifd，ofd则用于输入和输出。</p>
+<p>refreshLine分为两种模式，MultiLine模式和SingleLine模式。</p>
+<pre><code>void linenoiseSetMultiLine(int ml);
+</code></pre><p>就是用于设置这个全局选项的。</p>
+<p>显示refreshSingleLine，单行模式，首先就是光标的位置不可以超过单行的长度，不然存在问题。其次是字符串的长度不可以超过单行的长度。</p>
+<p>然后就是制造一个ab序列就可以了，根据内容填充进去。</p>
+<ul>
+<li>\r        回到行首</li>
+<li>prompt    添加命令行头部</li>
+<li>buf       添加命令行的内容</li>
+<li>\x1b[0K   清除之后的一行的内容</li>
+<li>\r\x1b[%dC    先回到行首，然后则折返回光标位置</li>
+</ul>
+<p>abuf 的类型比上面的cvec还要简单，就是一个字符串空间，要注意的就是append的时候，同样使用realloc增长，然后把字符串复制进去就行了。</p>
+<p>那么MultiLine模式呢，显然也是类似构造的。这里是没有趣味的就省略了。</p>
+<p>那么添加一个字符在当前位置呢，同样的步骤一样是可以完成的。<br>对于单行模式，并且并未超过行宽的时候，可以直接写入下一个字符的，这种特别处理一下（因为简单，又不想重新搞一遍控制字符）</p>
+<p>对于单行模式其他情况和多行模式，那么必要要调用刚刚的刷新函数了。</p>
+<p>对于在中间插入的情况，那么将后半段的内容向后移一个字符，这里使用memmove，不能用memcpy哦。<br>然后把插入的字符补进来就行了。</p>
+<p>从这里可以看到基于Ansi Escape的编码序列，控制term的显示逻辑就是这里的关键思想。其他部分，并不重要。</p>
+<h3 id="历史-1"><a href="#历史-1" class="headerlink" title="历史"></a>历史</h3><p>History的部分其实和自动补全有些相似，其实不再由回调函数提供待匹配的字符串数据，而是由历史文件确定的。而命令行的显示原理是一样的。</p>
+<pre><code>char *linenoise(const char *prompt);
+int linenoiseHistoryAdd(const char *line);
+int linenoiseHistorySetMaxLen(int len);
+int linenoiseHistorySave(const char *filename);
+int linenoiseHistoryLoad(const char *filename);
+void linenoiseClearScreen(void);
+void linenoisePrintKeyCodes(void);
+</code></pre><h2 id="扩展"><a href="#扩展" class="headerlink" title="扩展"></a>扩展</h2><h3 id="层级命令"><a href="#层级命令" class="headerlink" title="层级命令"></a>层级命令</h3><p>对于一个控制/debug根据而言，其实可以想shell的控制终端一样，提供一个层级的方式。</p>
+<p>例如：</p>
+<pre><code>git log
+</code></pre><p>然后在这个上下文下，自动对命令进行的上下文进行补全。例如在这个状态下，执行HEAD<br>命令，那么就相当于git log HEAD 命令。这样的好处是我在层级之间切换的时候，<br>不需要输入冗长的前缀。因此它的菜单可以任意扩展。支持异常丰富的命令，同时<br>对于使用者没有那么大的压力。</p>
+<h3 id="进度条"><a href="#进度条" class="headerlink" title="进度条"></a>进度条</h3><p>怎么画个进度条，在这个基础上，应该是个挺简单的东西了。</p>
+<h2 id="更新"><a href="#更新" class="headerlink" title="更新"></a>更新</h2><p>最新fix了其中的一个bug,就是在某些系统中(android的adb shell环境中),Enter键对应的是Line Feed,而不是Carriage Return的值.</p>
+<p>说白了,这还是一个\r和\n的不同问题,支持上这种情况就可以了,很简单.不过追溯bug的过程还是挺有意思的.</p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+  
+  <div class="tags">
+    <a href="/tags/C/">C</a>, <a href="/tags/intro/">intro</a>, <a href="/tags/src/">src</a>
+  </div>
+
+        
+      
+      <div class="clearfix"></div>
+<!-- 
+<div class="pagepart clearfix">
+  
+  
+    <a href="/2015/02/03/better-ten-cmd/" class="alignright next" title="Linux的10个命令？">Linux的10个命令？</a>
+  
+</div>
+
+ -->
+    </footer>
+  </div>
+</article>
+
+
+<section id="comment">
+  <h1 class="title">留言</h1>
+
+  
+  <div id="disqus_thread">
+    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  </div>
+  
+</section>
+
+
+</div></div>
+    <aside id="sidebar" class="alignright">
+  <div class="search">
+  <form action="//google.com/search" method="get" accept-charset="utf-8">
+    <input type="search" name="q" results="0" placeholder="搜索">
+    <input type="hidden" name="q" value="site:liuyang1.github.io">
+  </form>
+</div>
+
+  
+
+  
+<div class="widget tag">
+  <h3 class="title">标签</h3>
+  <ul class="entry">
+  
+    <li><a href="/tags/C/">C</a><small>4</small></li>
+  
+    <li><a href="/tags/Haskell/">Haskell</a><small>2</small></li>
+  
+    <li><a href="/tags/Software-Engineer/">Software Engineer</a><small>1</small></li>
+  
+    <li><a href="/tags/Standard/">Standard</a><small>1</small></li>
+  
+    <li><a href="/tags/algo/">algo</a><small>2</small></li>
+  
+    <li><a href="/tags/aos/">aos</a><small>1</small></li>
+  
+    <li><a href="/tags/bash/">bash</a><small>2</small></li>
+  
+    <li><a href="/tags/basic/">basic</a><small>1</small></li>
+  
+    <li><a href="/tags/coderead/">coderead</a><small>1</small></li>
+  
+    <li><a href="/tags/hexo/">hexo</a><small>1</small></li>
+  
+    <li><a href="/tags/intro/">intro</a><small>2</small></li>
+  
+    <li><a href="/tags/mobile/">mobile</a><small>1</small></li>
+  
+    <li><a href="/tags/python/">python</a><small>3</small></li>
+  
+    <li><a href="/tags/src/">src</a><small>2</small></li>
+  
+    <li><a href="/tags/tool/">tool</a><small>4</small></li>
+  
+    <li><a href="/tags/video/">video</a><small>3</small></li>
+  
+    <li><a href="/tags/vim/">vim</a><small>1</small></li>
+  
+    <li><a href="/tags/week/">week</a><small>12</small></li>
+  
+    <li><a href="/tags/实战/">实战</a><small>1</small></li>
+  
+    <li><a href="/tags/翻译/">翻译</a><small>1</small></li>
+  
+  </ul>
+</div>
+
+</aside>
+    <div class="clearfix"></div>
+  </div>
+  <footer id="footer" class="inner"><div class="alignleft">
+  
+  &copy; 2017 liuyang1
+  
+</div>
+<div class="clearfix"></div></footer>
+  <script src="//lib.sinaapp.com/js/jquery/2.0.3/jquery-2.0.3.min.js"></script>
+<script src="/js/instantclick.min.js" data-no-instant></script>
+<script data-no-instant>
+    InstantClick.on('change', function(isInitialLoad) {
+      if (isInitialLoad === false) {
+        if (typeof _hmt !== 'undefined')
+          _hmt.push(['_trackPageview', location.pathname + location.search]);
+        if (typeof ga !== 'undefined')
+          ga('send', 'pageview', location.pathname + location.search);
+      }
+    });
+    InstantClick.init();
+</script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+
+
+<script type="text/javascript">
+var disqus_shortname = 'liuyang1';
+
+(function(){
+  var dsq = document.createElement('script');
+  dsq.type = 'text/javascript';
+  dsq.async = true;
+  dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+}());
+</script>
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "//hm.baidu.com/hm.js?0c65442b2922ed650d2d34c603409234";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+</body>
+</html>

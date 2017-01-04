@@ -1,0 +1,283 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>如何写出更&quot;好&quot;的shell脚本 | River &amp; Could</title>
+  <meta name="author" content="liuyang1">
+  
+  <meta name="description" content="在工作当中shell,是不可避免的工具,但是因为shell沉重的历史包袱,如何写出高质量的shell脚本确实比较麻烦.
+本文并不讨论shell常见的混乱易错的地方,而是尝试从编程方法角度来探讨这个问题.">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <meta property="og:title" content="如何写出更&quot;好&quot;的shell脚本"/>
+  <meta property="og:site_name" content="River &amp; Could"/>
+
+  
+    <meta property="og:image" content="undefined"/>
+  
+
+  <link href="/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="River &amp; Could" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+  
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-59389559-1']);
+  
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+
+</head>
+
+
+<body>
+  <header id="header" class="inner"><div class="alignleft">
+  <h1><a href="/">River &amp; Could</a></h1>
+  <h2><a href="/">从前有一个大傻逼，没有人知道他是谁。</a></h2>
+</div>
+<nav id="main-nav" class="alignright">
+  <ul>
+    
+      <li><a href="/">Home</a></li>
+    
+      <li><a href="/archives">Archives</a></li>
+    
+      <li><a href="/fun">Fun</a></li>
+    
+      <li><a href="/about">About</a></li>
+    
+      <li><a href="/atom.xml">RSS</a></li>
+    
+  </ul>
+  <div class="clearfix"></div>
+</nav>
+<div class="clearfix"></div>
+</header>
+  <div id="content" class="inner">
+    <div id="main-col" class="alignleft"><div id="wrapper"><article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time datetime="2015-03-11T14:48:23.000Z"><a href="/2015/03/11/better-shell/">2015-03-11</a></time>
+      
+      
+  
+    <h1 class="title">如何写出更&quot;好&quot;的shell脚本</h1>
+  
+
+    </header>
+    <div class="entry">
+      
+
+<div id="toc" class="toc-article alignright">
+    <strong class="toc-title">Table of Content:</strong>
+    <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#脚本解释执行-没有编译检查"><span class="toc-text">脚本解释执行,没有编译检查</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#脚本是”一次性”的"><span class="toc-text">脚本是”一次性”的</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#脚本没有”显式的”提供严谨的特性"><span class="toc-text">脚本没有”显式的”提供严谨的特性</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#which-shell"><span class="toc-text">which shell?</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#引号"><span class="toc-text">引号</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#函数"><span class="toc-text">函数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#数组和关联数组"><span class="toc-text">数组和关联数组</span></a>
+</div>
+
+        <p>在工作当中shell,是不可避免的工具,但是因为shell沉重的历史包袱,如何写出高质量的shell脚本确实比较麻烦.</p>
+<p>本文并不讨论shell常见的混乱易错的地方,而是尝试从编程方法角度来探讨这个问题.<br><a id="more"></a></p>
+<p>##背景<br>一般如果使用C或者Java之类,开始写程序,我们会认真规划,划分模块和层级结构,写出专门的函数.<br>最终组织成一个可用的不管是大型或者小型的程序.<br>编译器会帮助我们进行编译检查,从而最终编译通过,链接,最终构成可执行程序.<br>我们在分别在不同的场景/输入的情况下,进行测试,检查是否有各种缺陷,然后修复它们,最终得到”最终”版本的程序.<br>后续我们还会不断使用这个程序,得到更多的bug反馈,我们再进一步修复这些bug.</p>
+<p>但是在使用shell编程的时候,我们似乎就瞬间忘记了这些原则或者方法.我们只是简单的把命令或按照顺序,或按照输入输出(Pipe)串接在一起,就认为工作完成了.但是这个时候除非是最简单的shell脚本,绝大多数情况下,这个shell脚本都是有缺陷的.</p>
+<p>之所以会出现这种情况,主要有下面几个原因.</p>
+<h3 id="脚本解释执行-没有编译检查"><a href="#脚本解释执行-没有编译检查" class="headerlink" title="脚本解释执行,没有编译检查"></a>脚本解释执行,没有编译检查</h3><p>因为脚本是解释执行的,因此可以立即执行.这种跳过了编译检查,脚本之间模块/函数的连接往往都是通过字符串进行的.而没有各种类型检查,这其实就可能放松了程序的约束.</p>
+<p>这种问题其实对一些动态语言也是存在的,不过没有shell那么严重.</p>
+<h3 id="脚本是”一次性”的"><a href="#脚本是”一次性”的" class="headerlink" title="脚本是”一次性”的"></a>脚本是”一次性”的</h3><p>脚本是简单的,一次性的,这种观念其实潜藏在我们的观念里.因为写一个可以运行,够用的脚本实在是太容易的.我们就忽视了其他没有测试的例子.最终可能还不小心轰烂了自己的腿.</p>
+<h3 id="脚本没有”显式的”提供严谨的特性"><a href="#脚本没有”显式的”提供严谨的特性" class="headerlink" title="脚本没有”显式的”提供严谨的特性"></a>脚本没有”显式的”提供严谨的特性</h3><p>我们其实很多时候没有意识到shell其实提供一些可以更好的组织的特性,这有助于我们写出更好的程序.<br>但是很多人都没有想过去应用他们.</p>
+<h2 id="which-shell"><a href="#which-shell" class="headerlink" title="which shell?"></a>which shell?</h2><p>我们知道shell其实有许多种,最为常见的是bash.<br>可是系统默认的shell一般是sh.sh很多情况下是软链接到dash.<br>二者之间其实还是存在很多微秒的细节的.因此在shell的最开始通过shebang,就是以#!开始的那一行声明使用的是哪个shell.</p>
+<p>我们后面的讨论也是基于bash的这个假设进行的.</p>
+<h2 id="引号"><a href="#引号" class="headerlink" title="引号"></a>引号</h2><p>我们知道一个最为常见的缺陷,就是无法处理带有空格的字符串.(或者文件名).</p>
+<p>实际上这个bash提供的”特性”.</p>
+<pre><code>func $param
+</code></pre><p>如果param这个变量中含有空格,那么param就会展开,从而作为func的第一个参数和第二个参数,(也可以更多,按照空格划分).</p>
+<p>可惜的是这个特性在非常多的情况下,是我们不想要的.这个时候就是使用引号来避免这种展开.</p>
+<pre><code>func &quot;$param&quot;
+</code></pre><p>不要小看这个微不足道的细节,这个缺陷在海量的脚本中存活着.以至于大家发明了另外一个技巧里避免这个缺陷:</p>
+<pre><code>文件夹的命名不要使用空格
+</code></pre><p>不过毕竟我们不能控制所有的脚本都没有缺陷,这个好习惯还是保留吧.</p>
+<h2 id="函数"><a href="#函数" class="headerlink" title="函数"></a>函数</h2><p>bash中也有函数的概念,而这个函数其实非常的原始,基本上只有参数展开的功能.</p>
+<p>不过幸好,我们在函数内部还是可以local修饰.这样可以是的变量在不同的scope中,有着各自的生命周期.</p>
+<p>而默认情况下则不是这样的.默认所有的变量都是global,这是多么可怕,几乎不用说了.</p>
+<p>函数还提供了一层抽象,里避免重复的代码.这是非常有意义的.当我们的代码有重复的部分的时候,用函数来优化吧.</p>
+<p>##source<br>很多的shell脚本都是只有一个文件.可是shell脚本也是在不断的膨胀的.终于有那么一天也许你需要多个shell脚本来容纳它.这个时候就可以考虑使用source了.</p>
+<p>使用source可以在”当前”的shell执行环境中<strong>引入/执行</strong>这个脚本.</p>
+<p>bash的初始化的过程中一系列的bashrc之类,就是通过source执行的.</p>
+<p>我们可以将通用的shell函数放在一个脚本中,然后在不同的地方source.</p>
+<p>这种方法避免了膨胀的单文件,划分了模块,同时我们未来还可能复用部分shell代码.</p>
+<pre><code>NOTE:
+真的要&quot;复用&quot;shell脚本吗?哈哈,可以把这个当做一个笑话.
+</code></pre><h2 id="数组和关联数组"><a href="#数组和关联数组" class="headerlink" title="数组和关联数组"></a>数组和关联数组</h2><p>使用数组,我们可以直接在数组上循环操作事物.在shell中我们也可以这样做的.</p>
+<p>而且bash 4.0+版本还支持了关联数组(或者说map)这种结构.从而我们可以写出更为复杂的程序了.</p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+  
+  <div class="tags">
+    <a href="/tags/bash/">bash</a>
+  </div>
+
+        
+      
+      <div class="clearfix"></div>
+<!-- 
+<div class="pagepart clearfix">
+  
+    <a href="/2015/03/07/gtd/" class="alignleft prev" title="效率工具比较与选择">效率工具比较与选择</a>
+  
+  
+    <a href="/2015/03/12/aos-bash/" class="alignright next" title="AOS ch3 bash">AOS ch3 bash</a>
+  
+</div>
+
+ -->
+    </footer>
+  </div>
+</article>
+
+
+<section id="comment">
+  <h1 class="title">留言</h1>
+
+  
+  <div id="disqus_thread">
+    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  </div>
+  
+</section>
+
+
+</div></div>
+    <aside id="sidebar" class="alignright">
+  <div class="search">
+  <form action="//google.com/search" method="get" accept-charset="utf-8">
+    <input type="search" name="q" results="0" placeholder="搜索">
+    <input type="hidden" name="q" value="site:liuyang1.github.io">
+  </form>
+</div>
+
+  
+
+  
+<div class="widget tag">
+  <h3 class="title">标签</h3>
+  <ul class="entry">
+  
+    <li><a href="/tags/C/">C</a><small>4</small></li>
+  
+    <li><a href="/tags/Haskell/">Haskell</a><small>2</small></li>
+  
+    <li><a href="/tags/Software-Engineer/">Software Engineer</a><small>1</small></li>
+  
+    <li><a href="/tags/Standard/">Standard</a><small>1</small></li>
+  
+    <li><a href="/tags/algo/">algo</a><small>2</small></li>
+  
+    <li><a href="/tags/aos/">aos</a><small>1</small></li>
+  
+    <li><a href="/tags/bash/">bash</a><small>2</small></li>
+  
+    <li><a href="/tags/basic/">basic</a><small>1</small></li>
+  
+    <li><a href="/tags/coderead/">coderead</a><small>1</small></li>
+  
+    <li><a href="/tags/hexo/">hexo</a><small>1</small></li>
+  
+    <li><a href="/tags/intro/">intro</a><small>2</small></li>
+  
+    <li><a href="/tags/mobile/">mobile</a><small>1</small></li>
+  
+    <li><a href="/tags/python/">python</a><small>3</small></li>
+  
+    <li><a href="/tags/src/">src</a><small>2</small></li>
+  
+    <li><a href="/tags/tool/">tool</a><small>4</small></li>
+  
+    <li><a href="/tags/video/">video</a><small>3</small></li>
+  
+    <li><a href="/tags/vim/">vim</a><small>1</small></li>
+  
+    <li><a href="/tags/week/">week</a><small>12</small></li>
+  
+    <li><a href="/tags/实战/">实战</a><small>1</small></li>
+  
+    <li><a href="/tags/翻译/">翻译</a><small>1</small></li>
+  
+  </ul>
+</div>
+
+</aside>
+    <div class="clearfix"></div>
+  </div>
+  <footer id="footer" class="inner"><div class="alignleft">
+  
+  &copy; 2017 liuyang1
+  
+</div>
+<div class="clearfix"></div></footer>
+  <script src="//lib.sinaapp.com/js/jquery/2.0.3/jquery-2.0.3.min.js"></script>
+<script src="/js/instantclick.min.js" data-no-instant></script>
+<script data-no-instant>
+    InstantClick.on('change', function(isInitialLoad) {
+      if (isInitialLoad === false) {
+        if (typeof _hmt !== 'undefined')
+          _hmt.push(['_trackPageview', location.pathname + location.search]);
+        if (typeof ga !== 'undefined')
+          ga('send', 'pageview', location.pathname + location.search);
+      }
+    });
+    InstantClick.init();
+</script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+
+
+<script type="text/javascript">
+var disqus_shortname = 'liuyang1';
+
+(function(){
+  var dsq = document.createElement('script');
+  dsq.type = 'text/javascript';
+  dsq.async = true;
+  dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+}());
+</script>
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "//hm.baidu.com/hm.js?0c65442b2922ed650d2d34c603409234";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,1303 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>River &amp; Could</title>
+  <subtitle>从前有一个大傻逼，没有人知道他是谁。</subtitle>
+  <link href="/atom.xml" rel="self"/>
+  
+  <link href="http://liuyang1.github.io/"/>
+  <updated>2017-01-04T12:09:10.227Z</updated>
+  <id>http://liuyang1.github.io/</id>
+  
+  <author>
+    <name>liuyang1</name>
+    <email>liuyang1@mail.ustc.edu.cn</email>
+  </author>
+  
+  <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>hexo again</title>
+    <link href="http://liuyang1.github.io/2017/01/04/hexo-again/"/>
+    <id>http://liuyang1.github.io/2017/01/04/hexo-again/</id>
+    <published>2017-01-04T11:36:24.000Z</published>
+    <updated>2017-01-04T12:09:10.227Z</updated>
+    
+    <content type="html"><![CDATA[<p>因为之前安装hexo环境的机器已经重新安装系统了，因此还需要重新安装一边hexo。</p>
+<p>不知不觉踩了些坑。</p>
+<a id="more"></a>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">sudo npm install -g hexo-cli</div><div class="line">hexo init blog</div></pre></td></tr></table></figure>
+<p> 这个步骤将会非常之慢，后来实在受不了，搜了下，npm源的问题。先去切换npm的源。</p>
+<h2 id="切换npm源"><a href="#切换npm源" class="headerlink" title="切换npm源"></a>切换npm源</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sudo npm install -g nrm</div></pre></td></tr></table></figure>
+<p>nrm是一个npm的源管理器。可惜这个过程似乎一样非常缓慢。</p>
+<p>好吧只能直接指定npm的源地址了。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sudo npm install --registry=https://registry.npm.taobao.org -g nrm</div></pre></td></tr></table></figure>
+<p>还是先手动安装nrm再说，为了之后使用方便。</p>
+<p>安装nrm完毕后，<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">nrm use taobao</div></pre></td></tr></table></figure></p>
+<p>之后，继续回去<code>hexo init blog</code>去。</p>
+<p>现在已经处于可用状态了。下一步再继续更新。</p>
+<h2 id="end-of-the-stream-or-…"><a href="#end-of-the-stream-or-…" class="headerlink" title="end of the stream or …"></a>end of the stream or …</h2><p>YAMLException: end of the stream or a document separator is expected at line x, column y:</p>
+<p>一般这种问题都是类似于yaml的配置文件写错的缘故。例如这个：<a href="http://blog.csdn.net/yongf2014/article/details/50016783" target="_blank" rel="external">http://blog.csdn.net/yongf2014/article/details/50016783</a></p>
+<p>我的错误方式比较奇怪，因为我把一个markdown文件不小心放到了img的目录下面去，然后就报了这个错误。结果我反反复复检查了很多遍markdown文件，也没要找到问题。</p>
+<h2 id="Deployer-not-found-github"><a href="#Deployer-not-found-github" class="headerlink" title="Deployer not found: github"></a>Deployer not found: github</h2><p>当我尝试去deploy到github的时候发现了这个错误。</p>
+<p>其实就是把这个里面对应的工具安装上就可以了。</p>
+<p><a href="https://github.com/hexojs/hexo/wiki/Migrating-from-2.x-to-3.0#install-hexo-cli" target="_blank" rel="external">https://github.com/hexojs/hexo/wiki/Migrating-from-2.x-to-3.0#install-hexo-cli</a></p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;因为之前安装hexo环境的机器已经重新安装系统了，因此还需要重新安装一边hexo。&lt;/p&gt;
+&lt;p&gt;不知不觉踩了些坑。&lt;/p&gt;
+    
+    </summary>
+    
+    
+      <category term="tool" scheme="http://liuyang1.github.io/tags/tool/"/>
+    
+      <category term="hexo" scheme="http://liuyang1.github.io/tags/hexo/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>翻译 通过Python的列表推导理解Monad</title>
+    <link href="http://liuyang1.github.io/2017/01/04/python_list_monad/"/>
+    <id>http://liuyang1.github.io/2017/01/04/python_list_monad/</id>
+    <published>2017-01-04T11:30:00.000Z</published>
+    <updated>2017-01-04T11:45:27.382Z</updated>
+    
+    <content type="html"><![CDATA[<p>原文链接： <a href="http://lukeplant.me.uk/blog/posts/understanding-monads-via-python-list-comprehensions/" target="_blank" rel="external">http://lukeplant.me.uk/blog/posts/understanding-monads-via-python-list-comprehensions/</a></p>
+<a id="more"></a>
+<p>在Python中，列表推导是一个非常棒的特性。这个特性借鉴自Haskell和ML语言，而归根究底，它来自于集合理论。你可能知道列表推导提供了一种非常直观的方式来从列表或者序列来建立新的列表。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">&gt;&gt;&gt; lst = [1, 2, 3]</div><div class="line">&gt;&gt;&gt; [x * 2 for x in lst]</div><div class="line">[2, 4, 6]</div></pre></td></tr></table></figure>
+<p>列表表达式用于代替下面这种写法：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">&gt;&gt;&gt; newlist = []</div><div class="line">&gt;&gt;&gt; for x in lst:</div><div class="line">...     newlist.append(x*2)</div></pre></td></tr></table></figure>
+<p>列表表达式去除了冗余的部分，从而使得Python可以更为简明。列表推导自动会创建空的列表，并且添加新的元素。这样我们不需要每次都要反复写这些代码。</p>
+<p>在学习Haskell的过程中，我发现本来熟悉的列表推导，变得有些诡异。因为Haskell中还提供了一种Monad的写法。在Haskell中，我们有着类似的代码。（在GHCi交互式命令行中，Prelude&gt;是标准的命令前导）：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">Prelude&gt; let lst = [1,2,3]</div><div class="line">Prelude&gt; [ x*2 | x &lt;- lst ]</div><div class="line">[2,4,6]</div></pre></td></tr></table></figure>
+<p>如果你懂得Python的话，这部分非常易于理解，只不过是将列表表达式翻译成英语而已。解包列表中的每个值，给它个名字<code>x</code>，然后每个返回为<code>x * 2</code>作为新的列表中的值。</p>
+<p>Haskell还有一种格式来实现同样的东西，通过<code>do</code>表达式</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">Prelude&gt; do &#123; x &lt;- lst; return (x*2) &#125;</div><div class="line">[2,4,6]</div></pre></td></tr></table></figure>
+<p>这个和上面的方式非常相似，实际上两者做的也是完全相同的事情。而且注意到，新的方式里面的表达式的顺序甚至更为接近英语，也更为符合命令式风格的思考方式。这个新的语法也反映了它最初来自于集合理论的数学表达符号。</p>
+<p>然后，有一点不一样的地方。</p>
+<p>列表推导清楚地表现了创建列表的部分。但是<code>do</code>表达式，却完全不存在列表的信息。实际上，上述表达式中关于列表的部分，仅仅是输入值的名字<code>lst</code>。为了证明这一点，我们可以基于上面的表达式，创建一个函数：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">Prelude&gt; let double val = do &#123; x &lt;- val; return (x*2) &#125;</div></pre></td></tr></table></figure>
+<p>这里定义了一个函数<code>double</code>。这个函数有一个输入值<code>val</code>。（在交互式命令中，我们必须要添加一个<code>let</code>，而在Haskell的源代码中，是不要这个<code>let</code>的）。我们可以使用这个函数</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">Prelude&gt; double [0,1,2]</div><div class="line">[0,2,4]</div></pre></td></tr></table></figure>
+<p>GHCi没有抱怨任何东西，Haskell是一个静态类型的语言，而我们完全没有提<code>val</code>的类型是什么。那么它是什么类型呢？我们可以通过GHCi内置的<code>：type</code>命令来检查，间接的地通过检查<code>double</code>函数的类型：</p>
+<p>{警告：下面部分有点tricky，但是很快又会变得简单了，坚持下}</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">Prelude&gt; :type double</div><div class="line">double :: (Monad m, Num a) =&gt; m a -&gt; m a</div></pre></td></tr></table></figure>
+<p>哇！，这到底是什么意思啊？我们首先忽略括号的部分，直接先看后面的部分：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">m a -&gt; m a</div></pre></td></tr></table></figure>
+<p>箭头告诉我们，这是一个函数。（GHC这点至少是正确的了。）它的输入类型是<code>m a</code>，输出类型也是<code>m a</code>。<code>m a</code>是一个带参数的类型，或者说参数化的类型。简单地说，我们可以说<code>m</code>是是一个容器类型的占位符。而<code>a</code>是一个容器包含的东西的类型的占位符。<br>对于上面的例子,我们的输入是<code>lst</code>，<code>m</code>就是列表。（一般使用<code>[]</code>来表示），<code>a</code>就是整数。这一般写为<code>[Integer]</code>,整数列表。而不是<code>[] Integer</code>。<br>对于我们的示例，<code>double</code>输入的整数列表，输出也是整数列表。</p>
+<p>但是GHC知道我们的函数可以更为通用，而不仅仅是面向于整数的列表。对于<code>do</code>表达式，它并不知道列表，而是推导出<code>m</code>可以是任何的<code>Monad</code>。<br>对于<code>* 2</code>，推导出<code>a</code>必须是一种数字类型，准确来说，就是实现了<code>Num</code>接口的类型（这个接口包含了整数，分数，等等）。<br>而<code>（Monad m, Num a) =&gt;</code>就是说明了这个限制。</p>
+<p>那么我们的<code>double</code>函数又是如何在完全不知道任何关于列表的信息，但是却可以从列表中解包元素，对每个值翻倍，然后再把数据重新组织为列表的呢？<br>那是因为我们使用了<code>do</code>表达式，它隐式地使用了<code>Monad</code>接口的一系列方法。而列表是一种<code>Monad</code>，定义了这些方法，因为<code>do</code>表达式就可以做到这点了。</p>
+<p>那么除了列表，我们还可以使用其他的<code>Monad</code>吗？当然，而且如果<code>Monad</code>这个接口只有<code>list</code>这一个实例的话，我们根本就不需要这么麻烦来创建一个接口了。<br>一个简单的例子是<code>Maybe</code> monad，它可以包含<code>Nothing</code>或者一个实际的值，写作<code>Just somevalue</code>。<code>Maybe</code>这种Monad或者封装了一个值，或者没有。而如果它只是包含了<code>Nothing</code>的时候，可以应用于任何函数，但是全部都返回为<code>Nothing</code>。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">Prelude&gt; double Nothing</div><div class="line">Nothing</div><div class="line"></div><div class="line">Prelude&gt; double (Just 1.5)</div><div class="line">Just 3.0</div></pre></td></tr></table></figure>
+<p>非常神奇吧，直接计算<code>Nothing * 2</code>会返回一个类型错误，但是通过<code>do</code>表达式，我们的函数就对于monad而言是通用的了。而且不需要任何额外的工作。是不是令人印象深刻？</p>
+<p>在其他语言中，你也可以创建一个工作在不同类型的的集合collections的函数，例如使用Python中的<code>iterator protocal</code>迭代器协议，或者C#中的<code>IEnumerable</code>接口。但是我们这里使它达到一个新的高度：<code>Monad接口</code>是任何容器的抽象。</p>
+<p>而且，<code>Maybe</code>和<code>list</code>在计算值的时候，考虑的是不同的策略。<code>Maybe</code>要处理的情况是0或者1个值。而<code>list</code>要处理的是任意数量的值，并且应用在所有的之上。这引出单子的值表示了一种计算，一种计算一个值，然后绑定到输入值的方法的概念。？？？<br>当考虑到<code>State transformation</code>这种<code>monad</code>的时候，这会变得很重要，例如著名的<code>IO monad</code>。在这些情况下，容器实际上是一种函数。（如果这点使得你很头痛，那么先不要考虑这些）。</p>
+<p>在Haskell中，<code>Monad</code>是一种非常通用的容器。如此通用，以至于在Haskell中有着特殊的语法糖支持。这类似于迭代器协议和列表在Python中有各种各样的语法糖支持（例如<code>for</code>，<code>in</code>，列表推导等等）。这个接口比其他的容器更为抽象，因此也更难以理解。但是也更有力。更甜的语法糖，使得它可以更为广泛的使用。</p>
+<p>例如，在<code>Parsec parser库</code>中，monad用于写一种格式，直接翻译自巴科斯范式BNF，这使得它更为易读。解析器monad知道如何应用限制，回溯等等，就像列表monad知道如果拿出一个值，然后在上面应用一个函数一样。写monad是困难的，但是在Haskell中使用它们是非常容易的，也让我们可以写出更为powerful的东西。</p>
+<p>我知道以上部分解释了monad为什么有用。下面就是要理解monad接口的函数，这已经超出了这篇文章的范围了，但是我会尝试作出一个介绍。</p>
+<p>你可能已经猜出monad方法的一些东西了。一个是很显然的，它的<code>return</code>方法，这个方法用于将东西再打包回monad。另外一个称之为<code>bind</code>或者<code>&gt;&gt;=</code>。它用于解包，在<code>do</code>表达式中，使用<code>&lt;-</code>箭头。</p>
+<p>实际上，<code>bind</code>方法不是真的用于解包和返回数据。实际上，它定义了这样一种方式，它内部处理了所有的解包，而你必须提供一个函数来返回monad中的数据。为什么这非常重要呢？因为在一些monad中，特别是IO monad中，需要确保数据是不会转义的，来保证程序按照预期来工作。类似于<code>Maybe</code>和列表monad则不那么有占有欲，你可以很容易从中很容易拿到数据。但是通过这样定义了monad接口，它就可以处理所有的情形，并且使得所有的方式都变得简单。</p>
+<p>那么<code>do</code>表达式中的<code>&lt;-</code>符号呢？它实际上是个语法糖。它帮助你可以简单地定义合适类型的函数，它看起来非常像“从monad中解包拿出数据，然后我就可以使用它了”，这在概念上有帮助。和<code>do</code>表达式的其他部分一起，构成了一个匿名lambda函数。<br>我们可以按照Python的风格来写这个函数。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">def double(val):</div><div class="line">    return val.bind(lambda x: val.return_(x*2))</div></pre></td></tr></table></figure>
+<p>这里不得不使用<code>return_</code>，因为<code>return</code>是Python的关键词，不能用作函数的名字。Haskell的<code>do</code>表达式消除了显式的<code>bind</code>和<code>lambda</code>调用，使得它进一步易于使用。当在一个很长的<code>do</code>代码块中，处理多个monad的对象的时候，就变得越来越重要了。另外，当你学习Haskell的时候，你会发现使用空白字符（换行和缩进）而不是分号和括号，是多么方便。</p>
+<p>除了上面的<code>double</code>的小例子，我完整实现了<code>List and Maybe Monads in Python</code>，尽可能保持了在Haskell中的使用方式。当然，没有Haskell的类型系统，但是Python可以实现一个。因为不像其他的OOP的语言，Python可以有无实例的方法。这个代码也展示了函数式的代码风格，几乎所有的函数都在4行代码之内。</p>
+<p>有没有一点帮助？我希望得到任何反馈或者订正。我本人也是一个Haskell的新手，因此可能哪个地方搞错了。</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;原文链接： &lt;a href=&quot;http://lukeplant.me.uk/blog/posts/understanding-monads-via-python-list-comprehensions/&quot;&gt;http://lukeplant.me.uk/blog/posts/understanding-monads-via-python-list-comprehensions/&lt;/a&gt;&lt;/p&gt;
+    
+    </summary>
+    
+    
+      <category term="python" scheme="http://liuyang1.github.io/tags/python/"/>
+    
+      <category term="Haskell" scheme="http://liuyang1.github.io/tags/Haskell/"/>
+    
+      <category term="翻译" scheme="http://liuyang1.github.io/tags/%E7%BF%BB%E8%AF%91/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>[vim] clighter8</title>
+    <link href="http://liuyang1.github.io/2017/01/04/clighter8/"/>
+    <id>http://liuyang1.github.io/2017/01/04/clighter8/</id>
+    <published>2017-01-04T11:14:23.000Z</published>
+    <updated>2017-01-04T11:42:37.695Z</updated>
+    
+    <content type="html"><![CDATA[<p>随着VIM进入8.0时代，终于有了一系列的异步调用的支持。这些支持使得vim可以更好的处理复杂的异步操作，例如编译，建立tag等等。</p>
+<p>而vim的语法渲染方案过去只能够给予纯文本的分析，因此只能够对例如关键词，基本的语法结构啊，比如括号之前的部分进行格式上的区分，但是因为没有语义的概念，所有就有一些限制，比如，就不能对函数和宏进行区分进行渲染。</p>
+<p><a href="https://github.com/bbchung/clighter8" target="_blank" rel="external">clighter8</a>就是这样的一个CS架构的vim插件。</p>
+<a id="more"></a>
+<p>它利用了vim的<code>channel</code>的API，主要集成了<a href="http://clang.llvm.org/" target="_blank" rel="external">clang</a>用于语义分析。提供以下的特性：</p>
+<ul>
+<li>运行时可变的，高度定制的语法高亮。</li>
+</ul>
+<p>其他的特性，我没有觉得特别有用：</p>
+<ul>
+<li>重命名重构</li>
+</ul>
+<p>这个不是很常用，而且相比于全文替换相比，没有觉得有非常大的用处。而且我的工作代码库特别庞大，因此使用这个工具也不能保证不会引入问题。</p>
+<ul>
+<li>自动后台运行gtags</li>
+</ul>
+<p>这个也有缺陷，因为它只会在当前目录运行，不会在git root目录运行，因此反而会shadow掉我原本放在git root目录下面的gtags文件。</p>
+<ul>
+<li>clang-format集成</li>
+</ul>
+<p>我在实际中采用unicurstiry而不是clang-format，因此这个特性对于我而言也没有用途。</p>
+<hr>
+<p>先展示下使用clighter8前后的效果对比图。我使用的是molokai主题，本来就比较花哨。<br>使用clighter8之后，可以清晰的区分宏和函数，区分变量的定义和使用时的高亮。对于函数的定义，也有额外的高亮支持。</p>
+<p><img src="img/clighter8.png" alt="cligher8"></p>
+<p>这个插件需要：</p>
+<ul>
+<li>vim8.0，并且打开job和channel的支持。</li>
+<li>libclang和兼容的python bindings。</li>
+<li>clang-format</li>
+<li>GNU global</li>
+</ul>
+<p>这些东西都需要预先安装好。后面的clighter8的安装过程才可以保证顺利没有问题。</p>
+<p>安装过程则非常简单,使用任意一款包管理器，我使用的是Plug</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">Plug &apos;bbchung/clighter8&apos;</div></pre></td></tr></table></figure>
+<h2 id="issues"><a href="#issues" class="headerlink" title="issues"></a>issues</h2><h3 id="clighter8-failed-start-engine"><a href="#clighter8-failed-start-engine" class="headerlink" title="[clighter8] failed start engine"></a>[clighter8] failed start engine</h3><p>这个错误是因为engine.py的脚本没有启动成功。我检查下，发现它碰到一个异常，没有找到libclang.so。这是因为我没有配置</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">let g:clighter8_libclang_path=&quot;/usr/lib/llvm-3.9/lib/libclang.so&quot;</div></pre></td></tr></table></figure>
+<p>这里按照你对应的clang版本进行配置。</p>
+<p>其他问题可以尝试检查<code>/tmp/cligher8.log</code>.</p>
+<h3 id="编译选项的自定义"><a href="#编译选项的自定义" class="headerlink" title="编译选项的自定义"></a>编译选项的自定义</h3><p>除了最简单的项目，我们都需要自己定义的一堆编译选项。需要配置</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">let g:clighter8_global_compile_args=[&apos;-Ipthread&apos;, ...]</div></pre></td></tr></table></figure>
+<h3 id="clighter8Expr的问题"><a href="#clighter8Expr的问题" class="headerlink" title="clighter8Expr的问题"></a>clighter8Expr的问题</h3><p>配置完成之后，发现经常会提醒没有关于clighter8Expr的高亮配置。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">highlight default link clighter8Expr cString</div></pre></td></tr></table></figure>
+<hr>
+<p>有问题的话，可以查看其文档，如果相应的功能有问题，可能是依赖没有安装，或者对应的配置选项没有进行配置。</p>
+<p>目前已经基本功能可用，后续再看需要吧。</p>
+<p>更多我的配置，可以参考<a href="https://github.com/liuyang1/dotfiles" target="_blank" rel="external">dotfiles</a></p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;随着VIM进入8.0时代，终于有了一系列的异步调用的支持。这些支持使得vim可以更好的处理复杂的异步操作，例如编译，建立tag等等。&lt;/p&gt;
+&lt;p&gt;而vim的语法渲染方案过去只能够给予纯文本的分析，因此只能够对例如关键词，基本的语法结构啊，比如括号之前的部分进行格式上的区分，但是因为没有语义的概念，所有就有一些限制，比如，就不能对函数和宏进行区分进行渲染。&lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;https://github.com/bbchung/clighter8&quot;&gt;clighter8&lt;/a&gt;就是这样的一个CS架构的vim插件。&lt;/p&gt;
+    
+    </summary>
+    
+    
+      <category term="vim" scheme="http://liuyang1.github.io/tags/vim/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>实战 最长状态</title>
+    <link href="http://liuyang1.github.io/2016/06/13/haskell-longeststatus/"/>
+    <id>http://liuyang1.github.io/2016/06/13/haskell-longeststatus/</id>
+    <published>2016-06-13T14:42:54.000Z</published>
+    <updated>2017-01-03T01:24:49.069Z</updated>
+    
+    <content type="html"><![CDATA[<p>从去年开始,陆续学习了一点Haskell的东西,当时在<a href="https://github.com/liuyang1/test/tree/master/lang/haskell/codewars" target="_blank" rel="external">codewars</a>上面着实写了一些练习题,还有<a href="https://github.com/liuyang1/H99" target="_blank" rel="external">H99</a>之类的.</p>
+<p>最近又开始回头看<a href="https://github.com/liuyang1/sicp-ans" target="_blank" rel="external">SICP</a>,然后看到racket,接触到<a href="http://courses.cs.washington.edu/courses/cse341/15au/index.html" target="_blank" rel="external">CSE341</a>的课程,这个过程中自己也有和Haskell进行比较.</p>
+<p>比较的结果,就是Haskell还是有着自己的独特之处的,值得再继续学习下去.</p>
+<p>学习要结合着练习,毕竟学的都是死的,真的能够在日常生活中使用起来,才能够保持对相关知识的活力.</p>
+<p>所以就有了今天这个实战的小code.</p>
+<a id="more"></a>
+<h1 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h1><p>要完成的功能其实非常简单.</p>
+<pre><code>日志处理
+日志按行分布,部分行中带有BufferS的信息.
+这些行的Log中,有的带有status信息.具体的的status,则是从status到该行的最后.
+找到停留在该status最长的状态,并且输出对应的停留的行数.
+注意:带有BufferS的行并不一定是连续的.
+</code></pre><p>这个要求其实比较简单,就是求出该日志中停留在什么状态最长.</p>
+<p>其中可能涉及到的方法有:</p>
+<pre><code>参数解析
+文件读取,和标准输出
+文本处理
+</code></pre><p>其他东西,则涉及到Haskell具体的一些东西了,后面再说.</p>
+<h1 id="实战"><a href="#实战" class="headerlink" title="实战"></a>实战</h1><p>本文涉及到的Haskell的特点</p>
+<h2 id="副作用"><a href="#副作用" class="headerlink" title="副作用"></a>副作用</h2><p>很多资料都介绍说Haskell是一个没有副作用的语言.这其实是不可能的,如果完全没有副作用,那么其实就等于不能够运行一样.</p>
+<p>盗图一张啊 :)</p>
+<p><img src="/img/xkcd_haskell.png" alt="Haskell" align="center"></p>
+<p>但是Haskell的副作用限制比较大,至少要符合其对应的类型系统中去.这样的结果就是副作用比较集中,从而不会散布在代码的各个地方.</p>
+<p>例如:</p>
+<figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="title">main</span> = <span class="keyword">do</span></div><div class="line">        args  &lt;- getArgs</div><div class="line">        s &lt;- <span class="type">C</span>.readFile $ head args</div><div class="line">        print $ process s</div></pre></td></tr></table></figure>
+<p>所用的带副作用的代码,都在main函数的控制中.而这里代用副作用的函数其实就三个getArgs获得参数,readFile,以及print打印.比如我想把打印直接放在process的函数里面,这个时候就会有问题,因为process的类型就必须是IO类型的.这和一般的代码结构是矛盾的.</p>
+<h2 id="函数式"><a href="#函数式" class="headerlink" title="函数式"></a>函数式</h2><p>在上面的代码片段中,以及可以获取参数,读取文件,标准输出都包含了.下面就集中在文本处理process的过程上.</p>
+<p>首先需要将整个文件读取内容按行进行划分,使用lines函数.lines函数将内容划分成字符串列表[String].</p>
+<p>   <br></p>
+<h3 id="评论"><a href="#评论" class="headerlink" title="评论"></a>评论</h3><p>从此可以看到Haskell的一个特点,自带电池,库的强大性.这点基本上在所有的编程语言的发展历史上都有所体现.从C到C++,到Java,包括Haskell,以及一堆在jvm上面的语言.</p>
+<p>第二个特点,数据结构的支持,原始的编程语言中很少带有强大的数据结构,但是后续的编程语言都带有强大的数据结构,包括列表,map(或者dict字典,关联数组).</p>
+<p>如果说各种各样的库,使得编程语言的能力加性的提高,那么数据结构在使得编程语言的能力有着乘性的提高.</p>
+<p>   <br></p>
+<p>下面需要过滤字符串列表,带有BufferS并且带有status的继续处理,其他的可以丢失掉.结合函数式编程语言标配的<code>filter</code>,只需要提供一个谓词函数就可以了.</p>
+<figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="title">isStatus</span> x = isInfixOf <span class="string">"BufferS"</span> x &amp;&amp; isInfixOf <span class="string">"status"</span> x</div></pre></td></tr></table></figure>
+<p>函数式编程语言的函数式的特点,可以提供更高的抽象性.一般的函数操作其输入输出数据,高阶的函数操作函数,从而提高更高的抽象性.</p>
+<figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">(.&amp;&amp;.) f g a = (f a) &amp;&amp; (g a)</div><div class="line"><span class="title">isStatus</span> = isInfixOf <span class="string">"BufferS"</span> .&amp;&amp;. isInfixOf <span class="string">"status"</span></div></pre></td></tr></table></figure>
+<p>这里的<code>.&amp;&amp;.</code>,其实是一个函数,类似于C++的操作符重载.这里相当于建立一个新的操作符.这个操作将两个谓词函数都应用在参数上并且<code>与</code>起来.也就是组成一个新的谓词函数,要求同时满足两个谓词函数.听起来觉得好像和一般的<code>与</code>似乎差不多啊.</p>
+<pre><code>&amp;&amp; -&gt; 返回一个布尔值,该布尔值是两个值的`与`
+.&amp;&amp;. -&gt; 返回一个谓词函数,该函数要求同时满足(`与`)两个谓词函数
+</code></pre><p>这样对比一下,好像清晰一点点了.</p>
+<p>紧接着,从满足条件的字符串中提取除相应的状态信息.</p>
+<p>然后就到了最核心的逻辑的地方了.</p>
+<figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="comment">-- find status in bufferstatus line log</span></div><div class="line"><span class="title">probeState</span> = snd . breakOnEnd <span class="string">" status "</span></div><div class="line"></div><div class="line"><span class="comment">-- max Run Length Encoding</span></div><div class="line"><span class="title">maxRLE</span> = maximumBy (comparing snd) . map (head &amp;&amp;&amp; length) . group</div></pre></td></tr></table></figure>
+<ol>
+<li>从右向左边看,<code>group</code>将列表划分成列表的列表,这个新的列表中的每个列表都是相同的.</li>
+<li>同时应用<code>head</code>和<code>length</code>函数到列表的元素(第二级的列表).</li>
+<li><code>maximumBy</code>函数,则比较元素的第二个参数.</li>
+</ol>
+<p>例如:</p>
+<pre><code>[&quot;a&quot;, &quot;a&quot;, &quot;b&quot;, &quot;c&quot;, &quot;c&quot;, &quot;c&quot;, &quot;a&quot;]
+-&gt;
+[[&quot;a&quot;, &quot;a&quot;], [&quot;b&quot;], [&quot;c&quot;, &quot;c&quot;, &quot;c&quot;], [&quot;a&quot;]]
+-&gt;
+[(&quot;a&quot;, 2), (&quot;b&quot;, 1), (&quot;c&quot;, 4), (&quot;a&quot;, 1)]
+-&gt;
+(&quot;c&quot;, 4)
+</code></pre><p>从这一段可以看到Haskell强大的表现力.对Haskell熟悉以后,这一段就像直接翻译处核心逻辑一样.除了关键点的逻辑之外,没有一点点噪声,没有奇奇怪怪的中间变量和下标,没有特意构造出来的临时的数据结构.甚至可以说肯定没有bug,因为这些已经是最上层的逻辑的翻译了,如果有问题,那也是程序员对需求的逻辑没有理解清楚,而不是代码本身的bug.</p>
+<h2 id="性能问题"><a href="#性能问题" class="headerlink" title="性能问题"></a>性能问题</h2><p>从上面来看,Haskell的这段代码岂不是很好,没有一点问题了?</p>
+<p>也不尽然,这段代码的性能比较慢,对于100M+的日志文件,需要处理40s+.这个时间在实际的使用过程中是不能接受的.日常工作中节奏的连贯性是非常重要的,过长的等待时间会使得程序员的注意力无法保持集中,从而打断其工作的状态,因此需要优化.</p>
+<p>Haskell的优化可以通过profiling来进行.如果没有profiling则不要做任何优化,因为这个时候根本不知道要优化什么地方,仅仅依赖于幻想来优化,往往只是浪费时间而已.</p>
+<p>profile的结果显示,第一步的lines就需要很长的时间.从网上搜索发现,可以通过将String优化为ByteString数据结构,从而大大加快其性能.</p>
+<h2 id="兼容性"><a href="#兼容性" class="headerlink" title="兼容性"></a>兼容性</h2><p>而Haskell上,<code>ByteString</code>和<code>String</code>是两种数据结构,但是有很多的成员函数?都是<code>API兼容</code>的,从而比较容易切换过去.</p>
+<p>注意的是,这里的兼容和一般的API兼容是不同的,这里其实是其域上的函子是一致的.</p>
+<p>比如,两个结构上都有<code>isInfixOf</code>函数.</p>
+<pre><code>-- Stirng, [Char] 使用的
+isInfixOf :: [a] -&gt; [a] -&gt; Bool
+-- ByteString
+isInfixOf :: ByteString -&gt; ByteString -&gt; Bool
+-- 只是保持这个形式不变
+T -&gt; T -&gt; Bool
+</code></pre><p>完整的代码在这里</p>
+<p><a href="https://github.com/liuyang1/test/tree/master/lang/haskell/practice" target="_blank" rel="external">github</a></p>
+<p>回头看,很多地方就是在胡言乱语,姑且先记在这里吧.</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;从去年开始,陆续学习了一点Haskell的东西,当时在&lt;a href=&quot;https://github.com/liuyang1/test/tree/master/lang/haskell/codewars&quot;&gt;codewars&lt;/a&gt;上面着实写了一些练习题,还有&lt;a href=&quot;https://github.com/liuyang1/H99&quot;&gt;H99&lt;/a&gt;之类的.&lt;/p&gt;
+&lt;p&gt;最近又开始回头看&lt;a href=&quot;https://github.com/liuyang1/sicp-ans&quot;&gt;SICP&lt;/a&gt;,然后看到racket,接触到&lt;a href=&quot;http://courses.cs.washington.edu/courses/cse341/15au/index.html&quot;&gt;CSE341&lt;/a&gt;的课程,这个过程中自己也有和Haskell进行比较.&lt;/p&gt;
+&lt;p&gt;比较的结果,就是Haskell还是有着自己的独特之处的,值得再继续学习下去.&lt;/p&gt;
+&lt;p&gt;学习要结合着练习,毕竟学的都是死的,真的能够在日常生活中使用起来,才能够保持对相关知识的活力.&lt;/p&gt;
+&lt;p&gt;所以就有了今天这个实战的小code.&lt;/p&gt;
+    
+    </summary>
+    
+    
+      <category term="实战" scheme="http://liuyang1.github.io/tags/%E5%AE%9E%E6%88%98/"/>
+    
+      <category term="Haskell" scheme="http://liuyang1.github.io/tags/Haskell/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>YUV viewer</title>
+    <link href="http://liuyang1.github.io/2016/04/23/yuvviewer/"/>
+    <id>http://liuyang1.github.io/2016/04/23/yuvviewer/</id>
+    <published>2016-04-23T14:00:07.000Z</published>
+    <updated>2017-01-03T01:24:49.073Z</updated>
+    
+    <content type="html"><![CDATA[<p>yet another yuv viewer</p>
+<a id="more"></a>
+<p>My daily job need check <a href="http://liuyang1.github.io/2015/12/29/yuv/">YUV (Chinese)</a> frequently.</p>
+<p>There are so may yuv tools to convert / view YUV image. I use <a href="http://datahammer.de/" target="_blank" rel="external">7yuv</a> at PC. 7yuv have one tip: <strong>save format to preset</strong>, with this feature, it could save to width, height and format information for next time using. It’s handful. However, 7yuv is commercial software, and impossible to improve it. And I work at linux most time, so have to switch to PC to use 7yuv. So I decide to find open source tool at linux and improve it by myself.</p>
+<h2 id="yuv-viewer"><a href="#yuv-viewer" class="headerlink" title="yuv-viewer"></a>yuv-viewer</h2><p>Find <a href="https://github.com/liuyang1/yuv-viewer" target="_blank" rel="external">yuv-viewer</a> forked from <a href="https://github.com/figgis/yuv-viewer" target="_blank" rel="external">figg’s</a>.</p>
+<p>This tool is based libsdl, and match linux-style, simple and fast, easy to use keybindings.</p>
+<p>I plan to branch out and develop some features for myself.</p>
+<p><img src="/img/akiyo_cif.png" alt="akiyo cif" align="center"></p>
+<p>already add feature</p>
+<ul>
+<li>guess arguemnts from filename</li>
+<li>yuv420sp format support</li>
+<li>interactive change width and height on the fly</li>
+</ul>
+<p>will add these fetures next step:</p>
+<ul>
+<li>yuv420sp 10bit support</li>
+<li>tiled yuv420sp support</li>
+</ul>
+<p>If have any interested, welcome feed back.</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;yet another yuv viewer&lt;/p&gt;
+    
+    </summary>
+    
+    
+      <category term="tool" scheme="http://liuyang1.github.io/tags/tool/"/>
+    
+      <category term="video" scheme="http://liuyang1.github.io/tags/video/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>快慢指针问题的讨论</title>
+    <link href="http://liuyang1.github.io/2016/04/02/fast-slow-pointer/"/>
+    <id>http://liuyang1.github.io/2016/04/02/fast-slow-pointer/</id>
+    <published>2016-04-02T12:50:27.000Z</published>
+    <updated>2017-01-03T01:24:49.069Z</updated>
+    
+    <content type="html"><![CDATA[<p>又是一个非常常见的问题.</p>
+<p>最近在缓慢的学习 leetcode 上面的习题. 看到了有些问题都和这个有点关系,就总结下来.</p>
+<a id="more"></a>
+<p>原始问题大家都很熟悉了.</p>
+<h2 id="141-Linked-List-Cycle-I"><a href="#141-Linked-List-Cycle-I" class="headerlink" title="141. Linked List Cycle I"></a>141. <a href="https://leetcode.com/problems/linked-list-cycle/" target="_blank" rel="external">Linked List Cycle I</a></h2><pre><code>给定链表,发现其中是否有环.
+</code></pre><p>暴力手段,就是保存所有自链表头部节点开始的所有节点,然后一边向后遍历,一边向前比较,如果没有重复出现节点,那么不存在环路;如果有重复出现的节点,那么检测到存在环路.</p>
+<p>这种方式,因为需要保持已经遍历过的节点,因此需要较多的存储空间. 同时因为比较过程也比较复杂,时间复杂度也不好.</p>
+<p>这个问题可以通过快慢指针很好的解决.</p>
+<pre><code>- 慢指针:每次迭代,向前移动一个节点 `pSlow = pSlow-&gt;next;`
+- 快指针:每次迭代向前移动两个节点 `pFast = pFast-&gt;next-&gt;next;`
+</code></pre><p>如果<code>pFast</code>或者<code>pFast-&gt;next</code>为<code>NULL</code>,则检查到链表尾部,发现没有存在环路; 如果发现 <code>pFast == pSlow</code> 则存在环路.</p>
+<p>需要注意的一点是,当发现 <code>pFast == pSlow</code> 的时候,并不一定是链表出现环路位置的入口位置.</p>
+<p>暴力手段之所以复杂,主要在于没有充分利用题目的限定条件. 题目考虑是否出现环路的问题,如果出现环路,那么必然会遍历到已经遍历过的节点.但是此时,并不需要第一次检查到遍历过的节点是,就立刻检查出来. 而因为环路存在,后续被继续遍历的节点,实际上也会被再次检查到.我们在之后的位置,检查到环路也是可以的. 快慢指针的方案,就放弃了”在环路入口位置就检查到环路存在”这一点,从而另辟蹊径.</p>
+<p><a href="https://github.com/liuyang1/test/blob/master/lang/c/leetcode/linkedListCycle.141.c" target="_blank" rel="external">linkedListCycle.141.c</a></p>
+<h2 id="142-Linked-List-Cycle-II"><a href="#142-Linked-List-Cycle-II" class="headerlink" title="142. Linked List Cycle II"></a>142. <a href="https://leetcode.com/problems/linked-list-cycle-ii/" target="_blank" rel="external">Linked List Cycle II</a></h2><pre><code>给定链表,如果存在环路,找到环路的入口位置;如果不存在环路,返回`NULL`
+</code></pre><p>很明显,这个问题在141问题基础上更进一步. 例如141的快慢指针方案,可以简单快速的找到入口的存在.</p>
+<p>假设存在环路, 环路部分节点个数为r, 从头部到环路部分节点个数为l. 那么到快慢指针相遇,慢指针走了s步,快指针走可2s步.因为快指针走的快,在环路上饶圈子,设饶了k圈,整圈之外又走了r0步.</p>
+<p>则</p>
+<pre><code>s = l + r0
+2s = l + kr + r0
+=&gt;
+2(l + r0) = l + kr + r0
+r0 = kr - l
+</code></pre><p>因此考虑如何找到环路的入口处,也就是寻找到消除r0的方式.所以消除r0的方式,就是再移动 l 步.因此将一个指针放回到链表入口head处,然后另一个指针继续在环路上转圈子,直到二者再次相遇,这个时候,就是环路的入口位置.</p>
+<p><a href="https://github.com/liuyang1/test/blob/master/lang/c/leetcode/linkedListCycle.142.c" target="_blank" rel="external">linkedListCycle.142.c</a></p>
+<h2 id="148-Sort-List"><a href="#148-Sort-List" class="headerlink" title="148. Sort List"></a>148. <a href="https://leetcode.com/problems/sort-list/" target="_blank" rel="external">Sort List</a></h2><pre><code>排序一个链表.
+</code></pre><p>根据链表的特性,合并排序最为简单,因为链表的合并过程,可以之间通过链表的指针过程进行,因此不需要数据的额外搬运过程.</p>
+<p>如果链表当中没有环路的话,使用快慢指针可以快速得到链表的中点位置. 当快指针走到链表的尾部的时候,慢指针刚好在链表的中点位置.</p>
+<p>在合并排序一个链表的时候,就利用这个技巧可以定位到链表的中间位置,然后分别对前后各一半进行排序,然后再把二者合并起来.</p>
+<p><a href="https://github.com/liuyang1/test/blob/master/lang/c/leetcode/sortList.148.c" target="_blank" rel="external">sortList.148.c</a></p>
+<h2 id="234-Palindrome-Linked-List"><a href="#234-Palindrome-Linked-List" class="headerlink" title="234. Palindrome Linked List"></a>234. <a href="https://leetcode.com/problems/palindrome-linked-list/" target="_blank" rel="external">Palindrome Linked List</a></h2><pre><code>检查链表是否是回文.
+</code></pre><p>同样需要寻找链表的中间节点,需要选择链表的中间节点,那么就可以将链表的后半部分逆序,然后就变成链表的前半部分和(逆序后的)后半部分的比较问题.比较结束后,可以再次将后半部分逆序回去,从而保持链表不变.</p>
+<p>一个小细节,就是链表的长度是奇数的时候,这个时候链表不能够均分为两部分,我们需要找的是链表的后中位点,因此需要<code>pSlow</code>向前再移动一次.</p>
+<p><a href="https://github.com/liuyang1/test/blob/master/lang/c/leetcode/validPalindLinkedList.234.c" target="_blank" rel="external">validPalindLinkedList.234.c</a></p>
+<p>以上两个小问题,仅仅是根据快慢指针需要链表的中间位置,非常简单.</p>
+<h2 id="202-Happy-Number"><a href="#202-Happy-Number" class="headerlink" title="202. Happy Number"></a>202. <a href="https://leetcode.com/problems/happy-number/" target="_blank" rel="external">Happy Number</a></h2><pre><code>检查一个数是否是happy number.
+
+对数字可以进行一种迭代,各位数字的平方和.反复进行迭代,如果可以迭代到1,那么因为1的平方和就是1,迭代就会停止,这个数字就是happy number,如果可以循环进行这种迭代,一直到无法迭代到1,那么就不是happy number.
+</code></pre><p>比如:19就是happy number.因为</p>
+<pre><code>1 ^ 2 + 9 ^ 2 = 82
+8 ^ 2 + 2 ^ 2 = 68
+6 ^ 2 + 8 ^ 2 = 100
+1 ^ 2 + 0 ^ 2 + 0 ^ 2 = 1
+</code></pre><p>显然这个问题和快慢指针的问题,有一定的相似之处,都是检查环路或者尾部的存在性的.</p>
+<p>首先可以定义好迭代函数iter. “快指针”迭代两次,”慢指针”迭代一次,如果快指针迭代过程中可以达到1,则是happy number,如果”快指针”,”慢指针”二者相等(相遇),则说明可以循环进行,不是happy number.</p>
+<p>因此可以看到这个问题和快慢指针问题是同构的.只是,对于链表环路检查问题,迭代函数是<code>-&gt;next</code>,尾部节点是<code>NULL</code>;对于这个问题迭代函数是上述计算过程 <code>iter</code> 而已.尾部节点是1.</p>
+<pre><code>(\x -&gt; x-&gt;next, nil) &lt;=&gt; (iter, 1)
+</code></pre><p><a href="https://github.com/liuyang1/test/blob/master/lang/c/leetcode/happyNumber.202.c" target="_blank" rel="external">happyNumber.202.c</a></p>
+<h2 id="287-find-duplicate-nums"><a href="#287-find-duplicate-nums" class="headerlink" title="287. find duplicate nums"></a>287. <a href="https://leetcode.com/problems/find-the-duplicate-number/" target="_blank" rel="external">find duplicate nums</a></h2><pre><code>已知数组中包含`n + 1`个元素,任意元素在`[1, n]`范围内的整数.显然根据抽屉原理,必然存在一个元素,在至少出现了两次.找到这个重复出现的元素.
+
+需要注意:数字中重复出现的元素,也可能重复出现多次.
+</code></pre><p>暴力方案,直接对数组进行一个统计,最后直接可以找到重复出现的元素,这个方案需要<code>O(n)</code>的存储空间.时间复杂度也是<code>O(n)</code>.或者直接进行双重循环,则时间复杂度为<code>O(n^2)</code>,不需要额外的存储空间.如果可以限定出现元素的次数,还有可能通过位运算的技巧解决.但是这里重复出现的元素的出现次数是不定的.其他没有出现的元素(如果存在的话),也是不定的.因此也无法通过位运算解决.</p>
+<p>学习过完全二叉树的数组表示的,之道数组的下标(index),其实就是一种指针.而在这个问题中数组的下标取值范围为<code>[0, n]</code>,所以这个数组就是一个定义域为<code>[0, n]</code>,值域为<code>[1, n]</code>的函数,记这个函数为<code>A</code>,并且<code>A</code>也是可以反复迭代的.重复出现的元素,则意味着<code>A(a) = A(b) = c</code>,其中<code>a &lt; b</code>. 比如数组:</p>
+<pre><code>[1, 2, 4, 2, 3]
+下标为
+ 0, 1, 2, 3, 4
+</code></pre><p>这个数组表示的函数中<code>A(1) = A(3) = 2</code>, 则这个数组的迭代过程(设从0开始):</p>
+<pre><code>0 -&gt; 1 -&gt; {2 -&gt; 4 -&gt; 3} -&gt; 2 -&gt; 4 -&gt; 3 -&gt; ...
+</code></pre><p>可以看到<code>2-&gt;4-&gt;3</code>出现了一个环路.而问题就是寻找这个环路的入口节点.这也是链表环路的同构问题可以,完全可以通过快慢指针的技巧完成.</p>
+<p><a href="https://github.com/liuyang1/test/blob/master/lang/c/leetcode/findDup.287.c" target="_blank" rel="external">findDup.287.c</a></p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;又是一个非常常见的问题.&lt;/p&gt;
+&lt;p&gt;最近在缓慢的学习 leetcode 上面的习题. 看到了有些问题都和这个有点关系,就总结下来.&lt;/p&gt;
+    
+    </summary>
+    
+    
+      <category term="algo" scheme="http://liuyang1.github.io/tags/algo/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>投票多数问题</title>
+    <link href="http://liuyang1.github.io/2015/12/30/vote/"/>
+    <id>http://liuyang1.github.io/2015/12/30/vote/</id>
+    <published>2015-12-30T14:04:46.000Z</published>
+    <updated>2017-01-03T01:24:49.069Z</updated>
+    
+    <content type="html"><![CDATA[<p>一个算法问题，虽然简单，但是别有趣味。</p>
+<p>问题非常简单，已知数组中有一个元素出现次数大于N/2次，其中N为数组长度。求这个元素。</p>
+<a id="more"></a>
+<h2 id="常见解法"><a href="#常见解法" class="headerlink" title="常见解法"></a>常见解法</h2><p>首先直观上可以对数组进行排序，然后排序后数组的中位数，就是结果。这种方法复杂度在于排序，为O(n * log(n))。</p>
+<p>在数组中元素范围有限，或者元素范围很大，但是可以哈希的话，则可以在数组上进行一次统计计数，那么扫描数组一遍，即可以得到统计结果，然后在统计结果上遍历求解结果。这种方法的复杂度是O(n)的，缺点是需要额外的存储空间，特别是元素范围较大需要哈希，并且出现元素多数不相等的时候，需要O(n)的额外空间。</p>
+<p>元素范围有限的情况下，还可以用基数排序，复杂度也是O(n).</p>
+<p>上面的两种算法都有些overkill，方法一做了额外的排序，方法二做了额外的统计，这两部分实际上都做了许多的额外操作。</p>
+<p><img src="/img/ScarletOverkill.jpg" alt="Scarlet Overkill"></p>
+<p>其实对于这个问题，可以随机选择一个元素，然后统计该元素出现次数，如果大于N/2,则返回。检查一个数是否满足N/2，只需要遍历一遍数组即可。这种概率性的算法复杂度是多少呢？</p>
+<p>从N个对象中抽取p频次的对象的问题，直到抽中为止。这是一个<a href="https://zh.wikipedia.org/wiki/%E5%B9%BE%E4%BD%95%E5%88%86%E4%BD%88" target="_blank" rel="external">几何分布</a>问题，呈几何分布的随机变量X的期望值E(X)=1/p。</p>
+<p>对于本题，那么期望抽取两次即可以得到结果，看起来非常划算。算法实现在这里<a href="https://github.com/liuyang1/test/blob/master/lang/c/leetcode/majorityElem.169.c" target="_blank" rel="external">majorityElem.169.c</a></p>
+<p>而且以上是考虑从N个对象中抽取，有放回的情况（也就是抽取目标对象，频率保持p不变）。如果设计算法避免重复抽取已知不是目标的对象，那么显然可以进一步提高抽中的概率。期望抽取更少次，就可以得到正确结果。这里避免抽取已经抽过的对象，可以直接在原数组上交换元素就可以完成，不需要额外空间，这里不是重点，就不展开了。这种不放回的抽样方法属于<a href="https://zh.wikipedia.org/wiki/%E8%B6%85%E5%87%A0%E4%BD%95%E5%88%86%E5%B8%83" target="_blank" rel="external">超几何分布</a>。</p>
+<p>那么还有更好的算法了吗？有没有只需要常量存储空间，复杂度只有O(n)的确定性算法吗？</p>
+<p>这就是本文要介绍的内容。</p>
+<h2 id="Moore’s-Vote-Algorithm"><a href="#Moore’s-Vote-Algorithm" class="headerlink" title="Moore’s Vote Algorithm"></a>Moore’s Vote Algorithm</h2><p>Moore的这个算法，本是非常简单，教授本人对这个直观算法也非常自豪，专门列在自己的<a href="https://www.cs.utexas.edu/~moore/best-ideas/index.html" target="_blank" rel="external">`My` Best Ideas</a>页面中。</p>
+<p>对于已知必然存在频次大于N/2的对象的情况下，该算法只需要扫描数组一遍，即可得到结果。<br>算法过程如下：</p>
+<pre><code>初始化计数值cnt为0，
+扫描数组
+    如果cnt为0，那么当前值设为cand，并且cnt设为1.
+    如果cnt不为0
+        并且当前值和cand相等，则cnt++。
+        或者当前值和cand不相等，则cnt--。
+</code></pre><p>这个算法简单到已经可以直接转换为代码了。Moore教授还给出了一个单步运行算法的<a href="https://www.cs.utexas.edu/~moore/best-ideas/mjrty/example.html#step01" target="_blank" rel="external">示例</a>，很直观。<br>我的实现可以看<a href="https://github.com/liuyang1/test/blob/master/lang/c/leetcode/majorityElem.169.moore.c" target="_blank" rel="external">majorityElem.169.moore.c</a></p>
+<p>假设频次大于N/2的对象值为A，如果cnt等于零，则可以确定在数组已经扫描过的部分，A的出现频率少于等于1/2。(如果A或者任意其他值在已经扫描部分大于1/2，则cnt不能为0)。那么未扫描部分，则A的频率依然是大于等于1/2，问题的规模得以减小，但性质保持不变。具体可以参考论文<a href="http://www.cs.utexas.edu/users/boyer/mjrty.ps.Z" target="_blank" rel="external">MJRTY - A Fast Majority Vote Algorithm</a>。</p>
+<p>对于确定存在频次大于N/2的对象的情况下，算法到此结束了。<br>对于不能确定是否存在频次大于N/2的对象的情况下，还需要额外一次数组扫描。对其出现次数进行计数，如果大于N/2,则为结果值，否则没有频次大于N/2的对象。</p>
+<p>这个算法只需要2个额外存储空间，并且还可以处理不确定是否存在结果的情况。（概率算法不能够处理这种情况）。而且算法过程异常直观。Moore教授的这篇论文<a href="http://www.cs.utexas.edu/users/boyer/mjrty.ps.Z" target="_blank" rel="external">MJRTY - A Fast Majority Vote Algorithm</a>可惜没有出版。</p>
+<p>这个问题还可以进一步推广，如何寻找出现频率大于1/3的对象。或者如何寻找出现频率大于1/K(其中K&lt;N)的对象呢？</p>
+<p>Moore教授的同事Misra在上述算法的激励下，也在思考这个问题。</p>
+<h2 id="Misra’s-Algorithm"><a href="#Misra’s-Algorithm" class="headerlink" title="Misra’s Algorithm"></a>Misra’s Algorithm</h2><p>Misra的这篇论文<a href="http://www.mathcs.emory.edu/~cheung/papers/StreamDB/Frequency-count/1982-Misra-FindRepeatedElements.pdf" target="_blank" rel="external">FindRepeatedElements</a>略微复杂一点，瞄了一眼，没有看懂。。然后找到一份<a href="http://dimacs.rutgers.edu/~graham/pubs/papers/encalgs-mg.pdf" target="_blank" rel="external">summary</a>，这个summary里面清晰的介绍了算法。</p>
+<p><img src="/img/misra.png" alt="Misra Algorithm"></p>
+<p>显然出现频率大于1/K的元素最多有K-1个。</p>
+<p>这个算法相比Moore的算法扩充在，cand不再是一个值，而是一个规模大小以K-1为上限的候选集合，记为T，对应着集合中的每个元素都有一个计数。当T的元素个数不足K的时候，则加入到T中。当集合T满的时候，且扫描遇到的元素不在集合T中的时候，则对集合中所有对象的计数全部都减一。</p>
+<p>好像也不复杂吧？我实现了一个版本<a href="https://github.com/liuyang1/test/blob/master/lang/c/leetcode/majorityElem2.229.c" target="_blank" rel="external">majorityElem2.229.c</a></p>
+<pre><code>int *majorityElement(int *nums, int numsSize, int *returnSize) {
+    Ctx ctx, *pctx = &amp;ctx;;
+    // at most K - 1 elements ocurr greater than [n / K] times.
+    initCtx(pctx, K - 1);
+    int i, j;
+    for (i = 0; i != numsSize; i++) {
+        if (pros(pctx, nums[i])) {
+        } else if (atnd(pctx, nums[i])) {
+        } else {
+            cons(pctx);
+        }
+    }
+    int *r = retr(pctx, returnSize);
+    deinitCtx(pctx);
+
+    // have to one more pass to verify it really greater than [n / K] times.
+    vrfy(nums, numsSize, numsSize / K, r, returnSize);
+    return r;
+}
+</code></pre><p>我把算法形象地实现为3个动作，pros投票，atnd参加，cons反对票。</p>
+<pre><code>- pros，投票，如果扫描对象在候选人中，则对其投票。如果不在候选人中，则投票失败。
+- 如果投票失败，那么尝试将当前扫描值加入到候选人。如果候选人已经满了，那么参加(atnd)选举失败
+- 如果参加(atnd)失败，则对当前所有候选人投反对票。
+</code></pre><p>完整的算法实现见<a href="https://github.com/liuyang1/test/blob/master/lang/c/leetcode/majorityElem2.229.c" target="_blank" rel="external">majorityElem2.229.c</a>。</p>
+<p>需要注意的是，这个算法同样需要验证得到候选集合T中的元素的频率是否真的大于1/K。K ！= 2，那么最终符合条件的元素个数最多有 K - 1个。即使有保证存在一个元素频率大于1/K，但是最终扫描得到的候选集合T的元素个数仍然是K - 1，要排除其他的元素，这就需要验证过程啦。</p>
+<h2 id="后记"><a href="#后记" class="headerlink" title="后记"></a>后记</h2><p>这个算法可以很方便的用于统计计数，下次投票的时候可以用啦。:)</p>
+<p>这里的Moore教授还发明了字符串匹配的BM算法。这里的M指的就是他！</p>
+<h1 id="链接地址"><a href="#链接地址" class="headerlink" title="链接地址"></a>链接地址</h1><h2 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h2><ul>
+<li><a href="https://zh.wikipedia.org/wiki/%E5%B9%BE%E4%BD%95%E5%88%86%E4%BD%88" target="_blank" rel="external">几何分布</a></li>
+<li><a href="https://zh.wikipedia.org/wiki/%E8%B6%85%E5%87%A0%E4%BD%95%E5%88%86%E5%B8%83" target="_blank" rel="external">超几何分布</a></li>
+<li><a href="https://www.cs.utexas.edu/~moore/best-ideas/mjrty/example.html#step01" target="_blank" rel="external">Moore的示例</a></li>
+<li><a href="http://www.cs.utexas.edu/users/boyer/mjrty.ps.Z" target="_blank" rel="external">MJRTY - A Fast Majority Vote Algorithm</a></li>
+<li><a href="http://www.mathcs.emory.edu/~cheung/papers/StreamDB/Frequency-count/1982-Misra-FindRepeatedElements.pdf" target="_blank" rel="external">FindRepeatedElements</a></li>
+</ul>
+<h2 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h2><ul>
+<li><a href="https://github.com/liuyang1/test/blob/master/lang/c/leetcode/majorityElem.169.c" target="_blank" rel="external">majorityElem.169.c</a></li>
+<li><a href="https://github.com/liuyang1/test/blob/master/lang/c/leetcode/majorityElem.169.moore.c" target="_blank" rel="external">majorityElem.169.moore.c</a></li>
+<li><a href="https://github.com/liuyang1/test/blob/master/lang/c/leetcode/majorityElem2.229.c" target="_blank" rel="external">majorityElem2.229.c</a></li>
+</ul>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;一个算法问题，虽然简单，但是别有趣味。&lt;/p&gt;
+&lt;p&gt;问题非常简单，已知数组中有一个元素出现次数大于N/2次，其中N为数组长度。求这个元素。&lt;/p&gt;
+    
+    </summary>
+    
+    
+      <category term="C" scheme="http://liuyang1.github.io/tags/C/"/>
+    
+      <category term="algo" scheme="http://liuyang1.github.io/tags/algo/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>YUV格式</title>
+    <link href="http://liuyang1.github.io/2015/12/29/yuv/"/>
+    <id>http://liuyang1.github.io/2015/12/29/yuv/</id>
+    <published>2015-12-29T14:29:12.000Z</published>
+    <updated>2017-01-03T01:24:49.073Z</updated>
+    
+    <content type="html"><![CDATA[<p>做视频图像之流，YUV格式是最基本的知识，原不必细说的。只是现在发现自己还是会遇到很多的细节问题，现在自己对于这个的经验也越多，不免就想总结下。</p>
+<p>这个问题居然熟悉到我以为自己已经写过这个话题了。。原来自己曾经总结过程一个<a href="https://github.com/liuyang1/wiki/blob/master/yuv.wiki" target="_blank" rel="external">wiki</a>,不过这个是干货中的干货，就像吃压缩饼干，还没有水喝一样，囫囵吞枣，不小心还会噎着。</p>
+<a id="more"></a>
+<h1 id="YUV颜色空间"><a href="#YUV颜色空间" class="headerlink" title="YUV颜色空间"></a>YUV颜色空间</h1><p>YUV其实是一个颜色空间，RGB是大家非常熟悉的另外一个颜色空间。</p>
+<p>常用的颜色空间有这些：</p>
+<pre><code>- YUV，用于视频图像的压缩、显示等。
+- RGB/RGBA，用于graphic上的显示等，最为常见。
+- HSL/HSV，同样用于显示。
+- CMYK，用于印刷之类。
+</code></pre><p>其中YUV颜色空间，又有具体不同的标准。</p>
+<p>YUV空间有3个分量：</p>
+<pre><code>- Y 亮度
+- U/V， 两个色度分量
+</code></pre><p>之所以压缩显示摄像领域采用YUV格式，最主要的原因是人的眼睛的物理特性。人的眼睛对亮度信息最为敏感，颜色信息相对没有那么明显。因此降低对色度的采样，可以基本保持视觉效果不变。</p>
+<h2 id="比特深度-位深"><a href="#比特深度-位深" class="headerlink" title="比特深度/位深"></a>比特深度/位深</h2><p>每个数据至采用几个比特表示。</p>
+<p>一般最为常见的是8bit，也就是一个像素。现在已经有10bit视频流。医用显示器上显示位深可以达到12bit，不过据说很贵啦。位深越大，表示数据的阶数越多。早年彩屏手机出来的时候，喜欢号称自己有一千六百万色，其实就是(2 ^ 8) ^ 3 = 16777216啦。其实就是位深为8，RGB三色显示的意思。</p>
+<h2 id="采样率"><a href="#采样率" class="headerlink" title="采样率"></a>采样率</h2><p>YUV格式有4：4：4，4：2：2，4：2：0三种常见的采样方式。</p>
+<pre><code>- 4：4：4，每个像素采样YUV三个分量
+- 4：2：2，每个像素采样Y分量，UV分量水平方向每两个像素采样一次
+- 4：2：0，每个像素采样Y分量，UV分量水平数值方向每4个像素采样一次
+</code></pre><p><img src="/img/yuv422_sample.png" alt="YUV422 sampling"></p>
+<p><img src="/img/yuv420_sample.png" alt="YUV422 sampling"></p>
+<p>结合采样率和位深概念，有bit per pixel的概念，就是平均每个像素需要多少比特。<br>根据上面采样率的定义，结果如下：</p>
+<table>
+<thead>
+<tr>
+<th>sample rate</th>
+<th style="text-align:center">bit per pixel</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>444</td>
+<td style="text-align:center">24</td>
+</tr>
+<tr>
+<td>422</td>
+<td style="text-align:center">16</td>
+</tr>
+<tr>
+<td>420</td>
+<td style="text-align:center">12</td>
+</tr>
+</tbody>
+</table>
+<p>由此，也印证了最初关于YUV方式的讨论。</p>
+<h2 id="示例"><a href="#示例" class="headerlink" title="示例"></a>示例</h2><p>了解RGB的，可以很直观的理解其作用机制，就是RGB三原色，同时RGB相同，可以简单降为灰度图。 #000000 表示黑色， #ffffff 表示白色，也非常易于理解。</p>
+<p>YUV在这点上就相对没有那么直观（可能还是接触较少的缘故）。YUV的意义前面已经介绍过。其中UV两个分量是有符号的。或者对于8比特的情况下，可以认为是有bias = - 2 ^ 7 的。因此Y的取值范围为[0，255], UV的取值范围为[-127，128]。当UV为0的时候，表示没有颜色，颜色为灰色。而UV为0的时候，其二进制表示为0x80。因为 0x80 - bias = 0。所以 0x008080 为黑色， 0xff8080 为白色。</p>
+<p>那么0x000000呢，为绿色。</p>
+<p>注意，并不是强度为0x00，就是灰色或者白到黑色了。在YUV里，不是这样的。这里UV分量都是0x00，就决定了其颜色为绿色，强度分量为0x00表示是深绿，0xff0000，则是浅绿。这里的亮度，理解为强度更为合适啊。</p>
+<p>那么0xffffff呢，为浅粉红色。</p>
+<p>这两个颜色的特殊意义，在于一般程序中会将数据清空为全零数据，那么这些区域显示出来就是绿色。解码出现错误的时候，也很有可能是绿色的块。对于只有有效的Y数据，但是没有有效的UV数据的时候，所有的内容都会看上去蒙上一层绿色。</p>
+<p>同理显示的时候，也有可能遇到粉屏。</p>
+<p><img src="/img/yuv_sample.png" alt="YUV sample" align="center"></p>
+<p>从<a href="http://multimedia.cx/eggs/yuv-and-rgb/" target="_blank" rel="external">这里</a>截个图，因为实在是太直观了。</p>
+<h2 id="YUV分布"><a href="#YUV分布" class="headerlink" title="YUV分布"></a>YUV分布</h2><p>对比RGBA,一般每个像素各个分量一般都是在一起的。而YUV则有更丰富的分布方式。</p>
+<pre><code>- packed，YUV数据放在一起，类似于RGBA。（默认类型）
+- planar，YUV三个分量的数据在一起，对应于三个planar，也就是所有Y数据放在一起，所有的U数据在一起，所有的V数据在一起。
+- semi-planar，这种方式的特点之处就在于Y数据在一起，UV数据交错放置在一起。
+- tiled（vs. rastered)， rastered就是光栅也就是数据按照每个像素进行划分，tiled则将数据首先按照4*4或者6*6的块进行组织，然后每个块，则进一步分布。
+</code></pre><p>这部分信息量有点大。还需要更多图演示一下。</p>
+<p>以YUV422为例，packed的方式数据如下分布：</p>
+<pre><code>+--+--+--+--+--+--+--+--+--+--+--+--
+|U0|Y0|V0|Y1|U2|Y2|V2|Y3|  |  |  |
++--+--+--+--+--+--+--+--+--+--+--+--
+</code></pre><p>注意，这里因为YUV422水平方向UV采样率只有2：1，因此UV分量只有偶数的。而packed中，还有分布顺序的区别，上面示意图中分布顺序为UYVY，显然还可以分布为VYUY，以及其他方式。</p>
+<p>planar的方式呢，则比较简单,仍然考虑为YUV422 planar的情况</p>
+<pre><code>+-------------------------------+
++                               |
++                Y              |
++                               |
++----------------+--------------+
++                +
++       U        +
++                +
++----------------+
++                +
++       V        +
++                +
++----------------+
+</code></pre><p>这里要注意，UV的每行长度只有Y的一般，因为2：1采样的缘故。但是二者的行数是完全一样的。</p>
+<p>那么YUV422 semi-planar呢，</p>
+<pre><code>+-------------------------------+
++                               |
++                Y              |
++                               |
++-------------------------------+
++U0|V0|U2|V2|                   |
++                UV             |
++                               |
++-------------------------------+
+</code></pre><p>UV分量联合起来，UV数据的分布大小刚刚好和Y是一样的。其中UV也同样有顺序的问题。</p>
+<p>YUV420也有类似的区分，planar或者semi-planar，其中YUV420 semi-planar的情况下，UV的stride和Y相等，但是UV的高是Y部分高的一半。</p>
+<pre><code>+-------------------------------+
++                               |
++                Y              |
++                               |
++-------------------------------+
++U0|V0|U2|V2|    UV             |
++                               |
++-------------------------------+
+</code></pre><p>Tiled的情况，没有那么常见，暂时不谈，以后更新。如果采用了tiled方式，但是格式配置错误的话，可能有块状的马赛克出现。</p>
+<p>好像也没有那么复杂吧，还有最后一点，这点经常容易出现问题。</p>
+<h2 id="alignment-stride"><a href="#alignment-stride" class="headerlink" title="alignment/stride"></a>alignment/stride</h2><p>在计算机处理的时候，对数据的对齐alignment往往有着特殊的要求，例如对齐到8字节或者64字节，当图像的宽度不符合这个对齐值的时候，就需要每行额外多一些，来达到对齐值的整数倍。<br>因此在水平方向上就有stride和width的区别，stride表示对齐之后的宽度，width则仅仅表示有效数据的宽度。</p>
+<p>类似的，在垂直方向上，可能也有对齐的问题。这里记为hstride，height。</p>
+<p>同样的，对于变分辨率的视频（adaptive playback会遇到）,可能还会碰到over allocate和crop的问题。也就是可能申请一块1920x1080的内存，但是这时候视频流的内容分辨率仅仅有640x480，那么这个时候数据要按照stride为1920，hstride为1080，来进行填充，这样可以直接从11920x1080的内存区域中直接从左上角crop出640x480的数据来。</p>
+<p>width x height的数据是可用的，但是其他地方则有可能为全零数据，或者任意的值，或者上一次写入的数据。</p>
+<p>如果stride值不对，那么图像会有斜条纹状的马赛克，这里的斜条纹是因为stride’和stride的差，在每行上都会累积的结果。</p>
+<p>对于YUV420SP,如果UV数据的起始地址不对，那么UV分量上则会有有问题。这时可以仅仅查看Y分量来检查问题。如果错误的UV分量位置上刚好是零，则图像会有一层绿色。</p>
+<p>之后碰到其他问题，再补充。</p>
+<h1 id="ChangeList"><a href="#ChangeList" class="headerlink" title="ChangeList"></a>ChangeList</h1><ul>
+<li>2015-12-29 Initial</li>
+<li>2015-12-30 update YUV422, YUV420 sampling image</li>
+</ul>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;做视频图像之流，YUV格式是最基本的知识，原不必细说的。只是现在发现自己还是会遇到很多的细节问题，现在自己对于这个的经验也越多，不免就想总结下。&lt;/p&gt;
+&lt;p&gt;这个问题居然熟悉到我以为自己已经写过这个话题了。。原来自己曾经总结过程一个&lt;a href=&quot;https://github.com/liuyang1/wiki/blob/master/yuv.wiki&quot;&gt;wiki&lt;/a&gt;,不过这个是干货中的干货，就像吃压缩饼干，还没有水喝一样，囫囵吞枣，不小心还会噎着。&lt;/p&gt;
+    
+    </summary>
+    
+    
+      <category term="video" scheme="http://liuyang1.github.io/tags/video/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>提取MP4文件中的h264/h265视频流</title>
+    <link href="http://liuyang1.github.io/2015/12/21/h264-mp4/"/>
+    <id>http://liuyang1.github.io/2015/12/21/h264-mp4/</id>
+    <published>2015-12-21T14:12:46.000Z</published>
+    <updated>2017-01-03T01:24:49.069Z</updated>
+    
+    <content type="html"><![CDATA[<p>这是一个非常细节的问题，毫无疑问，没有多少人会真的关心这个问题。所以这篇就是写给极少数人看的。<br><a id="more"></a></p>
+<p>这个问题，以及其逆问题“封装h264/h265视频流到mp4文件中”，定义在国际标准ISO-14496的第15部分。</p>
+<p>这个国际标准，我看到了两个版本，2004年，仅仅有h264部分。2013年版本，这个版本则包含了更多的视频流格式h265，以及其他的扩展视频格式。</p>
+<h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>到达这个问题之前，其实很有很多的其他细节问题：</p>
+<h3 id="MP4文件层级与组织"><a href="#MP4文件层级与组织" class="headerlink" title="MP4文件层级与组织"></a>MP4文件层级与组织</h3><p>这个问题，不是本文讨论的重点，仅仅简单介绍下。</p>
+<p>MP4文件，由层级的box/atom组成。box的头信息包含固定4个字节的长度信息和4个字节的类型信息。<br>类型一般都是类似FourCC的形式。box也有层级结构的，这样box可以嵌套或者包含多个box。一般真正的视频数据都在“mdat”类型的box中。</p>
+<p>一般MP4文件中有音视频track，每个track则有很多chunk，chunk内有多个sample。从track一直到sample，都是按照层级/表进行组织的。</p>
+<p>所以，从MP4文件中找到相应的sample，就可以把数据提取出来。</p>
+<h3 id="h264-h265视频流"><a href="#h264-h265视频流" class="headerlink" title="h264/h265视频流"></a>h264/h265视频流</h3><p>这种视频流中的每个单元为NALU，NALU之间以start code(0x00000001)进行分割。</p>
+<p>由上面的两点基础信息，就可回到问题本身了。</p>
+<h2 id="提取MP4文件中的h264-h265视频流"><a href="#提取MP4文件中的h264-h265视频流" class="headerlink" title="提取MP4文件中的h264/h265视频流"></a>提取MP4文件中的h264/h265视频流</h2><p>这个问题其实非常简单，核心问题其实只需要一句话。摘自ISO-IEC-14496-15 5.2.2.</p>
+<figure class="highlight plain"><figcaption><span>ISO-IEC-14496-15 5.2.2</span></figcaption><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">No start codes.</div><div class="line">The elementary streams shall not include start codes. As stored, each NAL unit is</div><div class="line">preceded by a length field as specified in 5.2.3; this enables easy scanning of the sample’s NAL units.</div><div class="line">Systems that wish to deliver, from this file format, a stream using start codes will need to reformat the</div><div class="line">stream to insert those start codes.</div></pre></td></tr></table></figure>
+<p>这部分的意思是<br>    ES数据不包含start code，而是存储上NALU的长度。反向进行时候，需要将start code添加回来。</p>
+<p>NALU的长度的长度信息则存储在MP4文件中的“avcC”中。具体的定义如下</p>
+<pre><code>aligned(8) class AVCDecoderConfigurationRecord {
+    unsigned int(8) configurationVersion = 1;
+    unsigned int(8) AVCProfileIndication;
+    unsigned int(8) profile_compatibility;
+    unsigned int(8) AVCLevelIndication;
+    bit(6) reserved = ‘111111’b;
+    unsigned int(2) lengthSizeMinusOne; // offset 4
+    bit(3) reserved = ‘111’b;
+    unsigned int(5) numOfSequenceParameterSets;
+    for (i=0; i&lt; numOfSequenceParameterSets; i++) {
+        unsigned int(16) sequenceParameterSetLength ;
+        bit(8*sequenceParameterSetLength) sequenceParameterSetNALUnit;
+    }
+    unsigned int(8) numOfPictureParameterSets;
+    for (i=0; i&lt; numOfPictureParameterSets; i++) {
+        unsigned int(16) pictureParameterSetLength;
+        bit(8*pictureParameterSetLength) pictureParameterSetNALUnit;
+    }
+}
+</code></pre><p>一个典型的“avcC”内容如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">01 42 c0 15 fd e1 00 17 67 42 c0 15 92 44 0f 04</div><div class="line">7f 58 08 80 00 00 3e 80 00 0b b5 47 8b 17 50 01</div><div class="line">00 04 68 ce 32 c8</div></pre></td></tr></table></figure>
+<p>解析的结果(内部的数值都是十六进制的)</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">version:      01</div><div class="line">profile:      42</div><div class="line">compatibilty: c0</div><div class="line">level:        15</div><div class="line">lengthSize:   2 (0xfd -&gt; 2)</div><div class="line">num of SPS:   1</div><div class="line">SPS len:      17</div><div class="line">SPS:          67 42 c0 15 92 44 0f 04 7f 58 08 80 00 00 3e 80</div><div class="line">              00 0b b5 47 8b 17 50</div><div class="line">num of PPS:   1</div><div class="line">PPS len:      4</div><div class="line">PPS:          68 ce 32 c8</div></pre></td></tr></table></figure>
+<p>根据里面的lengthSize就可以得到“NALU的长度”这部分数据的长度。</p>
+<pre><code>+---+-------+---+-------+--+-------+---
+|len|  NAL  |len|  NAL  |  |       |
++---+-------+---+-------+--+-------+---
+</code></pre><p>注意，这里的顺序是大端(网络序)的。一般一个sample有一个NALU(当然不是绝对的)。</p>
+<p>SPS和PPS是h264流中的元信息，在MP4文件中单独存放在“avcC”中。（如上所示），转换的时候，还需要将SPS和PPS提取出来，添加上0x00000001，放在h264视频流的开始位置。</p>
+<h3 id="h265的处理方法"><a href="#h265的处理方法" class="headerlink" title="h265的处理方法"></a>h265的处理方法</h3><p>其实几乎是一样的，对于h265，其元信息在”hvcC”类型box中。具体的语法结构就不贴了。其中lengthSize的偏移地址为21.</p>
+<h2 id="code"><a href="#code" class="headerlink" title="code"></a>code</h2><p>很多开源代码珠玉在前，我就不献丑了。</p>
+<p>ffmpeg中，可以参考libavcodec/h264_mp4toannexb_bsf.c. 这个文件不长，只有300行左右。其功能完成就是本文讨论的内容，完全可以对比着一一参考。</p>
+<pre><code>- h264_extradata_to_annexb 处理avcC中的数据，并且提取出sps和pps信息
+- h264_mp4toannexb_filter 从sample中提取nalu数据
+</code></pre><p>Android的代码中可以参考libstagefright中的MPEG4Extractor.cpp文件。这个代码展示了完整的如何解析MP4文件的过程。关于本文讨论的内容，在read函数中3883行附近。在代码中搜索lengthsize也可以比较容易定位到。</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;这是一个非常细节的问题，毫无疑问，没有多少人会真的关心这个问题。所以这篇就是写给极少数人看的。&lt;br&gt;
+    
+    </summary>
+    
+    
+      <category term="Standard" scheme="http://liuyang1.github.io/tags/Standard/"/>
+    
+      <category term="coderead" scheme="http://liuyang1.github.io/tags/coderead/"/>
+    
+      <category term="video" scheme="http://liuyang1.github.io/tags/video/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>with statement @Python</title>
+    <link href="http://liuyang1.github.io/2015/08/26/withCtxMgr/"/>
+    <id>http://liuyang1.github.io/2015/08/26/withCtxMgr/</id>
+    <published>2015-08-26T11:34:57.000Z</published>
+    <updated>2017-01-03T01:24:49.069Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="with语句"><a href="#with语句" class="headerlink" title="with语句"></a>with语句</h1><p>以最常见的文件操作为例,打开文件,必须有对应的关闭文件.<br>这样保证资源(文件句柄)不会泄漏.但是如何手动保证这一点,在复杂的程序中,就会是一个问题.</p>
+<p>程序的逻辑可能比较复杂,而在有异常机制的语言中,控制流就更为复杂.</p>
+<p>在C++中,类似的问题,我们有析构函数来保证这一步.在Python中,我们有<code>with</code>语句.</p>
+<pre><code>with open(filename) as fp:
+    for line in fp.readlines():
+        pass
+</code></pre><p>这样在with程序执行完毕,或者异常跳出的时候,都可以保证打开的文件必然会关闭.</p>
+<p>下面就介绍下Python中的<code>with</code>.<br><a id="more"></a></p>
+<p>上面的代码直观的不需要解释.(这就是Python的显著优点啊)</p>
+<p><code>with</code>的语句格式如下:</p>
+<pre><code>with EXPR [as TARGET]:
+    BLOCK
+</code></pre><h1 id="深入一点点"><a href="#深入一点点" class="headerlink" title="深入一点点"></a>深入一点点</h1><p><code>with</code>语句其实是一种<code>contextmanager</code>.它的语句格式就如上所示.</p>
+<p>在执行<code>with</code>语句是的执行顺序</p>
+<pre><code>- 执行表达式EXPR
+- 注册contextmanager的__exit__方法
+- 执行contextmanager的__enter__方法
+- 如果有as,那么将EXPR的结果赋值给TARGET
+- 执行后面BLOCK中的代码
+- 执行__exit__方法
+</code></pre><p>一个典型的示例程序<a href="https://github.com/liuyang1/test/blob/master/lang/python/contextlib/contextMgr.py" target="_blank" rel="external">contextMgr.py</a>:</p>
+<pre><code>class myCtxMgr():
+    def __init__(self, val):
+        print &quot;init&quot;
+        self.val = val
+    def __enter__(self):
+        print &quot;enter&quot;
+        return self.val
+    # Don&apos;t use keyword type as var name
+    # as Guan XiQing&apos;s suggestion
+    def __exit__(self, typ, value, traceback):
+        print &quot;leave&quot;
+        return
+
+with myCtxMgr(5) as val:
+    print val
+</code></pre><p><code>__exit__</code>方法带的众多参数,就是为了保证在异常的情况下面,依然可以处理.</p>
+<p>执行结果如下:</p>
+<pre><code>init
+enter
+5
+leave
+</code></pre><h1 id="实例"><a href="#实例" class="headerlink" title="实例"></a>实例</h1><p><code>with</code>语句看上去不错,但是有什么用处呢?</p>
+<p>利用with语句可以简化我们的代码.特别是我们想进入一个上下文时候,做特定的操作.离开上下文的时候,做相应的逆操作.</p>
+<p>上下文的英文就是<code>context</code></p>
+<p>最常见的锁操作,进来加锁,退出关锁.可惜Python中没有锁的概念,不能使用这个例子了.</p>
+<p>在数据库的操作简单封装的时候,其实也有类似的需求.连接数据库,操作数据库,断开连接.这里的连接其实也是一种上下文.</p>
+<p>下面放一个sqlite3的数据库操作的小例子 <a href="https://github.com/liuyang1/test/blob/master/lang/python/db.py" target="_blank" rel="external">db.py</a></p>
+<pre><code>import sqlite3
+import json
+
+
+rootdir = &quot;./&quot;
+db = rootdir + &quot;db/gering.db&quot;
+table = &quot;clst&quot;
+sqlRecent10 = &quot;SELECT * FROM %s ORDER BY id DESC LIMIT 10;&quot; % (table)
+sqlInsertSQL = &quot;INSERT INTO %s (clnum, json) VALUES (?,?);&quot; % (table)
+sqlMaxid = &quot;SELECT * FROM %s ORDER BY id DESC LIMIT 1;&quot; % (table)
+sqlDelAll = &quot;DELETE FROM %s;&quot; % (table)
+
+
+class openDB():
+
+    def __init__(self, db):
+        self.db = db
+
+    def __enter__(self):
+        self.conn = sqlite3.connect(self.db)
+        self.c = self.conn.cursor()
+        return self.conn, self.c
+
+    def __exit__(self, typ, value, trackback):
+        self.c.close()
+
+
+def insertHist(clnum, jsonobj):
+    with openDB(db) as (conn, csr):
+        csr.execute(sqlInsertSQL, (clnum, json.dumps(jsonobj)))
+        newid = csr.lastrowid
+        conn.commit()
+        return newid
+
+
+def getRecent10():
+    with openDB(db) as (_, csr):
+        csr.execute(sqlRecent10)
+        return csr.fetchall()
+
+
+def getMaxID():
+    with openDB(db) as (_, csr):
+        csr.execute(sqlMaxid)
+        try:
+            ret = csr.fetchone()[0]
+        except TypeError:
+            ret = 0
+        return ret
+
+
+def delAll():
+    with openDB(db) as (conn, csr):
+        csr.execute(sqlDelAll)
+        conn.commit()
+        return True
+</code></pre><h1 id="扩展"><a href="#扩展" class="headerlink" title="扩展"></a>扩展</h1><p>Python的标准库中有一些关于<code>with</code>的扩展库<code>contextlib</code>,用起来也比较有意思.</p>
+<h2 id="contextmanager"><a href="#contextmanager" class="headerlink" title="contextmanager"></a>contextmanager</h2><p>contextmanager是一种修饰器,配合<code>yield</code>语句使用. <a href="https://github.com/liuyang1/test/blob/master/lang/python/contextlib/tag.py" target="_blank" rel="external">tag.py</a></p>
+<pre><code>import contextlib
+
+@contextlib.contextmanager
+def htmlTag(tag):
+    print &quot;&lt;%s&gt;&quot; % (tag)
+    yield
+    print &quot;&lt;/%s&gt;&quot; % (tag)
+
+
+with htmlTag(&quot;h1&quot;):
+    print &quot;Header&quot;
+</code></pre><p>输出是什么,随手可以试一下.</p>
+<p>利用<code>contextmanager</code>,我们也可以快速的实现第一个小例子.这个就留给大家实践吧.</p>
+<h2 id="closing"><a href="#closing" class="headerlink" title="closing"></a>closing</h2><p><code>closing</code>完全符合上面的关闭资源这一点的设计目的.首先closing假设其对象参数,含有<code>close</code>方法.</p>
+<p>当代码块BLOCK执行完毕的时候,自动调用对象参数的<code>close</code>方法.</p>
+<pre><code>from contextlib import closing
+import urllib
+
+with closing(urllib.urlopen(&apos;http://www.google.com&apos;)) as page:
+    for line in page:
+        print line
+</code></pre><h3 id="ChangeLog"><a href="#ChangeLog" class="headerlink" title="ChangeLog"></a>ChangeLog</h3><ul>
+<li>rename <code>type</code> var name to <code>typ</code></li>
+</ul>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h1 id=&quot;with语句&quot;&gt;&lt;a href=&quot;#with语句&quot; class=&quot;headerlink&quot; title=&quot;with语句&quot;&gt;&lt;/a&gt;with语句&lt;/h1&gt;&lt;p&gt;以最常见的文件操作为例,打开文件,必须有对应的关闭文件.&lt;br&gt;这样保证资源(文件句柄)不会泄漏.但是如何手动保证这一点,在复杂的程序中,就会是一个问题.&lt;/p&gt;
+&lt;p&gt;程序的逻辑可能比较复杂,而在有异常机制的语言中,控制流就更为复杂.&lt;/p&gt;
+&lt;p&gt;在C++中,类似的问题,我们有析构函数来保证这一步.在Python中,我们有&lt;code&gt;with&lt;/code&gt;语句.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;with open(filename) as fp:
+    for line in fp.readlines():
+        pass
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;这样在with程序执行完毕,或者异常跳出的时候,都可以保证打开的文件必然会关闭.&lt;/p&gt;
+&lt;p&gt;下面就介绍下Python中的&lt;code&gt;with&lt;/code&gt;.&lt;br&gt;
+    
+    </summary>
+    
+    
+      <category term="python" scheme="http://liuyang1.github.io/tags/python/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>bitfield in ctypes @Python</title>
+    <link href="http://liuyang1.github.io/2015/08/25/bitfield-py/"/>
+    <id>http://liuyang1.github.io/2015/08/25/bitfield-py/</id>
+    <published>2015-08-25T15:16:36.000Z</published>
+    <updated>2017-01-03T01:24:49.069Z</updated>
+    
+    <content type="html"><![CDATA[<p>在C语言中,解析二进制数据常使用位域.可以直接从二进制数据映射到C语言中的结构提.</p>
+<p>在Python中,如果要解析二进制数据的话,可以使用struct模块.</p>
+<p>struct模块中定义了unpack方法可以用作这个用途.但是unpack其中内涵了一个小的描述语言,掌握其中的细节比较麻烦,而且谁能够记住这些东西呢.这个必然是write once, read never的代码,除非加上几倍的注释在附近.</p>
+<p>而利用Python的ctypes模块中的Structure的功能,我们也可以写出类似于C语言位域的代码,同时结合Python的特点,可以写出更为简明易懂的代码.</p>
+<p>闲话不说了,直接上例子.(也只有一个例子)<br><a id="more"></a></p>
+<p>VP8是Google出品的一种视频编码方式,VP8视频流可以存储在一种IVF的文件格式中.这种文件格式本身非常简单.</p>
+<pre><code>- 32字节的文件头
+- 12字节的帧头,帧头的前4个字节为帧数据的长度.
+</code></pre><p>据此我们可以完成一个简单的IVF文件的probe代码.</p>
+<hr>
+<pre><code>import ctypes
+
+tab = &quot;  &quot;
+
+
+def showFields(obj, name, prefix=tab):
+    s = name
+    w = max([len(i) for i, _ in obj._fields_])
+    for k, _ in obj._fields_:
+        s += &quot;\n%s%s: %s&quot; % (prefix, k.ljust(w), getattr(obj, k))
+    return s
+
+
+class IvfHeader(ctypes.LittleEndianStructure):
+    _fields_ = [
+        (&quot;signature&quot;, ctypes.c_char * 4),
+        (&quot;version&quot;, ctypes.c_ushort),
+        (&quot;lenght&quot;, ctypes.c_ushort),
+        (&quot;fourcc&quot;, ctypes.c_char * 4),
+        (&quot;width&quot;, ctypes.c_ushort),
+        (&quot;height&quot;, ctypes.c_ushort),
+        (&quot;framerate&quot;, ctypes.c_uint),
+        (&quot;timescale&quot;, ctypes.c_uint),
+        (&quot;numFrames&quot;, ctypes.c_uint),
+        (&quot;reserved&quot;, ctypes.c_uint),
+    ]
+
+    def __str__(self):
+        return showFields(self, &quot;IVF Header&quot;)
+
+
+class IvfFrmHeader(ctypes.LittleEndianStructure):
+    # with out _pack_, this will as 64bit alignment
+    _pack_ = 1
+    _fields_ = [
+        (&quot;size&quot;, ctypes.c_uint32),
+        (&quot;timestamp&quot;, ctypes.c_uint64),
+    ]
+
+    def __str__(self):
+        return showFields(self, &quot;IVF Header&quot;)
+
+HdrLen = ctypes.sizeof(IvfHeader)
+FrmLen = ctypes.sizeof(IvfFrmHeader)
+
+
+def parseIVF(fn):
+    with open(fn, &quot;rb&quot;) as fp:
+        data = fp.read()
+        hdr = IvfHeader.from_buffer_copy(data)
+        data = data[HdrLen:]
+        print hdr
+        while len(data) &gt; 0:
+            frm = IvfFrmHeader.from_buffer_copy(data)
+            print frm
+            data = data[FrmLen + frm.size:]
+</code></pre><hr>
+<p>其中<code>__str__</code>函数,是Python对象的默认转换为字符串的函数. 重载这个函数,可以直接简单的调用print来打印对象的信息.</p>
+<p>原始代码::</p>
+<ul>
+<li><a href="https://github.com/liuyang1/test/blob/master/lang/python/ivf.py" target="_blank" rel="external">github</a></li>
+</ul>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;在C语言中,解析二进制数据常使用位域.可以直接从二进制数据映射到C语言中的结构提.&lt;/p&gt;
+&lt;p&gt;在Python中,如果要解析二进制数据的话,可以使用struct模块.&lt;/p&gt;
+&lt;p&gt;struct模块中定义了unpack方法可以用作这个用途.但是unpack其中内涵了一个小的描述语言,掌握其中的细节比较麻烦,而且谁能够记住这些东西呢.这个必然是write once, read never的代码,除非加上几倍的注释在附近.&lt;/p&gt;
+&lt;p&gt;而利用Python的ctypes模块中的Structure的功能,我们也可以写出类似于C语言位域的代码,同时结合Python的特点,可以写出更为简明易懂的代码.&lt;/p&gt;
+&lt;p&gt;闲话不说了,直接上例子.(也只有一个例子)&lt;br&gt;
+    
+    </summary>
+    
+    
+      <category term="python" scheme="http://liuyang1.github.io/tags/python/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>2015年 第29周</title>
+    <link href="http://liuyang1.github.io/2015/07/16/201529/"/>
+    <id>http://liuyang1.github.io/2015/07/16/201529/</id>
+    <published>2015-07-16T15:09:19.000Z</published>
+    <updated>2017-01-03T01:24:49.069Z</updated>
+    
+    <content type="html"><![CDATA[<p>对不起,已经有连续6周没有更新了.</p>
+<p>最近没有更新主要是因为工作上的事情,最近实在是太忙了. 当然其实是自己没有blance.</p>
+<p>自己会注意这一点.</p>
+<p>本周继续.</p>
+<p>之后不再发无意义的week系列,而是尽可能release干货啊.</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;对不起,已经有连续6周没有更新了.&lt;/p&gt;
+&lt;p&gt;最近没有更新主要是因为工作上的事情,最近实在是太忙了. 当然其实是自己没有blance.&lt;/p&gt;
+&lt;p&gt;自己会注意这一点.&lt;/p&gt;
+&lt;p&gt;本周继续.&lt;/p&gt;
+&lt;p&gt;之后不再发无意义的week系列,而是尽可能release干货
+    
+    </summary>
+    
+    
+      <category term="week" scheme="http://liuyang1.github.io/tags/week/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>2015年 第22-23周周记</title>
+    <link href="http://liuyang1.github.io/2015/06/07/201522-23/"/>
+    <id>http://liuyang1.github.io/2015/06/07/201522-23/</id>
+    <published>2015-06-07T14:37:39.000Z</published>
+    <updated>2017-01-03T01:24:49.069Z</updated>
+    
+    <content type="html"><![CDATA[<p>最近其实也没有什么好说的.中间经历一次小小挫折打击了一下,导致上周的周记没有发.</p>
+<p>一直在<a href="www.codewars.com/r/b4y8Xw">codewars</a>平台上面刷题.目前达到4kyu,208点honor,排名达到了3k-的名次.目前3kyu的升级过程完成了30%.预计达到3kyu估计要比较长的时间.</p>
+<p>代码全部都在这里<a href="https://github.com/liuyang1/test/tree/master/lang/haskell/codewars" target="_blank" rel="external">github</a>.</p>
+<p>最近没有做特别趣味性或者复杂的问题.绝大多数都比较简单.</p>
+<p>一个简单的解数独的程序,haskell的37行代码即可以完成.(简单情况,不支持多种情况下的猜测和回溯).</p>
+<p>一个汉语风格表示数字的程序,我觉得还比较有意思.结果居然<a href="www.codewars.r/b4y8Xw">codewars</a>上这道题目,没有haskell的测试.</p>
+<p>不过编程这种东西的学习,还是要做有一定难度的东西,不然是没有长进的.我要继续rank up啊!</p>
+<p>在haskell或者类似的函数式编程语言里面,经验和C中的是完全两种东西.至此至少不能够直接的在二者之间相互参考.</p>
+<p>另外,自己在github上面这么长时间,终于获得了一个星了.不过我看了下,估计是那个家伙搜索东西,搞错了.尽管是一个完全没有质量的玩意,但是也算是一种勉强的互动吧.在同样的repo上,还有2个fork.同样意义不大,不过估计不是搜索搞错的.</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;最近其实也没有什么好说的.中间经历一次小小挫折打击了一下,导致上周的周记没有发.&lt;/p&gt;
+&lt;p&gt;一直在&lt;a href=&quot;www.codewars.com/r/b4y8Xw&quot;&gt;codewars&lt;/a&gt;平台上面刷题.目前达到4kyu,208点honor,排名达到了3k-的名次.
+    
+    </summary>
+    
+    
+      <category term="week" scheme="http://liuyang1.github.io/tags/week/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>2015年 第21周</title>
+    <link href="http://liuyang1.github.io/2015/05/27/201521/"/>
+    <id>http://liuyang1.github.io/2015/05/27/201521/</id>
+    <published>2015-05-27T12:37:31.000Z</published>
+    <updated>2017-01-03T01:24:49.069Z</updated>
+    
+    <content type="html"><![CDATA[<p>本周主要在<a href="www.codewars.com/r/b2y8Xw">codewars</a>平台上面,练习haskell代码.</p>
+<p>目前已经升级到5kyu级别,110点honor.排名在遥远的7k+名次.</p>
+<p>打算进一步在上面练习haskell,努力达到proficent级别(2kyu)吧.至少要到competent级别.</p>
+<p>代码全部都在这里<a href="https://github.com/liuyang1/test/tree/master/lang/haskell/codewars" target="_blank" rel="external">github</a></p>
+<p>这里就分享下上面的几个有趣的问题.</p>
+<a id="more"></a>
+<h1 id="整数分拆问题"><a href="#整数分拆问题" class="headerlink" title="整数分拆问题"></a>整数分拆问题</h1><p>这个问题,可以看到很多的在动态规划的解法.算法的复杂度为O(N^2).</p>
+<p>在wiki上面看到一个五边形数定理,可以很好的解决这个问题.</p>
+<pre><code>p(k) = p(k − 1) + p(k − 2) − p(k − 5) − p(k − 7) + p(k − 12) + p(k − 15) − p(k − 22) − ...
+</code></pre><p>其中,上面的1,2,5,7为广义五边形数w(n) = (3 <em> n </em> n +- n) / 2,前面的符号,始终为1,1,-1,-1,1,1</p>
+<p>结合上面的五边形的规律,以及记忆化的策略,可以得到较好的结果.</p>
+<p>一个小细节,就是可以上面公式所列的,是按照k的降序分布的.而在实际的代码实践中,可以按照升序排列.</p>
+<p>这样的话,p(n)是按照从小到大计算得到的,结合记忆化的策略,可以避免递归太深栈溢出的问题.</p>
+<h1 id="汉明数的生成"><a href="#汉明数的生成" class="headerlink" title="汉明数的生成"></a>汉明数的生成</h1><p>汉明数是一种正规数.<br>这里的正规数是regular number,不是normal number.</p>
+<p>前者是仅包含素因子2,3,5的整数.后者为数字0~9出现的概率相同的实数.</p>
+<p>wiki上面有一个非常好的图,可以说明这个问题.我很喜欢,就放在这里了.</p>
+<p><img src="/img/regular.svg.png" alt="regular number" width="800"></p>
+<p>这个问题本身挺简单,关键在于优化的生成速度.在codewars平台上,不同语言,对于速度的要求还不是一致的.<br>导致python版本,这道题目用了比较长时间才过.</p>
+<p>记忆化的策略同样是有用的.可以有效的避免重复计算.</p>
+<p>python代码的合并排序,其实并不如list(sort(set(lst)))来的粗暴快捷,因为后者肯定是经过C优化的.</p>
+<h1 id="RPN逆波兰式"><a href="#RPN逆波兰式" class="headerlink" title="RPN逆波兰式"></a>RPN逆波兰式</h1><p>这个本身比较简单的问题,这里提下主要是感叹下相比于5年前,自己使用C++来实现的逆波兰式,毫无疑问haskell的版本简单了许多许多.</p>
+<p>这里也有部分是自己的提高吧.</p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>总的来看,haskell的优点</p>
+<ul>
+<li>提供了大量的库<br>很多编程语言在这点上都是做的越来越好了.大量的库,意味着更快的开发速度,更少的细节bug,更易读.</li>
+<li>静态语言与类型推断<br>同时避免了静态语言和动态语言各自的问题.更多的检查来保证程序的正确性</li>
+<li>函数式与副作用的分离<br>至少有更好的错误处理.至少我觉得Maybe比C的错误码要好多了.</li>
+</ul>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;本周主要在&lt;a href=&quot;www.codewars.com/r/b2y8Xw&quot;&gt;codewars&lt;/a&gt;平台上面,练习haskell代码.&lt;/p&gt;
+&lt;p&gt;目前已经升级到5kyu级别,110点honor.排名在遥远的7k+名次.&lt;/p&gt;
+&lt;p&gt;打算进一步在上面练习haskell,努力达到proficent级别(2kyu)吧.至少要到competent级别.&lt;/p&gt;
+&lt;p&gt;代码全部都在这里&lt;a href=&quot;https://github.com/liuyang1/test/tree/master/lang/haskell/codewars&quot;&gt;github&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;这里就分享下上面的几个有趣的问题.&lt;/p&gt;
+    
+    </summary>
+    
+    
+      <category term="week" scheme="http://liuyang1.github.io/tags/week/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>2015年 20周 周记</title>
+    <link href="http://liuyang1.github.io/2015/05/17/201520/"/>
+    <id>http://liuyang1.github.io/2015/05/17/201520/</id>
+    <published>2015-05-17T14:50:49.000Z</published>
+    <updated>2017-01-03T01:24:49.069Z</updated>
+    
+    <content type="html"><![CDATA[<p>SICP与xkcd @ matplotlib<br><a id="more"></a></p>
+<h2 id="SICP"><a href="#SICP" class="headerlink" title="SICP"></a>SICP</h2><p>这本相当著名的书,其实我从两三年前就开始接触,并且有断断续续坚持在看吧.</p>
+<p>本科的时候,偶尔的阅读,最初的接触好像天书一样,到处都是不懂的概念.<br>在某一年的寒假,我从图书馆借回去,然后一个寒假都没有看它.尽管我只带了一本书回去.</p>
+<p>后来,我初步阅读了这本书,至少还算认真的读了前三章,完成了其中大部分的习题.<br><a href="https://github.com/liuyang/sicp-ans" target="_blank" rel="external">sicp-ans</a></p>
+<p>最近打算继续其第四五章的部分.五一假期部分,已经初步阅读过(更早之前其实也有初步阅读).</p>
+<p>当然在早期,我就也看到了以SICP作为教材的6.001的课程,以及相应的视频,奈何因为语言障碍的缘故(尽管现在可能障碍没有那么大,但是依旧很大).<br>只是简单的看了一点点吧.</p>
+<p>最近看到中文字幕版本,心情还是非常激动的.<a href="https://github.com/DeathKing/Learning-SICP" target="_blank" rel="external">Learning-SICP</a><br>然后基本可以说是一口气看完的吧.非常<a href="https://github.com/DeathKing" target="_blank" rel="external">DeathKing</a>,以及哈工大的研究小组.<br>你们非常令人佩服.</p>
+<p>我也希望自己可以有机会加入其中,后面我可能会尝试也去翻译其中一部分,并且反馈.</p>
+<p>这个视频也放在了<a href="http://i.youku.com/u/UNTcxODk3ODQw" target="_blank" rel="external">youku</a>,一个比较趣味的现象就是,其浏览量其实是按照指数递减的.<br>当然没有考虑发布时间来看这点确实是非常不公平的.</p>
+<p>坚持.</p>
+<p><img src="/img/sicp.youku.png" alt="sicp youku" width="400"></p>
+<h1 id="xkcd-style-matplotlib"><a href="#xkcd-style-matplotlib" class="headerlink" title="xkcd style @ matplotlib"></a>xkcd style @ matplotlib</h1><p>这个图片是采用matplotlib的xkcd风格输出的,字体是Humor Sans,达到一种仿手写的效果.</p>
+<p>如果你对这个风格的东西有点兴趣,或者想自己生成类似的东西,可以参考<a href="https://github.com/liuyang1/test/blob/master/lang/python/matplotlib/sicp.youku.py" target="_blank" rel="external">sicp.youku.py - github</a></p>
+<p>matplotlib,的字体管理程序现在有个bug.</p>
+<p>其fontmananger为了效率,是静态的,也就是其会扫描字体的文件,然后将整个fontmanager(其中存储这字体列表),通过pickle序列化存在在本地.<br>然后就<em>不会更新</em>了.</p>
+<p>当新加入了字体,就不能够被识别到.而且这是一个已知bug,在最新的matplotlib的1.4.3版本上面都是存在的.</p>
+<p>因此只有手动删除缓存目录下的fontList.cache文件才可以.缓存目录可能在当前用户目录(Win/most Linux).或者/tmp/xdgcache下面.</p>
+<h1 id="vim"><a href="#vim" class="headerlink" title="vim"></a>vim</h1><p>最后的最后,吐槽一下vim的7.4.723版本,在tmux中,如果进行分屏操作,必然会crash!<br>受不了了.</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;SICP与xkcd @ matplotlib&lt;br&gt;
+    
+    </summary>
+    
+    
+      <category term="week" scheme="http://liuyang1.github.io/tags/week/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>2015年第19周周记</title>
+    <link href="http://liuyang1.github.io/2015/05/12/201519/"/>
+    <id>http://liuyang1.github.io/2015/05/12/201519/</id>
+    <published>2015-05-11T16:59:56.000Z</published>
+    <updated>2017-01-03T01:24:49.069Z</updated>
+    
+    <content type="html"><![CDATA[<p>颈椎不适. 果然程序员的最终阅读的书是颈椎病治疗手册啊.</p>
+<p>大部分时间都卧床休息了,因此本周几乎没有要更新的内容.</p>
+<h2 id="explainshell"><a href="#explainshell" class="headerlink" title="explainshell"></a><a href="http://explainshell.com/" target="_blank" rel="external">explainshell</a></h2><p>推荐个站点.顾名思义,就是解释shell的语法.</p>
+<p>这里有一个<a href="http://explainshell.com/explain?cmd=%3A%28%29%7B%20%3A%7C%3A%26%20%7D%3B%3A" target="_blank" rel="external">fork-bomb</a>的解释,还是挺直观的.</p>
+<h2 id="New-Macbook"><a href="#New-Macbook" class="headerlink" title="New Macbook"></a>New Macbook</h2><p>最近再一次心动,想换笔记本电脑,先列下我的需求.</p>
+<ul>
+<li>高分辨率</li>
+<li>够用的性能</li>
+<li>良好的键盘</li>
+<li>Mac OS X Prefer</li>
+</ul>
+<p>New Macbook, Apple 2015年新推出的笔记本电脑,问题还是很多的.</p>
+<p>New Macbook饱受诟病的一点,在于其键盘的手感极端之差.</p>
+<p>不过我也尝试了Apple的其他笔记本,键盘手感一样相当的差.</p>
+<p>全部不如我现在使用的Thinkpad渣本.</p>
+<p>要不是我想体验一下Mac OS X,估计还是更新入手一个Thinkpad X1 Carbon (2015).</p>
+<p>Force Touch触摸板的效果还挺不错,使用起来非常直观,比如想打开,直接”猛击”就可以了,比双击效果还好.</p>
+<p>Retina Macbook Pro是另外一个选择.</p>
+<p>看来即使是在Apple寥寥几款笔记本电脑里面,我也找不到完全契合我的需求的选择.</p>
+<p>归根结底还是钱少啊!</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;颈椎不适. 果然程序员的最终阅读的书是颈椎病治疗手册啊.&lt;/p&gt;
+&lt;p&gt;大部分时间都卧床休息了,因此本周几乎没有要更新的内容.&lt;/p&gt;
+&lt;h2 id=&quot;explainshell&quot;&gt;&lt;a href=&quot;#explainshell&quot; class=&quot;headerlink&quot; titl
+    
+    </summary>
+    
+    
+      <category term="week" scheme="http://liuyang1.github.io/tags/week/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>2015年 第17周 第18周 周记</title>
+    <link href="http://liuyang1.github.io/2015/05/05/201517-18/"/>
+    <id>http://liuyang1.github.io/2015/05/05/201517-18/</id>
+    <published>2015-05-05T10:55:01.000Z</published>
+    <updated>2017-01-03T01:24:49.069Z</updated>
+    
+    <content type="html"><![CDATA[<p>第17周最主要的精力都忙于工作了,以至于根本没有其他时间来做其他事情.</p>
+<p>第18周,因为家事,又耽搁了绝大部分精力.</p>
+<p>自己的平衡工作还有更长的路要走.</p>
+<p>没有丝毫干货,就填一些水货吧.</p>
+<p>避免失败,这同样是我所深深接受的教育.<br>蹭蹬一生的恐惧,一样根植于我的恐惧中.</p>
+<p>一个不坚定的调和主义者,注定得到了一个差的结果.因为你放大了自己的允许范围.</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;第17周最主要的精力都忙于工作了,以至于根本没有其他时间来做其他事情.&lt;/p&gt;
+&lt;p&gt;第18周,因为家事,又耽搁了绝大部分精力.&lt;/p&gt;
+&lt;p&gt;自己的平衡工作还有更长的路要走.&lt;/p&gt;
+&lt;p&gt;没有丝毫干货,就填一些水货吧.&lt;/p&gt;
+&lt;p&gt;避免失败,这同样是我所深深接受的教育
+    
+    </summary>
+    
+    
+      <category term="week" scheme="http://liuyang1.github.io/tags/week/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>演进的代码与缺陷</title>
+    <link href="http://liuyang1.github.io/2015/04/23/new-bug/"/>
+    <id>http://liuyang1.github.io/2015/04/23/new-bug/</id>
+    <published>2015-04-23T00:46:24.000Z</published>
+    <updated>2017-01-03T01:24:49.069Z</updated>
+    
+    <content type="html"><![CDATA[<p>最近发现自己目前的核心维护模块,接连出现了2个问题.</p>
+<p>这两个问题都是自己的refine代码过程当中,自己引入的新的问题.</p>
+<p>说实话,这个对我打击挺大的.其中一个是别人检查出来的,另一个是自己检查出来的.</p>
+<p>bug的细节就不多说了,其实都是比较基础性.但是定位的过程是曲折的,因为从触发条件-&gt;出错现象-&gt;定位分析-&gt;解决问题,这个流程是复杂的.</p>
+<p>但是需要注意的是<em>新引入</em>的问题.</p>
+<a id="more"></a>
+<p>我们可以从两点上面避免此类问题:</p>
+<h2 id="逻辑语义一致"><a href="#逻辑语义一致" class="headerlink" title="逻辑语义一致"></a>逻辑语义一致</h2><p>涉及到逻辑的修改,需要务必慎重.要保证重构过程中,要尽可能保持逻辑上和之前的版本是一致的.</p>
+<p>之前版本,可能存在问题,但需要确认存在问题,方进行修改.</p>
+<h2 id="一致性改动"><a href="#一致性改动" class="headerlink" title="一致性改动"></a>一致性改动</h2><p>代码中的修改,单点的改动很少.很多改动需要多处的配合,这个时候就需要保持一致性.</p>
+<p>改动之后,要经过详细的代码走查,来保证涉及的模块,都进行了相应的变动.</p>
+<h2 id="自动测试"><a href="#自动测试" class="headerlink" title="自动测试"></a>自动测试</h2><p>自动测试被强调的很多,这次还是需要再次强调.</p>
+<p>测试程序也要随着代码主体一起演进,发现了新的case,那么就要加到测试列表中,从而保证更为丰富和健全的测试.</p>
+<h2 id="注释与日志"><a href="#注释与日志" class="headerlink" title="注释与日志"></a>注释与日志</h2><p>代码中要加上注释,这点不需要说了.尽管实际中代码没有那么多注释.</p>
+<p>良好的日志是注释的更好的辅助,其实我的建议是良好的日志比注释更为重要.</p>
+<p>日志系统,可以列出关键信息,并且简要说明当前的关键状态点.根据日志,其实就已经可以推想代码模块中目前所处的状态.</p>
+<p>甚至QA和AE也可以根据现场生成的日志,更为准确的判断,从而节约开发者的时间.</p>
+<p>良好的日志系统,要可读性良好.这个可读性是满足两方面</p>
+<ul>
+<li>人类可读</li>
+<li>机器可读</li>
+</ul>
+<p>人类可读,这个非常显然,前面的描述就是为此.机器可读,是在于大量日志的情况下,通过简要的日志分析,通过日志分析工具,甚至简单的grep帮助我们快速定位的问题所在的地方,并且将其上下文展示出来.</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;最近发现自己目前的核心维护模块,接连出现了2个问题.&lt;/p&gt;
+&lt;p&gt;这两个问题都是自己的refine代码过程当中,自己引入的新的问题.&lt;/p&gt;
+&lt;p&gt;说实话,这个对我打击挺大的.其中一个是别人检查出来的,另一个是自己检查出来的.&lt;/p&gt;
+&lt;p&gt;bug的细节就不多说了,其实都是比较基础性.但是定位的过程是曲折的,因为从触发条件-&amp;gt;出错现象-&amp;gt;定位分析-&amp;gt;解决问题,这个流程是复杂的.&lt;/p&gt;
+&lt;p&gt;但是需要注意的是&lt;em&gt;新引入&lt;/em&gt;的问题.&lt;/p&gt;
+    
+    </summary>
+    
+    
+      <category term="Software Engineer" scheme="http://liuyang1.github.io/tags/Software-Engineer/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>2015年 第16周 周记</title>
+    <link href="http://liuyang1.github.io/2015/04/21/201516/"/>
+    <id>http://liuyang1.github.io/2015/04/21/201516/</id>
+    <published>2015-04-21T15:01:23.000Z</published>
+    <updated>2017-01-03T01:24:49.069Z</updated>
+    
+    <content type="html"><![CDATA[<p>最近工作的事情比较多.</p>
+<p>因此更新内容比较少.</p>
+<h2 id="H99-Continue"><a href="#H99-Continue" class="headerlink" title="H99 Continue."></a><a href="https://github.com/liuyang1/H99" target="_blank" rel="external">H99</a> Continue.</h2><h2 id="Bash"><a href="#Bash" class="headerlink" title="Bash"></a>Bash</h2><p>确实没有特别大的深入研究的意义了,以后自己尽量使用python来作为脚本语言,试图取代bash.</p>
+<h2 id="fast-agnoster"><a href="#fast-agnoster" class="headerlink" title="fast-agnoster"></a><a href="https://github.com/liuyang1/dotfiles/tree/master/zsh" target="_blank" rel="external">fast-agnoster</a></h2><p>给自己的fast-agnoster的zsh theme,增加了持久化的功能.</p>
+<p>这个自己优化过的zsh主题,主要有以下特性(相比于原始的agnoster主题)</p>
+<ul>
+<li>短路径<br>尽可能短的显示路径.对于深度路径特别有用.<ul>
+<li>路径的最后的一级,始终保持展开</li>
+<li>路径的父路径所在的层级上,以最短的可以区分的前缀<br>例如~/git/hub/dotfiles,同时还有路径~/git/huerko/abc<br>那么,<br>在~/git/hub路径下面,则显示为”~/g/hub”<br>在~/git/huerko/abc,则显示为”~/g/hue/abc”</li>
+</ul>
+</li>
+<li>git status的保存<br>git status的显示功能,在zsh的主题中很多,但是对于较大规模的git repo,则会存在性能的问题.</li>
+</ul>
+<p>这个功能就是用于缓存git status的结果,如果检测到可能发生更新,则会更新,否则则复用历史git status信息.<br>这样可以减少不必要的git status调用.<br>基本可以减少一半的git status调用.</p>
+<p>其他的功能,则都比较常见了,这里就不多说了.</p>
+<h2 id="daily-note"><a href="#daily-note" class="headerlink" title="daily note"></a>daily note</h2><p>自己新建的笔记格式,用于日常的工作时间记录,这个是最新的.</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;最近工作的事情比较多.&lt;/p&gt;
+&lt;p&gt;因此更新内容比较少.&lt;/p&gt;
+&lt;h2 id=&quot;H99-Continue&quot;&gt;&lt;a href=&quot;#H99-Continue&quot; class=&quot;headerlink&quot; title=&quot;H99 Continue.&quot;&gt;&lt;/a&gt;&lt;a href=&quot;htt
+    
+    </summary>
+    
+    
+      <category term="week" scheme="http://liuyang1.github.io/tags/week/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>2015年第15周 周记</title>
+    <link href="http://liuyang1.github.io/2015/04/12/201515/"/>
+    <id>http://liuyang1.github.io/2015/04/12/201515/</id>
+    <published>2015-04-12T14:31:48.000Z</published>
+    <updated>2017-01-03T01:24:49.069Z</updated>
+    
+    <content type="html"><![CDATA[<p><a href="https://github.com/liuyang1/H99" target="_blank" rel="external">H99</a> 继续,大概又前进了20+题目的样子.</p>
+<p>发现这周居然没有太多更新的内容,自己要努力啊!</p>
+<p>没有更多内容,连read more都省啦.</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;&lt;a href=&quot;https://github.com/liuyang1/H99&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;H99&lt;/a&gt; 继续,大概又前进了20+题目的样子.&lt;/p&gt;
+&lt;p&gt;发现这周居然没有太多更新的内容,自己要努力啊!&lt;/p&gt;
+&lt;p
+    
+    </summary>
+    
+    
+      <category term="week" scheme="http://liuyang1.github.io/tags/week/"/>
+    
+  </entry>
+  
+</feed>

@@ -1,0 +1,273 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>2015年第13周周记 | River &amp; Could</title>
+  <meta name="author" content="liuyang1">
+  
+  <meta name="description" content="sorry, 上周因为看导致进度没有如期而至.现在简单补上.">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <meta property="og:title" content="2015年第13周周记"/>
+  <meta property="og:site_name" content="River &amp; Could"/>
+
+  
+    <meta property="og:image" content="undefined"/>
+  
+
+  <link href="/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="River &amp; Could" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+  
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-59389559-1']);
+  
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+
+</head>
+
+
+<body>
+  <header id="header" class="inner"><div class="alignleft">
+  <h1><a href="/">River &amp; Could</a></h1>
+  <h2><a href="/">从前有一个大傻逼，没有人知道他是谁。</a></h2>
+</div>
+<nav id="main-nav" class="alignright">
+  <ul>
+    
+      <li><a href="/">Home</a></li>
+    
+      <li><a href="/archives">Archives</a></li>
+    
+      <li><a href="/fun">Fun</a></li>
+    
+      <li><a href="/about">About</a></li>
+    
+      <li><a href="/atom.xml">RSS</a></li>
+    
+  </ul>
+  <div class="clearfix"></div>
+</nav>
+<div class="clearfix"></div>
+</header>
+  <div id="content" class="inner">
+    <div id="main-col" class="alignleft"><div id="wrapper"><article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time datetime="2015-04-01T15:01:46.000Z"><a href="/2015/04/01/201513/">2015-04-01</a></time>
+      
+      
+  
+    <h1 class="title">2015年第13周周记</h1>
+  
+
+    </header>
+    <div class="entry">
+      
+
+<div id="toc" class="toc-article alignright">
+    <strong class="toc-title">Table of Content:</strong>
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#hexo"><span class="toc-text">hexo</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#gerrit"><span class="toc-text">gerrit</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#linenoise"><span class="toc-text">linenoise</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#git-review"><span class="toc-text">git-review</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#web-application-developing"><span class="toc-text">web application developing</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#EVA"><span class="toc-text">EVA</span></a></li></ol>
+</div>
+
+        <p>sorry, 上周因为看<eva>导致进度没有如期而至.现在简单补上.</eva></p>
+<a id="more"></a>
+<h2 id="hexo"><a href="#hexo" class="headerlink" title="hexo"></a>hexo</h2><ul>
+<li>instantclick<br>无刷新页面快速载入,当鼠标悬停在链接上的时候,就开始加载过程,从而极大加快页面的载入速度.</li>
+<li>Table of Content<br>加上目录功能,目录的CSS样式参考了维基百科和light主题.</li>
+<li>前向后向页面<br>在文章的最后增加前向后向的页面链接功能</li>
+</ul>
+<p>这个后来发现又有bug,临时撤掉了.</p>
+<ul>
+<li>百度统计<br>话说增加了百度统计,结果就有的百度统计被利用攻击github的事情.<br>现在正在考虑是否去掉这个统计功能.</li>
+</ul>
+<h2 id="gerrit"><a href="#gerrit" class="headerlink" title="gerrit"></a>gerrit</h2><p>这部分见gerrit相关的文章,目前还没有完成.</p>
+<h2 id="linenoise"><a href="#linenoise" class="headerlink" title="linenoise"></a>linenoise</h2><p>发现一个linenoise的Line Feed和Carriage Return,也就是”\r”和”\n”的bug.</p>
+<p>这个问题就是在Android的adb的shell环境下,得到的回车键的响应符号是”\r”.而linenoise没有考虑这个情况.</p>
+<p>这个目前已经反映到其在github的页面上.不过那个似乎没有人维护,也就放在那里吧,有需求的人会看到的.</p>
+<h2 id="git-review"><a href="#git-review" class="headerlink" title="git-review"></a>git-review</h2><p>发现一个不能处理UTF8字符的bug.也已经处理了.</p>
+<p>但是其bug反馈的流程需要经过openstack的组织的review,现在还没有正式提交.</p>
+<p>其实这个bug也比较无所谓,就先这样吧.</p>
+<h2 id="web-application-developing"><a href="#web-application-developing" class="headerlink" title="web application developing"></a>web application developing</h2><p>在coursera上的公开课程.使用ruby实现.<br>本来上个星期应该要继续的,结果因为看EVA就错过了.</p>
+<p>不过目前其到module3的quiz都已经基本完成,自己要一口气完成,从而避免拖延.</p>
+<p>另外mongodb确实比较适合”轻量级”程序员啊.</p>
+<h2 id="EVA"><a href="#EVA" class="headerlink" title="EVA"></a>EVA</h2><p>这是日本人形”机器人”动画片的鼻祖了吧.<br>其在故事情节设定,任务性格设定,宗教和精神分析方面都有很不错的地方.</p>
+<p>wyy多年前的推荐还是靠谱的.</p>
+<p>三无少女啊.</p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+  
+  <div class="tags">
+    <a href="/tags/week/">week</a>
+  </div>
+
+        
+      
+      <div class="clearfix"></div>
+<!-- 
+<div class="pagepart clearfix">
+  
+    <a href="/2015/03/26/gerrit/" class="alignleft prev" title="gerrit讨论">gerrit讨论</a>
+  
+  
+    <a href="/2015/04/05/201514/" class="alignright next" title="2015年第14周 周记">2015年第14周 周记</a>
+  
+</div>
+
+ -->
+    </footer>
+  </div>
+</article>
+
+
+<section id="comment">
+  <h1 class="title">留言</h1>
+
+  
+  <div id="disqus_thread">
+    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  </div>
+  
+</section>
+
+
+</div></div>
+    <aside id="sidebar" class="alignright">
+  <div class="search">
+  <form action="//google.com/search" method="get" accept-charset="utf-8">
+    <input type="search" name="q" results="0" placeholder="搜索">
+    <input type="hidden" name="q" value="site:liuyang1.github.io">
+  </form>
+</div>
+
+  
+
+  
+<div class="widget tag">
+  <h3 class="title">标签</h3>
+  <ul class="entry">
+  
+    <li><a href="/tags/C/">C</a><small>4</small></li>
+  
+    <li><a href="/tags/Haskell/">Haskell</a><small>2</small></li>
+  
+    <li><a href="/tags/Software-Engineer/">Software Engineer</a><small>1</small></li>
+  
+    <li><a href="/tags/Standard/">Standard</a><small>1</small></li>
+  
+    <li><a href="/tags/algo/">algo</a><small>2</small></li>
+  
+    <li><a href="/tags/aos/">aos</a><small>1</small></li>
+  
+    <li><a href="/tags/bash/">bash</a><small>2</small></li>
+  
+    <li><a href="/tags/basic/">basic</a><small>1</small></li>
+  
+    <li><a href="/tags/coderead/">coderead</a><small>1</small></li>
+  
+    <li><a href="/tags/hexo/">hexo</a><small>1</small></li>
+  
+    <li><a href="/tags/intro/">intro</a><small>2</small></li>
+  
+    <li><a href="/tags/mobile/">mobile</a><small>1</small></li>
+  
+    <li><a href="/tags/python/">python</a><small>3</small></li>
+  
+    <li><a href="/tags/src/">src</a><small>2</small></li>
+  
+    <li><a href="/tags/tool/">tool</a><small>4</small></li>
+  
+    <li><a href="/tags/video/">video</a><small>3</small></li>
+  
+    <li><a href="/tags/vim/">vim</a><small>1</small></li>
+  
+    <li><a href="/tags/week/">week</a><small>12</small></li>
+  
+    <li><a href="/tags/实战/">实战</a><small>1</small></li>
+  
+    <li><a href="/tags/翻译/">翻译</a><small>1</small></li>
+  
+  </ul>
+</div>
+
+</aside>
+    <div class="clearfix"></div>
+  </div>
+  <footer id="footer" class="inner"><div class="alignleft">
+  
+  &copy; 2017 liuyang1
+  
+</div>
+<div class="clearfix"></div></footer>
+  <script src="//lib.sinaapp.com/js/jquery/2.0.3/jquery-2.0.3.min.js"></script>
+<script src="/js/instantclick.min.js" data-no-instant></script>
+<script data-no-instant>
+    InstantClick.on('change', function(isInitialLoad) {
+      if (isInitialLoad === false) {
+        if (typeof _hmt !== 'undefined')
+          _hmt.push(['_trackPageview', location.pathname + location.search]);
+        if (typeof ga !== 'undefined')
+          ga('send', 'pageview', location.pathname + location.search);
+      }
+    });
+    InstantClick.init();
+</script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+
+
+<script type="text/javascript">
+var disqus_shortname = 'liuyang1';
+
+(function(){
+  var dsq = document.createElement('script');
+  dsq.type = 'text/javascript';
+  dsq.async = true;
+  dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+}());
+</script>
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "//hm.baidu.com/hm.js?0c65442b2922ed650d2d34c603409234";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+</body>
+</html>

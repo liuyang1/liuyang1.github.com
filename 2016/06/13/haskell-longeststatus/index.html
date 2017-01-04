@@ -1,0 +1,327 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>实战 最长状态 | River &amp; Could</title>
+  <meta name="author" content="liuyang1">
+  
+  <meta name="description" content="从去年开始,陆续学习了一点Haskell的东西,当时在codewars上面着实写了一些练习题,还有H99之类的.
+最近又开始回头看SICP,然后看到racket,接触到CSE341的课程,这个过程中自己也有和Haskell进行比较.
+比较的结果,就是Haskell还是有着自己的独特之处的,值得再继续学习下去.
+学习要结合着练习,毕竟学的都是死的,真的能够在日常生活中使用起来,才能够保持对相关知识的活力.
+所以就有了今天这个实战的小code.">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <meta property="og:title" content="实战 最长状态"/>
+  <meta property="og:site_name" content="River &amp; Could"/>
+
+  
+    <meta property="og:image" content="undefined"/>
+  
+
+  <link href="/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="River &amp; Could" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+  
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-59389559-1']);
+  
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+
+</head>
+
+
+<body>
+  <header id="header" class="inner"><div class="alignleft">
+  <h1><a href="/">River &amp; Could</a></h1>
+  <h2><a href="/">从前有一个大傻逼，没有人知道他是谁。</a></h2>
+</div>
+<nav id="main-nav" class="alignright">
+  <ul>
+    
+      <li><a href="/">Home</a></li>
+    
+      <li><a href="/archives">Archives</a></li>
+    
+      <li><a href="/fun">Fun</a></li>
+    
+      <li><a href="/about">About</a></li>
+    
+      <li><a href="/atom.xml">RSS</a></li>
+    
+  </ul>
+  <div class="clearfix"></div>
+</nav>
+<div class="clearfix"></div>
+</header>
+  <div id="content" class="inner">
+    <div id="main-col" class="alignleft"><div id="wrapper"><article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time datetime="2016-06-13T14:42:54.000Z"><a href="/2016/06/13/haskell-longeststatus/">2016-06-13</a></time>
+      
+      
+  
+    <h1 class="title">实战 最长状态</h1>
+  
+
+    </header>
+    <div class="entry">
+      
+
+<div id="toc" class="toc-article alignright">
+    <strong class="toc-title">Table of Content:</strong>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#题目"><span class="toc-text">题目</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#实战"><span class="toc-text">实战</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#副作用"><span class="toc-text">副作用</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#函数式"><span class="toc-text">函数式</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#评论"><span class="toc-text">评论</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#性能问题"><span class="toc-text">性能问题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#兼容性"><span class="toc-text">兼容性</span></a></li></ol></li></ol>
+</div>
+
+        <p>从去年开始,陆续学习了一点Haskell的东西,当时在<a href="https://github.com/liuyang1/test/tree/master/lang/haskell/codewars" target="_blank" rel="external">codewars</a>上面着实写了一些练习题,还有<a href="https://github.com/liuyang1/H99" target="_blank" rel="external">H99</a>之类的.</p>
+<p>最近又开始回头看<a href="https://github.com/liuyang1/sicp-ans" target="_blank" rel="external">SICP</a>,然后看到racket,接触到<a href="http://courses.cs.washington.edu/courses/cse341/15au/index.html" target="_blank" rel="external">CSE341</a>的课程,这个过程中自己也有和Haskell进行比较.</p>
+<p>比较的结果,就是Haskell还是有着自己的独特之处的,值得再继续学习下去.</p>
+<p>学习要结合着练习,毕竟学的都是死的,真的能够在日常生活中使用起来,才能够保持对相关知识的活力.</p>
+<p>所以就有了今天这个实战的小code.</p>
+<a id="more"></a>
+<h1 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h1><p>要完成的功能其实非常简单.</p>
+<pre><code>日志处理
+日志按行分布,部分行中带有BufferS的信息.
+这些行的Log中,有的带有status信息.具体的的status,则是从status到该行的最后.
+找到停留在该status最长的状态,并且输出对应的停留的行数.
+注意:带有BufferS的行并不一定是连续的.
+</code></pre><p>这个要求其实比较简单,就是求出该日志中停留在什么状态最长.</p>
+<p>其中可能涉及到的方法有:</p>
+<pre><code>参数解析
+文件读取,和标准输出
+文本处理
+</code></pre><p>其他东西,则涉及到Haskell具体的一些东西了,后面再说.</p>
+<h1 id="实战"><a href="#实战" class="headerlink" title="实战"></a>实战</h1><p>本文涉及到的Haskell的特点</p>
+<h2 id="副作用"><a href="#副作用" class="headerlink" title="副作用"></a>副作用</h2><p>很多资料都介绍说Haskell是一个没有副作用的语言.这其实是不可能的,如果完全没有副作用,那么其实就等于不能够运行一样.</p>
+<p>盗图一张啊 :)</p>
+<p><img src="/img/xkcd_haskell.png" alt="Haskell" align="center"></p>
+<p>但是Haskell的副作用限制比较大,至少要符合其对应的类型系统中去.这样的结果就是副作用比较集中,从而不会散布在代码的各个地方.</p>
+<p>例如:</p>
+<figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="title">main</span> = <span class="keyword">do</span></div><div class="line">        args  &lt;- getArgs</div><div class="line">        s &lt;- <span class="type">C</span>.readFile $ head args</div><div class="line">        print $ process s</div></pre></td></tr></table></figure>
+<p>所用的带副作用的代码,都在main函数的控制中.而这里代用副作用的函数其实就三个getArgs获得参数,readFile,以及print打印.比如我想把打印直接放在process的函数里面,这个时候就会有问题,因为process的类型就必须是IO类型的.这和一般的代码结构是矛盾的.</p>
+<h2 id="函数式"><a href="#函数式" class="headerlink" title="函数式"></a>函数式</h2><p>在上面的代码片段中,以及可以获取参数,读取文件,标准输出都包含了.下面就集中在文本处理process的过程上.</p>
+<p>首先需要将整个文件读取内容按行进行划分,使用lines函数.lines函数将内容划分成字符串列表[String].</p>
+<p>   <br></p>
+<h3 id="评论"><a href="#评论" class="headerlink" title="评论"></a>评论</h3><p>从此可以看到Haskell的一个特点,自带电池,库的强大性.这点基本上在所有的编程语言的发展历史上都有所体现.从C到C++,到Java,包括Haskell,以及一堆在jvm上面的语言.</p>
+<p>第二个特点,数据结构的支持,原始的编程语言中很少带有强大的数据结构,但是后续的编程语言都带有强大的数据结构,包括列表,map(或者dict字典,关联数组).</p>
+<p>如果说各种各样的库,使得编程语言的能力加性的提高,那么数据结构在使得编程语言的能力有着乘性的提高.</p>
+<p>   <br></p>
+<p>下面需要过滤字符串列表,带有BufferS并且带有status的继续处理,其他的可以丢失掉.结合函数式编程语言标配的<code>filter</code>,只需要提供一个谓词函数就可以了.</p>
+<figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="title">isStatus</span> x = isInfixOf <span class="string">"BufferS"</span> x &amp;&amp; isInfixOf <span class="string">"status"</span> x</div></pre></td></tr></table></figure>
+<p>函数式编程语言的函数式的特点,可以提供更高的抽象性.一般的函数操作其输入输出数据,高阶的函数操作函数,从而提高更高的抽象性.</p>
+<figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">(.&amp;&amp;.) f g a = (f a) &amp;&amp; (g a)</div><div class="line"><span class="title">isStatus</span> = isInfixOf <span class="string">"BufferS"</span> .&amp;&amp;. isInfixOf <span class="string">"status"</span></div></pre></td></tr></table></figure>
+<p>这里的<code>.&amp;&amp;.</code>,其实是一个函数,类似于C++的操作符重载.这里相当于建立一个新的操作符.这个操作将两个谓词函数都应用在参数上并且<code>与</code>起来.也就是组成一个新的谓词函数,要求同时满足两个谓词函数.听起来觉得好像和一般的<code>与</code>似乎差不多啊.</p>
+<pre><code>&amp;&amp; -&gt; 返回一个布尔值,该布尔值是两个值的`与`
+.&amp;&amp;. -&gt; 返回一个谓词函数,该函数要求同时满足(`与`)两个谓词函数
+</code></pre><p>这样对比一下,好像清晰一点点了.</p>
+<p>紧接着,从满足条件的字符串中提取除相应的状态信息.</p>
+<p>然后就到了最核心的逻辑的地方了.</p>
+<figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="comment">-- find status in bufferstatus line log</span></div><div class="line"><span class="title">probeState</span> = snd . breakOnEnd <span class="string">" status "</span></div><div class="line"></div><div class="line"><span class="comment">-- max Run Length Encoding</span></div><div class="line"><span class="title">maxRLE</span> = maximumBy (comparing snd) . map (head &amp;&amp;&amp; length) . group</div></pre></td></tr></table></figure>
+<ol>
+<li>从右向左边看,<code>group</code>将列表划分成列表的列表,这个新的列表中的每个列表都是相同的.</li>
+<li>同时应用<code>head</code>和<code>length</code>函数到列表的元素(第二级的列表).</li>
+<li><code>maximumBy</code>函数,则比较元素的第二个参数.</li>
+</ol>
+<p>例如:</p>
+<pre><code>[&quot;a&quot;, &quot;a&quot;, &quot;b&quot;, &quot;c&quot;, &quot;c&quot;, &quot;c&quot;, &quot;a&quot;]
+-&gt;
+[[&quot;a&quot;, &quot;a&quot;], [&quot;b&quot;], [&quot;c&quot;, &quot;c&quot;, &quot;c&quot;], [&quot;a&quot;]]
+-&gt;
+[(&quot;a&quot;, 2), (&quot;b&quot;, 1), (&quot;c&quot;, 4), (&quot;a&quot;, 1)]
+-&gt;
+(&quot;c&quot;, 4)
+</code></pre><p>从这一段可以看到Haskell强大的表现力.对Haskell熟悉以后,这一段就像直接翻译处核心逻辑一样.除了关键点的逻辑之外,没有一点点噪声,没有奇奇怪怪的中间变量和下标,没有特意构造出来的临时的数据结构.甚至可以说肯定没有bug,因为这些已经是最上层的逻辑的翻译了,如果有问题,那也是程序员对需求的逻辑没有理解清楚,而不是代码本身的bug.</p>
+<h2 id="性能问题"><a href="#性能问题" class="headerlink" title="性能问题"></a>性能问题</h2><p>从上面来看,Haskell的这段代码岂不是很好,没有一点问题了?</p>
+<p>也不尽然,这段代码的性能比较慢,对于100M+的日志文件,需要处理40s+.这个时间在实际的使用过程中是不能接受的.日常工作中节奏的连贯性是非常重要的,过长的等待时间会使得程序员的注意力无法保持集中,从而打断其工作的状态,因此需要优化.</p>
+<p>Haskell的优化可以通过profiling来进行.如果没有profiling则不要做任何优化,因为这个时候根本不知道要优化什么地方,仅仅依赖于幻想来优化,往往只是浪费时间而已.</p>
+<p>profile的结果显示,第一步的lines就需要很长的时间.从网上搜索发现,可以通过将String优化为ByteString数据结构,从而大大加快其性能.</p>
+<h2 id="兼容性"><a href="#兼容性" class="headerlink" title="兼容性"></a>兼容性</h2><p>而Haskell上,<code>ByteString</code>和<code>String</code>是两种数据结构,但是有很多的成员函数?都是<code>API兼容</code>的,从而比较容易切换过去.</p>
+<p>注意的是,这里的兼容和一般的API兼容是不同的,这里其实是其域上的函子是一致的.</p>
+<p>比如,两个结构上都有<code>isInfixOf</code>函数.</p>
+<pre><code>-- Stirng, [Char] 使用的
+isInfixOf :: [a] -&gt; [a] -&gt; Bool
+-- ByteString
+isInfixOf :: ByteString -&gt; ByteString -&gt; Bool
+-- 只是保持这个形式不变
+T -&gt; T -&gt; Bool
+</code></pre><p>完整的代码在这里</p>
+<p><a href="https://github.com/liuyang1/test/tree/master/lang/haskell/practice" target="_blank" rel="external">github</a></p>
+<p>回头看,很多地方就是在胡言乱语,姑且先记在这里吧.</p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+  
+  <div class="tags">
+    <a href="/tags/实战/">实战</a>, <a href="/tags/Haskell/">Haskell</a>
+  </div>
+
+        
+      
+      <div class="clearfix"></div>
+<!-- 
+<div class="pagepart clearfix">
+  
+    <a href="/2016/04/23/yuvviewer/" class="alignleft prev" title="YUV viewer">YUV viewer</a>
+  
+  
+    <a href="/2017/01/04/clighter8/" class="alignright next" title="[vim] clighter8">[vim] clighter8</a>
+  
+</div>
+
+ -->
+    </footer>
+  </div>
+</article>
+
+
+<section id="comment">
+  <h1 class="title">留言</h1>
+
+  
+  <div id="disqus_thread">
+    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  </div>
+  
+</section>
+
+
+</div></div>
+    <aside id="sidebar" class="alignright">
+  <div class="search">
+  <form action="//google.com/search" method="get" accept-charset="utf-8">
+    <input type="search" name="q" results="0" placeholder="搜索">
+    <input type="hidden" name="q" value="site:liuyang1.github.io">
+  </form>
+</div>
+
+  
+
+  
+<div class="widget tag">
+  <h3 class="title">标签</h3>
+  <ul class="entry">
+  
+    <li><a href="/tags/C/">C</a><small>4</small></li>
+  
+    <li><a href="/tags/Haskell/">Haskell</a><small>2</small></li>
+  
+    <li><a href="/tags/Software-Engineer/">Software Engineer</a><small>1</small></li>
+  
+    <li><a href="/tags/Standard/">Standard</a><small>1</small></li>
+  
+    <li><a href="/tags/algo/">algo</a><small>2</small></li>
+  
+    <li><a href="/tags/aos/">aos</a><small>1</small></li>
+  
+    <li><a href="/tags/bash/">bash</a><small>2</small></li>
+  
+    <li><a href="/tags/basic/">basic</a><small>1</small></li>
+  
+    <li><a href="/tags/coderead/">coderead</a><small>1</small></li>
+  
+    <li><a href="/tags/hexo/">hexo</a><small>1</small></li>
+  
+    <li><a href="/tags/intro/">intro</a><small>2</small></li>
+  
+    <li><a href="/tags/mobile/">mobile</a><small>1</small></li>
+  
+    <li><a href="/tags/python/">python</a><small>3</small></li>
+  
+    <li><a href="/tags/src/">src</a><small>2</small></li>
+  
+    <li><a href="/tags/tool/">tool</a><small>4</small></li>
+  
+    <li><a href="/tags/video/">video</a><small>3</small></li>
+  
+    <li><a href="/tags/vim/">vim</a><small>1</small></li>
+  
+    <li><a href="/tags/week/">week</a><small>12</small></li>
+  
+    <li><a href="/tags/实战/">实战</a><small>1</small></li>
+  
+    <li><a href="/tags/翻译/">翻译</a><small>1</small></li>
+  
+  </ul>
+</div>
+
+</aside>
+    <div class="clearfix"></div>
+  </div>
+  <footer id="footer" class="inner"><div class="alignleft">
+  
+  &copy; 2017 liuyang1
+  
+</div>
+<div class="clearfix"></div></footer>
+  <script src="//lib.sinaapp.com/js/jquery/2.0.3/jquery-2.0.3.min.js"></script>
+<script src="/js/instantclick.min.js" data-no-instant></script>
+<script data-no-instant>
+    InstantClick.on('change', function(isInitialLoad) {
+      if (isInitialLoad === false) {
+        if (typeof _hmt !== 'undefined')
+          _hmt.push(['_trackPageview', location.pathname + location.search]);
+        if (typeof ga !== 'undefined')
+          ga('send', 'pageview', location.pathname + location.search);
+      }
+    });
+    InstantClick.init();
+</script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+
+
+<script type="text/javascript">
+var disqus_shortname = 'liuyang1';
+
+(function(){
+  var dsq = document.createElement('script');
+  dsq.type = 'text/javascript';
+  dsq.async = true;
+  dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+}());
+</script>
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "//hm.baidu.com/hm.js?0c65442b2922ed650d2d34c603409234";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+</body>
+</html>

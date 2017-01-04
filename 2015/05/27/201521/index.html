@@ -1,0 +1,281 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>2015年 第21周 | River &amp; Could</title>
+  <meta name="author" content="liuyang1">
+  
+  <meta name="description" content="本周主要在codewars平台上面,练习haskell代码.
+目前已经升级到5kyu级别,110点honor.排名在遥远的7k+名次.
+打算进一步在上面练习haskell,努力达到proficent级别(2kyu)吧.至少要到competent级别.
+代码全部都在这里github
+这里就分享下上面的几个有趣的问题.">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <meta property="og:title" content="2015年 第21周"/>
+  <meta property="og:site_name" content="River &amp; Could"/>
+
+  
+    <meta property="og:image" content="undefined"/>
+  
+
+  <link href="/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="River &amp; Could" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+  
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-59389559-1']);
+  
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+
+</head>
+
+
+<body>
+  <header id="header" class="inner"><div class="alignleft">
+  <h1><a href="/">River &amp; Could</a></h1>
+  <h2><a href="/">从前有一个大傻逼，没有人知道他是谁。</a></h2>
+</div>
+<nav id="main-nav" class="alignright">
+  <ul>
+    
+      <li><a href="/">Home</a></li>
+    
+      <li><a href="/archives">Archives</a></li>
+    
+      <li><a href="/fun">Fun</a></li>
+    
+      <li><a href="/about">About</a></li>
+    
+      <li><a href="/atom.xml">RSS</a></li>
+    
+  </ul>
+  <div class="clearfix"></div>
+</nav>
+<div class="clearfix"></div>
+</header>
+  <div id="content" class="inner">
+    <div id="main-col" class="alignleft"><div id="wrapper"><article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time datetime="2015-05-27T12:37:31.000Z"><a href="/2015/05/27/201521/">2015-05-27</a></time>
+      
+      
+  
+    <h1 class="title">2015年 第21周</h1>
+  
+
+    </header>
+    <div class="entry">
+      
+
+<div id="toc" class="toc-article alignright">
+    <strong class="toc-title">Table of Content:</strong>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#整数分拆问题"><span class="toc-text">整数分拆问题</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#汉明数的生成"><span class="toc-text">汉明数的生成</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#RPN逆波兰式"><span class="toc-text">RPN逆波兰式</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#总结"><span class="toc-text">总结</span></a></li></ol>
+</div>
+
+        <p>本周主要在<a href="www.codewars.com/r/b2y8Xw">codewars</a>平台上面,练习haskell代码.</p>
+<p>目前已经升级到5kyu级别,110点honor.排名在遥远的7k+名次.</p>
+<p>打算进一步在上面练习haskell,努力达到proficent级别(2kyu)吧.至少要到competent级别.</p>
+<p>代码全部都在这里<a href="https://github.com/liuyang1/test/tree/master/lang/haskell/codewars" target="_blank" rel="external">github</a></p>
+<p>这里就分享下上面的几个有趣的问题.</p>
+<a id="more"></a>
+<h1 id="整数分拆问题"><a href="#整数分拆问题" class="headerlink" title="整数分拆问题"></a>整数分拆问题</h1><p>这个问题,可以看到很多的在动态规划的解法.算法的复杂度为O(N^2).</p>
+<p>在wiki上面看到一个五边形数定理,可以很好的解决这个问题.</p>
+<pre><code>p(k) = p(k − 1) + p(k − 2) − p(k − 5) − p(k − 7) + p(k − 12) + p(k − 15) − p(k − 22) − ...
+</code></pre><p>其中,上面的1,2,5,7为广义五边形数w(n) = (3 <em> n </em> n +- n) / 2,前面的符号,始终为1,1,-1,-1,1,1</p>
+<p>结合上面的五边形的规律,以及记忆化的策略,可以得到较好的结果.</p>
+<p>一个小细节,就是可以上面公式所列的,是按照k的降序分布的.而在实际的代码实践中,可以按照升序排列.</p>
+<p>这样的话,p(n)是按照从小到大计算得到的,结合记忆化的策略,可以避免递归太深栈溢出的问题.</p>
+<h1 id="汉明数的生成"><a href="#汉明数的生成" class="headerlink" title="汉明数的生成"></a>汉明数的生成</h1><p>汉明数是一种正规数.<br>这里的正规数是regular number,不是normal number.</p>
+<p>前者是仅包含素因子2,3,5的整数.后者为数字0~9出现的概率相同的实数.</p>
+<p>wiki上面有一个非常好的图,可以说明这个问题.我很喜欢,就放在这里了.</p>
+<p><img src="/img/regular.svg.png" alt="regular number" width="800"></p>
+<p>这个问题本身挺简单,关键在于优化的生成速度.在codewars平台上,不同语言,对于速度的要求还不是一致的.<br>导致python版本,这道题目用了比较长时间才过.</p>
+<p>记忆化的策略同样是有用的.可以有效的避免重复计算.</p>
+<p>python代码的合并排序,其实并不如list(sort(set(lst)))来的粗暴快捷,因为后者肯定是经过C优化的.</p>
+<h1 id="RPN逆波兰式"><a href="#RPN逆波兰式" class="headerlink" title="RPN逆波兰式"></a>RPN逆波兰式</h1><p>这个本身比较简单的问题,这里提下主要是感叹下相比于5年前,自己使用C++来实现的逆波兰式,毫无疑问haskell的版本简单了许多许多.</p>
+<p>这里也有部分是自己的提高吧.</p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>总的来看,haskell的优点</p>
+<ul>
+<li>提供了大量的库<br>很多编程语言在这点上都是做的越来越好了.大量的库,意味着更快的开发速度,更少的细节bug,更易读.</li>
+<li>静态语言与类型推断<br>同时避免了静态语言和动态语言各自的问题.更多的检查来保证程序的正确性</li>
+<li>函数式与副作用的分离<br>至少有更好的错误处理.至少我觉得Maybe比C的错误码要好多了.</li>
+</ul>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+  
+  <div class="tags">
+    <a href="/tags/week/">week</a>
+  </div>
+
+        
+      
+      <div class="clearfix"></div>
+<!-- 
+<div class="pagepart clearfix">
+  
+    <a href="/2015/05/17/201520/" class="alignleft prev" title="2015年 20周 周记">2015年 20周 周记</a>
+  
+  
+    <a href="/2015/06/07/201522-23/" class="alignright next" title="2015年 第22-23周周记">2015年 第22-23周周记</a>
+  
+</div>
+
+ -->
+    </footer>
+  </div>
+</article>
+
+
+<section id="comment">
+  <h1 class="title">留言</h1>
+
+  
+  <div id="disqus_thread">
+    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  </div>
+  
+</section>
+
+
+</div></div>
+    <aside id="sidebar" class="alignright">
+  <div class="search">
+  <form action="//google.com/search" method="get" accept-charset="utf-8">
+    <input type="search" name="q" results="0" placeholder="搜索">
+    <input type="hidden" name="q" value="site:liuyang1.github.io">
+  </form>
+</div>
+
+  
+
+  
+<div class="widget tag">
+  <h3 class="title">标签</h3>
+  <ul class="entry">
+  
+    <li><a href="/tags/C/">C</a><small>4</small></li>
+  
+    <li><a href="/tags/Haskell/">Haskell</a><small>2</small></li>
+  
+    <li><a href="/tags/Software-Engineer/">Software Engineer</a><small>1</small></li>
+  
+    <li><a href="/tags/Standard/">Standard</a><small>1</small></li>
+  
+    <li><a href="/tags/algo/">algo</a><small>2</small></li>
+  
+    <li><a href="/tags/aos/">aos</a><small>1</small></li>
+  
+    <li><a href="/tags/bash/">bash</a><small>2</small></li>
+  
+    <li><a href="/tags/basic/">basic</a><small>1</small></li>
+  
+    <li><a href="/tags/coderead/">coderead</a><small>1</small></li>
+  
+    <li><a href="/tags/hexo/">hexo</a><small>1</small></li>
+  
+    <li><a href="/tags/intro/">intro</a><small>2</small></li>
+  
+    <li><a href="/tags/mobile/">mobile</a><small>1</small></li>
+  
+    <li><a href="/tags/python/">python</a><small>3</small></li>
+  
+    <li><a href="/tags/src/">src</a><small>2</small></li>
+  
+    <li><a href="/tags/tool/">tool</a><small>4</small></li>
+  
+    <li><a href="/tags/video/">video</a><small>3</small></li>
+  
+    <li><a href="/tags/vim/">vim</a><small>1</small></li>
+  
+    <li><a href="/tags/week/">week</a><small>12</small></li>
+  
+    <li><a href="/tags/实战/">实战</a><small>1</small></li>
+  
+    <li><a href="/tags/翻译/">翻译</a><small>1</small></li>
+  
+  </ul>
+</div>
+
+</aside>
+    <div class="clearfix"></div>
+  </div>
+  <footer id="footer" class="inner"><div class="alignleft">
+  
+  &copy; 2017 liuyang1
+  
+</div>
+<div class="clearfix"></div></footer>
+  <script src="//lib.sinaapp.com/js/jquery/2.0.3/jquery-2.0.3.min.js"></script>
+<script src="/js/instantclick.min.js" data-no-instant></script>
+<script data-no-instant>
+    InstantClick.on('change', function(isInitialLoad) {
+      if (isInitialLoad === false) {
+        if (typeof _hmt !== 'undefined')
+          _hmt.push(['_trackPageview', location.pathname + location.search]);
+        if (typeof ga !== 'undefined')
+          ga('send', 'pageview', location.pathname + location.search);
+      }
+    });
+    InstantClick.init();
+</script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+
+
+<script type="text/javascript">
+var disqus_shortname = 'liuyang1';
+
+(function(){
+  var dsq = document.createElement('script');
+  dsq.type = 'text/javascript';
+  dsq.async = true;
+  dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+}());
+</script>
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "//hm.baidu.com/hm.js?0c65442b2922ed650d2d34c603409234";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+</body>
+</html>

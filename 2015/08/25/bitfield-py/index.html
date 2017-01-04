@@ -1,0 +1,325 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>bitfield in ctypes @Python | River &amp; Could</title>
+  <meta name="author" content="liuyang1">
+  
+  <meta name="description" content="在C语言中,解析二进制数据常使用位域.可以直接从二进制数据映射到C语言中的结构提.
+在Python中,如果要解析二进制数据的话,可以使用struct模块.
+struct模块中定义了unpack方法可以用作这个用途.但是unpack其中内涵了一个小的描述语言,掌握其中的细节比较麻烦,而且谁能够记住这些东西呢.这个必然是write once, read never的代码,除非加上几倍的注释在附近.
+而利用Python的ctypes模块中的Structure的功能,我们也可以写出类似于C语言位域的代码,同时结合Python的特点,可以写出更为简明易懂的代码.
+闲话不说了,直接上例子.(也只有一个例子)">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <meta property="og:title" content="bitfield in ctypes @Python"/>
+  <meta property="og:site_name" content="River &amp; Could"/>
+
+  
+    <meta property="og:image" content="undefined"/>
+  
+
+  <link href="/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="River &amp; Could" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+  
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-59389559-1']);
+  
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+
+</head>
+
+
+<body>
+  <header id="header" class="inner"><div class="alignleft">
+  <h1><a href="/">River &amp; Could</a></h1>
+  <h2><a href="/">从前有一个大傻逼，没有人知道他是谁。</a></h2>
+</div>
+<nav id="main-nav" class="alignright">
+  <ul>
+    
+      <li><a href="/">Home</a></li>
+    
+      <li><a href="/archives">Archives</a></li>
+    
+      <li><a href="/fun">Fun</a></li>
+    
+      <li><a href="/about">About</a></li>
+    
+      <li><a href="/atom.xml">RSS</a></li>
+    
+  </ul>
+  <div class="clearfix"></div>
+</nav>
+<div class="clearfix"></div>
+</header>
+  <div id="content" class="inner">
+    <div id="main-col" class="alignleft"><div id="wrapper"><article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time datetime="2015-08-25T15:16:36.000Z"><a href="/2015/08/25/bitfield-py/">2015-08-25</a></time>
+      
+      
+  
+    <h1 class="title">bitfield in ctypes @Python</h1>
+  
+
+    </header>
+    <div class="entry">
+      
+
+<div id="toc" class="toc-article alignright">
+    <strong class="toc-title">Table of Content:</strong>
+    
+</div>
+
+        <p>在C语言中,解析二进制数据常使用位域.可以直接从二进制数据映射到C语言中的结构提.</p>
+<p>在Python中,如果要解析二进制数据的话,可以使用struct模块.</p>
+<p>struct模块中定义了unpack方法可以用作这个用途.但是unpack其中内涵了一个小的描述语言,掌握其中的细节比较麻烦,而且谁能够记住这些东西呢.这个必然是write once, read never的代码,除非加上几倍的注释在附近.</p>
+<p>而利用Python的ctypes模块中的Structure的功能,我们也可以写出类似于C语言位域的代码,同时结合Python的特点,可以写出更为简明易懂的代码.</p>
+<p>闲话不说了,直接上例子.(也只有一个例子)<br><a id="more"></a></p>
+<p>VP8是Google出品的一种视频编码方式,VP8视频流可以存储在一种IVF的文件格式中.这种文件格式本身非常简单.</p>
+<pre><code>- 32字节的文件头
+- 12字节的帧头,帧头的前4个字节为帧数据的长度.
+</code></pre><p>据此我们可以完成一个简单的IVF文件的probe代码.</p>
+<hr>
+<pre><code>import ctypes
+
+tab = &quot;  &quot;
+
+
+def showFields(obj, name, prefix=tab):
+    s = name
+    w = max([len(i) for i, _ in obj._fields_])
+    for k, _ in obj._fields_:
+        s += &quot;\n%s%s: %s&quot; % (prefix, k.ljust(w), getattr(obj, k))
+    return s
+
+
+class IvfHeader(ctypes.LittleEndianStructure):
+    _fields_ = [
+        (&quot;signature&quot;, ctypes.c_char * 4),
+        (&quot;version&quot;, ctypes.c_ushort),
+        (&quot;lenght&quot;, ctypes.c_ushort),
+        (&quot;fourcc&quot;, ctypes.c_char * 4),
+        (&quot;width&quot;, ctypes.c_ushort),
+        (&quot;height&quot;, ctypes.c_ushort),
+        (&quot;framerate&quot;, ctypes.c_uint),
+        (&quot;timescale&quot;, ctypes.c_uint),
+        (&quot;numFrames&quot;, ctypes.c_uint),
+        (&quot;reserved&quot;, ctypes.c_uint),
+    ]
+
+    def __str__(self):
+        return showFields(self, &quot;IVF Header&quot;)
+
+
+class IvfFrmHeader(ctypes.LittleEndianStructure):
+    # with out _pack_, this will as 64bit alignment
+    _pack_ = 1
+    _fields_ = [
+        (&quot;size&quot;, ctypes.c_uint32),
+        (&quot;timestamp&quot;, ctypes.c_uint64),
+    ]
+
+    def __str__(self):
+        return showFields(self, &quot;IVF Header&quot;)
+
+HdrLen = ctypes.sizeof(IvfHeader)
+FrmLen = ctypes.sizeof(IvfFrmHeader)
+
+
+def parseIVF(fn):
+    with open(fn, &quot;rb&quot;) as fp:
+        data = fp.read()
+        hdr = IvfHeader.from_buffer_copy(data)
+        data = data[HdrLen:]
+        print hdr
+        while len(data) &gt; 0:
+            frm = IvfFrmHeader.from_buffer_copy(data)
+            print frm
+            data = data[FrmLen + frm.size:]
+</code></pre><hr>
+<p>其中<code>__str__</code>函数,是Python对象的默认转换为字符串的函数. 重载这个函数,可以直接简单的调用print来打印对象的信息.</p>
+<p>原始代码::</p>
+<ul>
+<li><a href="https://github.com/liuyang1/test/blob/master/lang/python/ivf.py" target="_blank" rel="external">github</a></li>
+</ul>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+  
+  <div class="tags">
+    <a href="/tags/python/">python</a>
+  </div>
+
+        
+      
+      <div class="clearfix"></div>
+<!-- 
+<div class="pagepart clearfix">
+  
+    <a href="/2015/07/16/201529/" class="alignleft prev" title="2015年 第29周">2015年 第29周</a>
+  
+  
+    <a href="/2015/08/26/withCtxMgr/" class="alignright next" title="with statement @Python">with statement @Python</a>
+  
+</div>
+
+ -->
+    </footer>
+  </div>
+</article>
+
+
+<section id="comment">
+  <h1 class="title">留言</h1>
+
+  
+  <div id="disqus_thread">
+    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  </div>
+  
+</section>
+
+
+</div></div>
+    <aside id="sidebar" class="alignright">
+  <div class="search">
+  <form action="//google.com/search" method="get" accept-charset="utf-8">
+    <input type="search" name="q" results="0" placeholder="搜索">
+    <input type="hidden" name="q" value="site:liuyang1.github.io">
+  </form>
+</div>
+
+  
+
+  
+<div class="widget tag">
+  <h3 class="title">标签</h3>
+  <ul class="entry">
+  
+    <li><a href="/tags/C/">C</a><small>4</small></li>
+  
+    <li><a href="/tags/Haskell/">Haskell</a><small>2</small></li>
+  
+    <li><a href="/tags/Software-Engineer/">Software Engineer</a><small>1</small></li>
+  
+    <li><a href="/tags/Standard/">Standard</a><small>1</small></li>
+  
+    <li><a href="/tags/algo/">algo</a><small>2</small></li>
+  
+    <li><a href="/tags/aos/">aos</a><small>1</small></li>
+  
+    <li><a href="/tags/bash/">bash</a><small>2</small></li>
+  
+    <li><a href="/tags/basic/">basic</a><small>1</small></li>
+  
+    <li><a href="/tags/coderead/">coderead</a><small>1</small></li>
+  
+    <li><a href="/tags/hexo/">hexo</a><small>1</small></li>
+  
+    <li><a href="/tags/intro/">intro</a><small>2</small></li>
+  
+    <li><a href="/tags/mobile/">mobile</a><small>1</small></li>
+  
+    <li><a href="/tags/python/">python</a><small>3</small></li>
+  
+    <li><a href="/tags/src/">src</a><small>2</small></li>
+  
+    <li><a href="/tags/tool/">tool</a><small>4</small></li>
+  
+    <li><a href="/tags/video/">video</a><small>3</small></li>
+  
+    <li><a href="/tags/vim/">vim</a><small>1</small></li>
+  
+    <li><a href="/tags/week/">week</a><small>12</small></li>
+  
+    <li><a href="/tags/实战/">实战</a><small>1</small></li>
+  
+    <li><a href="/tags/翻译/">翻译</a><small>1</small></li>
+  
+  </ul>
+</div>
+
+</aside>
+    <div class="clearfix"></div>
+  </div>
+  <footer id="footer" class="inner"><div class="alignleft">
+  
+  &copy; 2017 liuyang1
+  
+</div>
+<div class="clearfix"></div></footer>
+  <script src="//lib.sinaapp.com/js/jquery/2.0.3/jquery-2.0.3.min.js"></script>
+<script src="/js/instantclick.min.js" data-no-instant></script>
+<script data-no-instant>
+    InstantClick.on('change', function(isInitialLoad) {
+      if (isInitialLoad === false) {
+        if (typeof _hmt !== 'undefined')
+          _hmt.push(['_trackPageview', location.pathname + location.search]);
+        if (typeof ga !== 'undefined')
+          ga('send', 'pageview', location.pathname + location.search);
+      }
+    });
+    InstantClick.init();
+</script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+
+
+<script type="text/javascript">
+var disqus_shortname = 'liuyang1';
+
+(function(){
+  var dsq = document.createElement('script');
+  dsq.type = 'text/javascript';
+  dsq.async = true;
+  dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+}());
+</script>
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "//hm.baidu.com/hm.js?0c65442b2922ed650d2d34c603409234";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+</body>
+</html>

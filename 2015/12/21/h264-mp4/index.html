@@ -1,0 +1,298 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>提取MP4文件中的h264/h265视频流 | River &amp; Could</title>
+  <meta name="author" content="liuyang1">
+  
+  <meta name="description" content="这是一个非常细节的问题，毫无疑问，没有多少人会真的关心这个问题。所以这篇就是写给极少数人看的。">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <meta property="og:title" content="提取MP4文件中的h264/h265视频流"/>
+  <meta property="og:site_name" content="River &amp; Could"/>
+
+  
+    <meta property="og:image" content="undefined"/>
+  
+
+  <link href="/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="River &amp; Could" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+  
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-59389559-1']);
+  
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+
+</head>
+
+
+<body>
+  <header id="header" class="inner"><div class="alignleft">
+  <h1><a href="/">River &amp; Could</a></h1>
+  <h2><a href="/">从前有一个大傻逼，没有人知道他是谁。</a></h2>
+</div>
+<nav id="main-nav" class="alignright">
+  <ul>
+    
+      <li><a href="/">Home</a></li>
+    
+      <li><a href="/archives">Archives</a></li>
+    
+      <li><a href="/fun">Fun</a></li>
+    
+      <li><a href="/about">About</a></li>
+    
+      <li><a href="/atom.xml">RSS</a></li>
+    
+  </ul>
+  <div class="clearfix"></div>
+</nav>
+<div class="clearfix"></div>
+</header>
+  <div id="content" class="inner">
+    <div id="main-col" class="alignleft"><div id="wrapper"><article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time datetime="2015-12-21T14:12:46.000Z"><a href="/2015/12/21/h264-mp4/">2015-12-21</a></time>
+      
+      
+  
+    <h1 class="title">提取MP4文件中的h264/h265视频流</h1>
+  
+
+    </header>
+    <div class="entry">
+      
+
+<div id="toc" class="toc-article alignright">
+    <strong class="toc-title">Table of Content:</strong>
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#背景"><span class="toc-text">背景</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#MP4文件层级与组织"><span class="toc-text">MP4文件层级与组织</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#h264-h265视频流"><span class="toc-text">h264/h265视频流</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#提取MP4文件中的h264-h265视频流"><span class="toc-text">提取MP4文件中的h264/h265视频流</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#h265的处理方法"><span class="toc-text">h265的处理方法</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#code"><span class="toc-text">code</span></a></li></ol>
+</div>
+
+        <p>这是一个非常细节的问题，毫无疑问，没有多少人会真的关心这个问题。所以这篇就是写给极少数人看的。<br><a id="more"></a></p>
+<p>这个问题，以及其逆问题“封装h264/h265视频流到mp4文件中”，定义在国际标准ISO-14496的第15部分。</p>
+<p>这个国际标准，我看到了两个版本，2004年，仅仅有h264部分。2013年版本，这个版本则包含了更多的视频流格式h265，以及其他的扩展视频格式。</p>
+<h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>到达这个问题之前，其实很有很多的其他细节问题：</p>
+<h3 id="MP4文件层级与组织"><a href="#MP4文件层级与组织" class="headerlink" title="MP4文件层级与组织"></a>MP4文件层级与组织</h3><p>这个问题，不是本文讨论的重点，仅仅简单介绍下。</p>
+<p>MP4文件，由层级的box/atom组成。box的头信息包含固定4个字节的长度信息和4个字节的类型信息。<br>类型一般都是类似FourCC的形式。box也有层级结构的，这样box可以嵌套或者包含多个box。一般真正的视频数据都在“mdat”类型的box中。</p>
+<p>一般MP4文件中有音视频track，每个track则有很多chunk，chunk内有多个sample。从track一直到sample，都是按照层级/表进行组织的。</p>
+<p>所以，从MP4文件中找到相应的sample，就可以把数据提取出来。</p>
+<h3 id="h264-h265视频流"><a href="#h264-h265视频流" class="headerlink" title="h264/h265视频流"></a>h264/h265视频流</h3><p>这种视频流中的每个单元为NALU，NALU之间以start code(0x00000001)进行分割。</p>
+<p>由上面的两点基础信息，就可回到问题本身了。</p>
+<h2 id="提取MP4文件中的h264-h265视频流"><a href="#提取MP4文件中的h264-h265视频流" class="headerlink" title="提取MP4文件中的h264/h265视频流"></a>提取MP4文件中的h264/h265视频流</h2><p>这个问题其实非常简单，核心问题其实只需要一句话。摘自ISO-IEC-14496-15 5.2.2.</p>
+<figure class="highlight plain"><figcaption><span>ISO-IEC-14496-15 5.2.2</span></figcaption><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">No start codes.</div><div class="line">The elementary streams shall not include start codes. As stored, each NAL unit is</div><div class="line">preceded by a length field as specified in 5.2.3; this enables easy scanning of the sample’s NAL units.</div><div class="line">Systems that wish to deliver, from this file format, a stream using start codes will need to reformat the</div><div class="line">stream to insert those start codes.</div></pre></td></tr></table></figure>
+<p>这部分的意思是<br>    ES数据不包含start code，而是存储上NALU的长度。反向进行时候，需要将start code添加回来。</p>
+<p>NALU的长度的长度信息则存储在MP4文件中的“avcC”中。具体的定义如下</p>
+<pre><code>aligned(8) class AVCDecoderConfigurationRecord {
+    unsigned int(8) configurationVersion = 1;
+    unsigned int(8) AVCProfileIndication;
+    unsigned int(8) profile_compatibility;
+    unsigned int(8) AVCLevelIndication;
+    bit(6) reserved = ‘111111’b;
+    unsigned int(2) lengthSizeMinusOne; // offset 4
+    bit(3) reserved = ‘111’b;
+    unsigned int(5) numOfSequenceParameterSets;
+    for (i=0; i&lt; numOfSequenceParameterSets; i++) {
+        unsigned int(16) sequenceParameterSetLength ;
+        bit(8*sequenceParameterSetLength) sequenceParameterSetNALUnit;
+    }
+    unsigned int(8) numOfPictureParameterSets;
+    for (i=0; i&lt; numOfPictureParameterSets; i++) {
+        unsigned int(16) pictureParameterSetLength;
+        bit(8*pictureParameterSetLength) pictureParameterSetNALUnit;
+    }
+}
+</code></pre><p>一个典型的“avcC”内容如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">01 42 c0 15 fd e1 00 17 67 42 c0 15 92 44 0f 04</div><div class="line">7f 58 08 80 00 00 3e 80 00 0b b5 47 8b 17 50 01</div><div class="line">00 04 68 ce 32 c8</div></pre></td></tr></table></figure>
+<p>解析的结果(内部的数值都是十六进制的)</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">version:      01</div><div class="line">profile:      42</div><div class="line">compatibilty: c0</div><div class="line">level:        15</div><div class="line">lengthSize:   2 (0xfd -&gt; 2)</div><div class="line">num of SPS:   1</div><div class="line">SPS len:      17</div><div class="line">SPS:          67 42 c0 15 92 44 0f 04 7f 58 08 80 00 00 3e 80</div><div class="line">              00 0b b5 47 8b 17 50</div><div class="line">num of PPS:   1</div><div class="line">PPS len:      4</div><div class="line">PPS:          68 ce 32 c8</div></pre></td></tr></table></figure>
+<p>根据里面的lengthSize就可以得到“NALU的长度”这部分数据的长度。</p>
+<pre><code>+---+-------+---+-------+--+-------+---
+|len|  NAL  |len|  NAL  |  |       |
++---+-------+---+-------+--+-------+---
+</code></pre><p>注意，这里的顺序是大端(网络序)的。一般一个sample有一个NALU(当然不是绝对的)。</p>
+<p>SPS和PPS是h264流中的元信息，在MP4文件中单独存放在“avcC”中。（如上所示），转换的时候，还需要将SPS和PPS提取出来，添加上0x00000001，放在h264视频流的开始位置。</p>
+<h3 id="h265的处理方法"><a href="#h265的处理方法" class="headerlink" title="h265的处理方法"></a>h265的处理方法</h3><p>其实几乎是一样的，对于h265，其元信息在”hvcC”类型box中。具体的语法结构就不贴了。其中lengthSize的偏移地址为21.</p>
+<h2 id="code"><a href="#code" class="headerlink" title="code"></a>code</h2><p>很多开源代码珠玉在前，我就不献丑了。</p>
+<p>ffmpeg中，可以参考libavcodec/h264_mp4toannexb_bsf.c. 这个文件不长，只有300行左右。其功能完成就是本文讨论的内容，完全可以对比着一一参考。</p>
+<pre><code>- h264_extradata_to_annexb 处理avcC中的数据，并且提取出sps和pps信息
+- h264_mp4toannexb_filter 从sample中提取nalu数据
+</code></pre><p>Android的代码中可以参考libstagefright中的MPEG4Extractor.cpp文件。这个代码展示了完整的如何解析MP4文件的过程。关于本文讨论的内容，在read函数中3883行附近。在代码中搜索lengthsize也可以比较容易定位到。</p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+  
+  <div class="tags">
+    <a href="/tags/Standard/">Standard</a>, <a href="/tags/coderead/">coderead</a>, <a href="/tags/video/">video</a>
+  </div>
+
+        
+      
+      <div class="clearfix"></div>
+<!-- 
+<div class="pagepart clearfix">
+  
+    <a href="/2015/08/26/withCtxMgr/" class="alignleft prev" title="with statement @Python">with statement @Python</a>
+  
+  
+    <a href="/2015/12/29/yuv/" class="alignright next" title="YUV格式">YUV格式</a>
+  
+</div>
+
+ -->
+    </footer>
+  </div>
+</article>
+
+
+<section id="comment">
+  <h1 class="title">留言</h1>
+
+  
+  <div id="disqus_thread">
+    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  </div>
+  
+</section>
+
+
+</div></div>
+    <aside id="sidebar" class="alignright">
+  <div class="search">
+  <form action="//google.com/search" method="get" accept-charset="utf-8">
+    <input type="search" name="q" results="0" placeholder="搜索">
+    <input type="hidden" name="q" value="site:liuyang1.github.io">
+  </form>
+</div>
+
+  
+
+  
+<div class="widget tag">
+  <h3 class="title">标签</h3>
+  <ul class="entry">
+  
+    <li><a href="/tags/C/">C</a><small>4</small></li>
+  
+    <li><a href="/tags/Haskell/">Haskell</a><small>2</small></li>
+  
+    <li><a href="/tags/Software-Engineer/">Software Engineer</a><small>1</small></li>
+  
+    <li><a href="/tags/Standard/">Standard</a><small>1</small></li>
+  
+    <li><a href="/tags/algo/">algo</a><small>2</small></li>
+  
+    <li><a href="/tags/aos/">aos</a><small>1</small></li>
+  
+    <li><a href="/tags/bash/">bash</a><small>2</small></li>
+  
+    <li><a href="/tags/basic/">basic</a><small>1</small></li>
+  
+    <li><a href="/tags/coderead/">coderead</a><small>1</small></li>
+  
+    <li><a href="/tags/hexo/">hexo</a><small>1</small></li>
+  
+    <li><a href="/tags/intro/">intro</a><small>2</small></li>
+  
+    <li><a href="/tags/mobile/">mobile</a><small>1</small></li>
+  
+    <li><a href="/tags/python/">python</a><small>3</small></li>
+  
+    <li><a href="/tags/src/">src</a><small>2</small></li>
+  
+    <li><a href="/tags/tool/">tool</a><small>4</small></li>
+  
+    <li><a href="/tags/video/">video</a><small>3</small></li>
+  
+    <li><a href="/tags/vim/">vim</a><small>1</small></li>
+  
+    <li><a href="/tags/week/">week</a><small>12</small></li>
+  
+    <li><a href="/tags/实战/">实战</a><small>1</small></li>
+  
+    <li><a href="/tags/翻译/">翻译</a><small>1</small></li>
+  
+  </ul>
+</div>
+
+</aside>
+    <div class="clearfix"></div>
+  </div>
+  <footer id="footer" class="inner"><div class="alignleft">
+  
+  &copy; 2017 liuyang1
+  
+</div>
+<div class="clearfix"></div></footer>
+  <script src="//lib.sinaapp.com/js/jquery/2.0.3/jquery-2.0.3.min.js"></script>
+<script src="/js/instantclick.min.js" data-no-instant></script>
+<script data-no-instant>
+    InstantClick.on('change', function(isInitialLoad) {
+      if (isInitialLoad === false) {
+        if (typeof _hmt !== 'undefined')
+          _hmt.push(['_trackPageview', location.pathname + location.search]);
+        if (typeof ga !== 'undefined')
+          ga('send', 'pageview', location.pathname + location.search);
+      }
+    });
+    InstantClick.init();
+</script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+
+
+<script type="text/javascript">
+var disqus_shortname = 'liuyang1';
+
+(function(){
+  var dsq = document.createElement('script');
+  dsq.type = 'text/javascript';
+  dsq.async = true;
+  dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+}());
+</script>
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "//hm.baidu.com/hm.js?0c65442b2922ed650d2d34c603409234";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+</body>
+</html>
